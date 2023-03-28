@@ -1,0 +1,51 @@
+<div class="bg-img">
+  <div class="content">
+      <header class="display-3 text-center">Login</header>
+      <!-- {{ userInfo | json}} -->
+      <form #loginForm="ngForm">
+          <div class="field">
+              <span class="bx bx-user"></span>
+              <input type="email" name="email" email #emailaddress="ngModel" [(ngModel)]="userInfo.email" class="form-control txtuser" required placeholder="Enter your email.">
+          </div>
+          <div class="error" *ngIf="emailaddress.dirty && emailaddress.errors?.['required']">
+            <small class="float-start mb-2 fw-bolder text-danger">Please enter your email address</small>
+          </div>
+          <div class="error" *ngIf="emailaddress.errors?.['email']">
+            <small class="float-start mb-2 fw-bolder text-danger">Please enter your email with an @mail.com</small>
+          </div>
+          <div class="field space">
+              <span class="bx bx-lock-alt"></span>
+              <input type="password" name="password" #userpassword="ngModel" [(ngModel)]="userInfo.password" required class="form-control passer" placeholder="Confirm Password">
+              <span class="showly">SHOW</span>
+          </div>
+          <div class="error" *ngIf="userpassword.dirty && userpassword.errors?.['required']">
+            <small class="float-start mb-2 fw-bolder text-danger">Please enter your password</small>
+          </div>
+          <div class="field space">
+              <button type="submit" [disabled]="loginForm.invalid" id="submit">LOGIN</button>
+          </div>
+          <div>
+              <p class="message"></p>
+          </div>
+          <div class="pass">
+              <a href="#">Forgot Password?</a>
+          </div>
+          <div class="login">Or login with</div>
+          <div class="link">
+              <div class="facebook">
+                  <a href="#" id="noy">
+                    <i class="bx bxl-facebook"><span>Facebook</span></i></a>
+              </div>
+              <!-- <div class="instagram">
+                  <i class="bx bxl-instagram"><span>Instagram</span></i>
+              </div> -->
+              <div class="google">
+                  <i class="bx bxl-google"><span>Google</span></i>
+              </div>
+          </div>
+          <div class="signup">Don't have an account?
+              <a href="../html/signup.html">Signup Now</a>
+          </div>
+      </form>
+  </div>
+</div>

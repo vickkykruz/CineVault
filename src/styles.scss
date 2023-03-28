@@ -1,0 +1,296 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+// GOOGLE Fonts
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap');
+
+:root {
+  --text-color: #f3f3f3f3;
+  --bg-color: #000000;
+  --main-color: #E50914;
+
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: var(--main-color);
+}
+
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.delay-2 {
+  transition-delay: 0.2s;
+}
+
+.delay-4 {
+  transition-delay: 0.4s;
+}
+
+.delay-6 {
+  transition-delay: 0.6s;
+}
+
+.delay-8 {
+  transition-delay: 0.8s;
+}
+
+
+.btn {
+  color: #ffffff;
+  padding: 0.25rem 1.5rem;
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+}
+
+.btn-hover::before {
+  z-index: 1;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: var(--main-color);
+  transition: 0.3s ease-in-out;
+}
+
+.btn-hover:hover::before {
+  width: 100%;
+}
+
+.btn i,
+.btn span {
+  z-index: 1;
+}
+
+.btn i {
+  margin-right: 1rem;
+}
+
+// Authentication Style
+.bg-img {
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url(./assets/images/background/Free-Movie-Download.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.bg-img::after {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 999;
+  width: 370px;
+  text-align: center;
+  padding: 60px 32px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: -1px 4px 28px 0px rgba(0, 0, 0, 0.75);
+}
+
+.content header {
+  color: white;
+  font-size: 33px;
+  font-weight: 600;
+  margin: 0 0 35px 0;
+}
+
+.field {
+  position: relative;
+  height: 45px;
+  width: 100%;
+  display: flex;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+
+.field input {
+  height: 100%;
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #222;
+  font-size: 16px;
+}
+
+.hi {
+  position: absolute;
+  right: 13px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #222;
+  cursor: pointer;
+  display: none;
+}
+
+.passworder:valid~.shower {
+  display: block;
+}
+
+.show {
+  position: absolute;
+  right: 13px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #222;
+  cursor: pointer;
+  display: none;
+}
+
+.password:valid~.show {
+  display: block;
+}
+
+.showly {
+  position: absolute;
+  right: 13px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #222;
+  cursor: pointer;
+  display: none;
+}
+
+.passer:valid~.showly {
+  display: block;
+}
+
+.space {
+  margin-top: 16px;
+
+}
+.field span {
+  color: #222;
+  width: 40px;
+  line-height: 45px;
+}
+
+.pass {
+  text-align: left;
+  margin: 10px 0;
+}
+
+.pass a {
+  color: white;
+  text-decoration: none;
+}
+
+.pass:hover a {
+  text-decoration: underline;
+  color: var(--main-color);
+}
+
+.field button[type="submit"] {
+  background: tomato;
+  border: 1px solid #d93b26;
+  color: white;
+  font-size: 18px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+
+.field button[type="submit"]:hover, .field button[type="submit"]:disabled{
+  background: #d93b26;
+  width: 100%;
+}
+
+.login {
+  color: white;
+  margin: 20px 0;
+}
+
+.link {
+  display: flex;
+  cursor: pointer;
+  color: white;
+  margin: 0 0 20px 0;
+}
+
+.facebook, .instagram, .google {
+  width: 100%;
+  height: 42px;
+  line-height: 45px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.facebook {
+  background: #4267B2;
+  border: 1px solid #3e61a8;
+  font-weight: 700;
+}
+
+.facebook #noy {
+  color: var(--text-color);
+  font: caption;
+}
+
+.facebook #noy i, .google i {
+  font-size: 1.3rem;
+}
+
+.instagram {
+  background: #dacc0e;
+  border: 1px solid #c1ce0c;
+}
+
+.google {
+  background: #e9ad0a;
+  border: 1px solid #dbd80b;
+}
+
+.link i {
+  font-size: 17px;
+}
+
+.link span {
+  font-size: 16px;
+  margin-left: 8px;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.signup {
+  color: white;
+  font-size: 15px;
+}
+
+.signup a {
+  text-decoration: none;
+  color: #3e61a8;
+}
+
+.signup:hover {
+  text-decoration: underline;
+}
