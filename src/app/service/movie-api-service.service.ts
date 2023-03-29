@@ -15,4 +15,9 @@ export class MovieApiServiceService {
   bannerApiData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/trending/all/week?api_key=${this.apiKey}`)
   }
+
+  // TreadingMoviesApi
+  trendingMoviesApi(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/trending/movie/day?api_key=${this.apiKey}`);
+  }
 }

@@ -47,6 +47,45 @@
 </owl-carousel-o>
 <!-- Banner End -->
 
+<!-- Trending Section -->
+<section class="container mt-5">
+  <div class="row">
+      <div class="col-lg-9 col-md-9 col-sm-12">
+        <div class="trending-info">
+          <div class="trending-heading">
+            <h2 class="trending-title">Trending Movies</h2>
+          </div>
+
+          <owl-carousel-o [options]="tendingSlide">
+            <ng-template carouselSlide *ngFor="let data of trendingMoviesResults">
+              <div class="movie-box">
+                <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
+                <div class="box-text">
+                  <h5 class="movie-title">{{ data.original_title }}</h5>
+                  <span class="movie-type">{{data.media_type}}</span>
+                  <a href="#" class="watch-btn play-btn">
+                    <i class="bx bx-right-arrow"></i>
+                  </a>
+                </div>
+              </div>
+            </ng-template>
+
+
+          </owl-carousel-o>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-3">
+        <div class="search-form">
+          <h4 class="search-heading">Search For</h4>
+          <form action="" method="post">
+            <input type="search" name="email" placeholder="Movie, Actor/Actess etc">
+            <button name="submit" class="getstarted"><i class='bx bx-search-alt'></i></button>
+          </form>
+        </div>
+      </div>
+  </div>
+</section>
+<div class="mt-5 pt-5"></div>
 <!-- Footer -->
 <app-footer></app-footer>
 <!-- End Footer -->
