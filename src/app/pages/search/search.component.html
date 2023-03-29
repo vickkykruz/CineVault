@@ -1,1 +1,53 @@
-<p>search works!</p>
+<app-nav></app-nav>
+<!-- Contents -->
+<section class="search mt-5" id="search">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-9 col-md-9 col-sm-12">
+
+        <div class="row movie-container" *ngFor="let data of searchResult">
+          <div class="col-lg-3 col-md-3 col-sm-12 movie-img-container">
+            <img src="https://image.tmdb.org/t/p/original{{ data.poster_path }}" height="200px" alt="" class="w-100 img-fluid">
+          </div>
+          <div class="col-lg-9 col-md-9 col-sm-12 mt-3">
+            <div class="movie-content">
+              <h2 class="search-header">{{ data.title}}</h2>
+              <div class="movie-icon">
+                <div class="movie-duration">
+                  <i class='bx bx-time-five'></i>
+                  <span>120mins</span>
+                </div>
+                <div class="movie-duration">
+                  <i class='bx bx-tv' ></i>
+                  <span>HD</span>
+                </div>
+                <div class="movie-duration">
+                  <i class='bx bx-user-plus' ></i>
+                  <span>16+</span>
+                </div>
+              </div>
+              <p class="movie-info">{{ data.overview }}</p>
+              <div class="movie-link">
+                <div class="movie-watch">
+                  <a [routerLink]="['/movie', data.id]">
+                    <i class='bx bx-play-circle'></i> <span>Watch</span>
+                  </a>
+                </div>
+                <div class="movie-download">
+                  <a href="#">
+                    <i class='bx bx-download' ></i> <span>Downlod </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <app-aside-bar></app-aside-bar>
+      </div>
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>

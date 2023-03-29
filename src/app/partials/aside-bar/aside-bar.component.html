@@ -1,0 +1,22 @@
+<div class="aside-container">
+  <!-- Search Form -->
+  <div class="search-form">
+    <!-- {{ inputSearch | json}} -->
+    <h4 class="search-heading">Search For</h4>
+    <form #searchForm="ngForm" (ngSubmit)="submitForm()">
+      <input type="search" name="search" #searchInput="ngModel" [(ngModel)]="inputSearch.search" required placeholder="Search Movies Here...">
+      <button type="submit" name="submit" [disabled]="searchForm.invalid" class="getstarted"><i class='bx bx-search-alt'></i></button>
+    </form>
+    <div class="search-error" *ngIf="searchInput.dirty && searchInput.errors?.['required']">
+      <small class="text-danger">Please Fill The Form</small>
+    </div>
+
+  </div>
+  <!-- End Search Form -->
+
+  <!-- Ads Placements -->
+  <div class="ads-container mt-5">
+    <img src="../../../assets/images/Ads_Images/ads_img.jpg" alt="" class="w-100 img-fluid">
+  </div>
+  <!-- End Ads Placements -->
+</div>

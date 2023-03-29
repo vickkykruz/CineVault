@@ -1,8 +1,24 @@
 <div class="bg-img">
   <div class="content">
+    <ng-container *ngIf="ValidateForm; else elseLogin">
+      <div class="container-fluid">
+        <div class="alert alert-success">
+          <h6 class="text-white">Successfully Login</h6>
+        </div>
+      </div>  
+    </ng-container>
+    <ng-template #elseLogin>
+      <div class="container-fluid" [ngStyle]="defaultError">
+        <div class="alert alert-danger">
+          <h6 class="text-white">Invalid Login Details</h6>
+        </div>
+      </div> 
+    </ng-template>
+    
+    
       <header class="display-3 text-center">Login</header>
       <!-- {{ userInfo | json}} -->
-      <form #loginForm="ngForm">
+      <form #loginForm="ngForm" (ngSubmit)="submitForm()">
           <div class="field">
               <span class="bx bx-user"></span>
               <input type="email" name="email" email #emailaddress="ngModel" [(ngModel)]="userInfo.email" class="form-control txtuser" required placeholder="Enter your email.">

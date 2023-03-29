@@ -18,6 +18,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { FormsModule } from '@angular/forms';
+import { AsideBarComponent } from './partials/aside-bar/aside-bar.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { FormsModule } from '@angular/forms';
     FooterComponent,
     LoginComponent,
     RegisterComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    AsideBarComponent
   ],
   imports: [
     BrowserModule,
