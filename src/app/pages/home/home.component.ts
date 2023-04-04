@@ -11,26 +11,25 @@ export class HomeComponent implements OnInit {
 
   bannerApiData: any = [];
   trendingMoviesResults: any = [];
+  loading: boolean = true;
+  errorStatus!: number;
+  errorMessage!: string;
 
   constructor(private service: MovieApiServiceService) {}
   ngOnInit(): void {
     this.bannerData();
     this.trendingData();
   }
-  // bannerApiTitle!: string;
 
   bannerData() {
     this.service.bannerApiData().subscribe((result)=> {
       console.log(result, 'bannerResult#');
       this.bannerApiData = result.results;
-
-      // if (result.results.original_name == ""){
-      //   this.bannerApiTitle = result.results.title;
-      // }else if (result.results.title == "") {
-      //   this.bannerApiTitle = result.results.original_name;
-      // }else {
-      //   this.bannerApiTitle = "Error";
-      // }
+    }, (err) => {
+      console.error(err, 'errors#')
+      this.errorStatus = err.status;
+      this.errorMessage = err.message;
+      this.loading = false;
     })
     }
 
@@ -38,7 +37,11 @@ export class HomeComponent implements OnInit {
       this.service.trendingMoviesApi().subscribe((result)=> {
         console.log(result, 'trendingMovies');
         this.trendingMoviesResults = result.results;
-      })
+      }, ((err) => {
+        this.errorStatus = err.status;
+        this.errorMessage = err.message;
+        this.loading = false;
+      }))
     }
 
     customOptions: OwlOptions = {
