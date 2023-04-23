@@ -14,8 +14,11 @@ const routes: Routes = [
   {path: 'movie/:id', component: MovieDetailsComponent},
   {path: 'auth', children: [
     {path: 'login', component: LoginComponent},
+    {path: 'login/:id', component: LoginComponent},
     {path: 'register', component: RegisterComponent},
-    {path: 'forgotPassword', component: ForgotPasswordComponent}
+    {path: 'register/:id', component: RegisterComponent},
+    {path: 'forgotPassword', component: ForgotPasswordComponent},
+    {path: 'forgotPassword/:id', component: ForgotPasswordComponent}
   ]},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: '**', component: NotFoundComponent}
