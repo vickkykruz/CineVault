@@ -14,11 +14,20 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './partials/nav/nav.component';
 import { FooterComponent } from './partials/footer/footer.component';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
-import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { FormsModule } from '@angular/forms';
 import { AsideBarComponent } from './partials/aside-bar/aside-bar.component';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService } from '@angular/fire/analytics';
+import { provideAuth,getAuth, AuthModule } from '@angular/fire/auth';
+import { provideDatabase,getDatabase } from '@angular/fire/database';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { provideFunctions,getFunctions } from '@angular/fire/functions';
+import { provideMessaging,getMessaging } from '@angular/fire/messaging';
+import { providePerformance,getPerformance } from '@angular/fire/performance';
+import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config';
+import { provideStorage,getStorage } from '@angular/fire/storage';
+import { AuthModules } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -29,9 +38,6 @@ import { AsideBarComponent } from './partials/aside-bar/aside-bar.component';
     MovieDetailsComponent,
     NavComponent,
     FooterComponent,
-    LoginComponent,
-    RegisterComponent,
-    ForgotPasswordComponent,
     AsideBarComponent
   ],
   imports: [
@@ -41,10 +47,22 @@ import { AsideBarComponent } from './partials/aside-bar/aside-bar.component';
     HttpClientModule,
     CarouselModule,
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAnalytics(() => getAnalytics()),
+    provideAuth(() => getAuth()),
+    provideDatabase(() => getDatabase()),
+    provideFirestore(() => getFirestore()),
+    provideFunctions(() => getFunctions()),
+    provideMessaging(() => getMessaging()),
+    providePerformance(() => getPerformance()),
+    provideRemoteConfig(() => getRemoteConfig()),
+    provideStorage(() => getStorage()),
+    AuthModules
   ],
   providers: [
-    MovieApiServiceService
+    MovieApiServiceService,
+    ScreenTrackingService,UserTrackingService
   ],
   bootstrap: [AppComponent]
 })

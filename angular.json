@@ -105,6 +105,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "Netflix_Clone:build:production",
+            "firebaseProject": "kruztv-77cf2",
+            "firebaseHostingSite": "kruztv-77cf2"
+          }
         }
       }
     }

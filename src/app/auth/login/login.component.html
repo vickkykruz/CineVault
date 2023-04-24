@@ -5,17 +5,17 @@
         <div class="alert alert-success">
           <h6 class="text-white">Successfully Login</h6>
         </div>
-      </div>  
+      </div>
     </ng-container>
     <ng-template #elseLogin>
       <div class="container-fluid" [ngStyle]="defaultError">
         <div class="alert alert-danger">
-          <h6 class="text-white">Invalid Login Details</h6>
+          <h6 class="text-white">{{ message }}</h6>
         </div>
-      </div> 
+      </div>
     </ng-template>
-    
-    
+
+
       <header class="display-3 text-center">Login</header>
       <!-- {{ userInfo | json}} -->
       <form #loginForm="ngForm" (ngSubmit)="submitForm()">

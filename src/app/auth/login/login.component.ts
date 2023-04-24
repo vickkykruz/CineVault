@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -14,12 +16,16 @@ export class LoginComponent implements OnInit {
     password: ''
   }
 
+  message!:string;
   ValidateForm!: boolean;
   defaultError = {
     'display' : 'none'
   }
 
-  constructor(private router: ActivatedRoute, private moveRoute: Router) {}
+  constructor(
+    private router: ActivatedRoute,
+    private moveRoute: Router,
+    private fireauth: AngularFireAuth) {}
   ngOnInit(): void {
 
   }
@@ -27,18 +33,33 @@ export class LoginComponent implements OnInit {
   id: any = this.router.snapshot.paramMap.get('id');
 
   submitForm() {
-    if (this.userInfo.email == 'onwuegbuchulemvic02@gmail.com' && this.userInfo.password == 'Vicchi232312') {
-      if (this.id == null){
-        this.moveRoute.navigate(['/home']);
-      }else {
-        this.moveRoute.navigate([`/movie/${this.id}`]);
-      }
-      this.ValidateForm = true;
-    }else {
-      this.ValidateForm = false;
+    this.fireauth.signInWithEmailAndPassword(this.userInfo.email, this.userInfo.password).then((response) =>
+    {
       this.defaultError = {
         'display': 'block'
       }
-    }
+      this.ValidateForm = true;
+      sessionStorage.setItem('token', 'key');
+
+      this.message = "Created an account successfully";
+
+      if (this.id != null){
+        this.moveRoute.navigate([`/movie/${this.id}`]);
+      }else {
+        this.moveRoute.navigate(['/home']);
+      }
+
+    }, err=> {
+      this.defaultError = {
+        'display': 'block'
+      }
+
+      if (err.message == "Firebase: Error (auth/user-not-found).") {
+        this.message = "No Accound Found With The Email Address";
+      }
+      this.ValidateForm = false;
+      // this.message = err.message;
+
+    });
   }
 }
