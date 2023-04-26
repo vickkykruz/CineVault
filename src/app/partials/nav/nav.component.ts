@@ -1,13 +1,22 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss']
 })
-export class NavComponent {
+export class NavComponent implements OnInit{
 
   navbar: any;
+  authStatus: boolean = false;
+  constructor(private service: MovieApiServiceService) {}
+
+  ngOnInit(): void {
+ 
+  }
+
+
   @HostListener('document:scroll') scrollover() {
     console.log(document.body.scrollTop, 'scrolllength#');
     if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {

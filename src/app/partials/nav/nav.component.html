@@ -5,25 +5,35 @@
       <img src="../assets/images/logo/Netflix-Logo.png" alt="Logo" width="100" height="60" id="disktop-logo" class="d-inline-block align-text-top">
       <img src="../assets/images/logo/net_logo.png" alt="Logo" width="60" height="40" id="mobile-logo" class="d-inline-block align-text-top">
     </a>
-    <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button> -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" [routerLink]="['/auth/login']" routerLinkActive="router-link-active" >
-            <i class='bx bx-log-in'></i> Sign In
-          </a>
+          <ng-container *ngIf="authStatus; else elseTemplate">
+            <div class="dropdown">
+              <div class="user_info" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="img">
+                  <img src="../../../assets/images/logo/img-1.jpg" alt="">
+                </div>
+                <h6>Edward Victor <i class="bx bx-chevron-down"></i></h6>
+              </div>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #elseTemplate>
+            <a class="nav-link active" aria-current="page" [routerLink]="['/auth/login']" routerLinkActive="router-link-active" >
+              <i class='bx bx-log-in'></i> Sign In
+            </a>
+          </ng-template>
+
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li> -->
-
       </ul>
-
     </div>
-    <a  [routerLink]="['/auth/login']" routerLinkActive="router-link-active"  class="moblie-anoch">
-      <i class='bx bx-log-in'></i> Sign In</a>
+    <!-- <a  [routerLink]="['/auth/login']" routerLinkActive="router-link-active"  class="moblie-anoch">
+      <i class='bx bx-log-in'></i> Sign In</a> -->
   </div>
 </nav>
 <!-- End Navbar -->

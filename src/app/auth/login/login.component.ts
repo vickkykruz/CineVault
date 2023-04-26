@@ -3,6 +3,8 @@ import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { catchError } from 'rxjs';
+import { onAuthStateChanged } from '@angular/fire/auth';
+import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
 
 @Component({
   selector: 'app-login',
@@ -25,21 +27,25 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: ActivatedRoute,
     private moveRoute: Router,
-    private fireauth: AngularFireAuth) {}
+    private fireauth: AngularFireAuth,
+    private service: MovieApiServiceService) {}
   ngOnInit(): void {
 
   }
 
   id: any = this.router.snapshot.paramMap.get('id');
-
+  feedback!: any;
+  user: any;
   submitForm() {
     this.fireauth.signInWithEmailAndPassword(this.userInfo.email, this.userInfo.password).then((response) =>
     {
+      // this.user = response.user;
+      // console.log(response);
       this.defaultError = {
         'display': 'block'
       }
       this.ValidateForm = true;
-      sessionStorage.setItem('token', 'key');
+      this.service.userEffect();
 
       this.message = "Created an account successfully";
 
@@ -56,10 +62,14 @@ export class LoginComponent implements OnInit {
 
       if (err.message == "Firebase: Error (auth/user-not-found).") {
         this.message = "No Accound Found With The Email Address";
+      }else {
+        this.message = "Network connection failed";
       }
       this.ValidateForm = false;
       // this.message = err.message;
 
     });
   }
+
+
 }

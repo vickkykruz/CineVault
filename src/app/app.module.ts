@@ -28,6 +28,7 @@ import { providePerformance,getPerformance } from '@angular/fire/performance';
 import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { AuthModules } from './auth/auth.module';
+import { DownloadMoviesComponent } from './pages/download-movies/download-movies.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { AuthModules } from './auth/auth.module';
     MovieDetailsComponent,
     NavComponent,
     FooterComponent,
-    AsideBarComponent
+    AsideBarComponent,
+    DownloadMoviesComponent
   ],
   imports: [
     BrowserModule,
