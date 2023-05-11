@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/service/auth.service';
 import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
 
 @Component({
@@ -10,11 +11,18 @@ export class NavComponent implements OnInit{
 
   navbar: any;
   authStatus: boolean = false;
-  constructor(private service: MovieApiServiceService) {}
+  constructor(private service: AuthService) {}
+
+  loginStatus: boolean = this.service.arrayExistsInSessionStorage();
 
   ngOnInit(): void {
- 
+    if (this.loginStatus == true) {
+      this.authStatus = true;
+    }
   }
+
+
+
 
 
   @HostListener('document:scroll') scrollover() {

@@ -29,6 +29,7 @@ import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { AuthModules } from './auth/auth.module';
 import { DownloadMoviesComponent } from './pages/download-movies/download-movies.component';
+import { AuthService } from './service/auth.service';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { DownloadMoviesComponent } from './pages/download-movies/download-movies
   ],
   providers: [
     MovieApiServiceService,
+    AuthService,
     ScreenTrackingService,UserTrackingService
   ],
   bootstrap: [AppComponent]

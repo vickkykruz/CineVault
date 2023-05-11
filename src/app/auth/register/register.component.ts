@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
-import { UserDertail } from 'src/app/service/userdetails';
+import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -28,9 +27,9 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private routeId: ActivatedRoute,
-    private route: Router,
     private fireAuth: AngularFireAuth,
-    private service: MovieApiServiceService) {}
+    private router: Router,
+    private service: AuthService) {}
   ngOnInit(): void {
 
   }
@@ -40,14 +39,18 @@ export class RegisterComponent implements OnInit {
       // Process The Registration
       this.fireAuth.createUserWithEmailAndPassword(this.userInfo.email, this.userInfo.password)
       .then((response) => {
-        console.log(response, "#** UserData'");
-        const UserData: UserDertail = {
-          displayName: this.userInfo.username,
-          email: response.user.em,
-          uid: ,
-          id: ''
-        }
-        // this.service.sendVerificationEmail(response.user, this.id, this.userInfo.username); // Send a verfiied email
+        alert(this.userInfo.username);
+        const datas: any = {
+          id: response.user?.uid,
+          status: 'active'
+        };
+        this.service.saveDataInSessionStorage(datas);
+        this.service.sendVerificationEmail(response.user, this.userInfo.username); // Send a verfiied email
+        if (this.id != null) {
+          this.router.navigate([`/movie/${this.id}`]);
+        } else {
+          this.router.navigate(['/home']);
+        };
       })
       .catch((err) => {
         this.defaultError = {

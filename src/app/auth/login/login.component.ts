@@ -2,8 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { catchError } from 'rxjs';
-import { onAuthStateChanged } from '@angular/fire/auth';
+
 import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
 
 @Component({
@@ -45,7 +44,7 @@ export class LoginComponent implements OnInit {
         'display': 'block'
       }
       this.ValidateForm = true;
-      this.service.userEffect();
+      // this.service.userEffect();
 
       this.message = "Created an account successfully";
 
