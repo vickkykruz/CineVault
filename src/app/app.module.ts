@@ -27,7 +27,6 @@ import { provideMessaging,getMessaging } from '@angular/fire/messaging';
 import { providePerformance,getPerformance } from '@angular/fire/performance';
 import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config';
 import { provideStorage,getStorage } from '@angular/fire/storage';
-import { AuthModules } from './auth/auth.module';
 import { DownloadMoviesComponent } from './pages/download-movies/download-movies.component';
 import { AuthService } from './service/auth.service';
 
@@ -61,7 +60,6 @@ import { AuthService } from './service/auth.service';
     providePerformance(() => getPerformance()),
     provideRemoteConfig(() => getRemoteConfig()),
     provideStorage(() => getStorage()),
-    AuthModules
   ],
   providers: [
     MovieApiServiceService,

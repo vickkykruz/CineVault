@@ -1,0 +1,43 @@
+aside {
+  height: 100vh;
+}
+
+aside .top {
+  background-color: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.4rem;
+}
+
+aside .top .logo {
+  display: flex;
+  gap: 0;
+}
+
+aside .top .logo img {
+  height: 2rem;
+  width: 2.3rem;
+}
+
+aside .close {
+  display: none;
+}
+
+aside .close i {
+  font-size: 2.3rem;
+}
+
+aside .sidebar {
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  position: relative;
+  top: 2rem;
+}
+
+aside .sidebar a .bx {
+  font-size: 1.8rem !important;
+  color: #dedede !important;
+}

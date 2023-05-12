@@ -8,6 +8,7 @@ import { AuthComponent } from './auth.component';
 import { RouterModule } from '@angular/router';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
+import { AuthRoutingModule } from './auth-routing.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { environment } from 'src/environments/environment';
   ],
   imports: [
     CommonModule,
+    AuthRoutingModule,
     FormsModule,
     RouterModule,
     AngularFireModule.initializeApp(environment.firebase)

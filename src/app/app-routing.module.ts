@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
 import { MovieDetailsComponent } from './pages/movie-details/movie-details.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -13,15 +10,9 @@ const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'search/:input', component: SearchComponent},
   {path: 'movie/:id', component: MovieDetailsComponent},
-  {path: 'auth', component: AuthComponent, children: [
-    {path: 'login', component: LoginComponent},
-    {path: 'login/:id', component: LoginComponent},
-    {path: 'register', component: RegisterComponent},
-    {path: 'register/:id', component: RegisterComponent},
-    {path: 'forgotPassword', component: ForgotPasswordComponent},
-    {path: 'forgotPassword/:id', component: ForgotPasswordComponent}
-  ]},
+  {path: 'auth', loadChildren: () => import('./auth/auth.module').then( m => m.AuthModules)},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   {path: '**', component: NotFoundComponent}
 ];
 
