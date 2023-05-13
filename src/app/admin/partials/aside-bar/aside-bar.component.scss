@@ -1,43 +1,79 @@
-aside {
-  height: 100vh;
+.sidebar {
+  width: 280px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--bg-secondary-color);
+  color: var(--text-color);
 }
 
-aside .top {
-  background-color: #0a0a0a;
+.sidebar-brand {
+  height: 70px;
+}
+
+.brand-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-icons span i {
+  font-size: 1.5rem;
+  margin-left: 1rem;
+}
+
+.sidebar-user {
+  margin: 1rem 0rem 1rem 0rem;
+  text-align: center;
+}
+
+.sidebar-user img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 3px solid var(--text-color);
+}
+
+.sidebar-user h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.sidebar-user span {
+  font-size: .8rem;
+}
+
+.sidebar-menu {
+  margin-top: 3rem;
+}
+
+.menu-head {
+  text-transform: uppercase;
+  color: var(--text-color);
+  font-size: .75rem;
+  font-weight: 500;
+  margin-bottom: .8rem;
+}
+
+.sidebar-menu ul {
+  margin-bottom: 1.5rem;
+}
+
+.sidebar-menu li {
+  margin-bottom: .9rem;
+}
+
+.sidebar-menu li a {
+  color: var(--text-color);
+  font-size: .9rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 1.4rem;
 }
 
-aside .top .logo {
-  display: flex;
-  gap: 0;
-}
-
-aside .top .logo img {
-  height: 2rem;
-  width: 2.3rem;
-}
-
-aside .close {
-  display: none;
-}
-
-aside .close i {
-  font-size: 2.3rem;
-}
-
-aside .sidebar {
-  background: #0a0a0a;
-  display: flex;
-  flex-direction: column;
-  height: 80vh;
-  position: relative;
-  top: 2rem;
-}
-
-aside .sidebar a .bx {
-  font-size: 1.8rem !important;
-  color: #dedede !important;
+.sidebar-menu li a span i {
+  font-size: 1.5rem;
+  display: inline-block;
+  margin-right: .8rem;
 }

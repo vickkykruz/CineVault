@@ -8,19 +8,21 @@
 :root {
   --text-color: #f3f3f3f3;
   --bg-color: #0a0300;
+  --bg-secondary-color: #7e0000;
   --main-color: #E50914;
 
 }
 * {
   margin: 0;
   padding: 0;
+  font-family: 'Ubuntu', sans-serif;
   box-sizing: border-box;
   text-decoration: none;
+  list-style-type: none;
   border: 0;
 }
 
 body {
-  font-family: 'Ubuntu', sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
   user-select: none;
@@ -86,7 +88,7 @@ a {
 
 // Authentication Style
 .bg-img {
-  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url(../../assets/images/background/Free-Movie-Download.jpg);
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url(assets/images/background/Free-Movie-Download.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
