@@ -6,6 +6,14 @@ header {
   // background: var(--bg-secondary-color);
   color: var(--text-color);
   padding: 1rem 1.5rem;
+  position: fixed;
+  left: 280px;
+  width: calc(100% - 280px);
+  top: 0;
+  background:#0a0300 !important;
+  z-index: 20;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.8);
+  transition: left 300ms;
 }
 
 .menu-toggle label {
@@ -25,4 +33,11 @@ header {
 
 .menu-toggle label:hover {
   background: var(--bg-secondary-color);
+}
+
+@media only screen and (max-width: 1124px) {
+  header {
+    left: 0;
+    width: 100%;
+  }
 }

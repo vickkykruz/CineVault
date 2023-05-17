@@ -1,0 +1,39 @@
+<div class="container info">
+  <h2 mat-dialog-title>Movie Analytics</h2>
+  <mat-dialog-content>
+    <h3>Weekly Genetic Rate</h3>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+       iusto voluptatum iste quod placeat quae voluptatem!</p>
+
+    <canvas baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [plugins]="barChartPlugins"
+        [legend]="barChartLegend"
+        [type]="'bar'">
+    </canvas>
+
+
+    <h3>Weekly Download</h3>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+      Aliquam officiis repellendus
+      istinctio vero soluta nesciunt, facilis quas.</p>
+    <div align="center">
+      <canvas baseChart
+        [type]="'pie'"
+        [datasets]="pieChartDatasets"
+        [labels]="pieChartLabels"
+        [options]="pieChartOptions"
+        [plugins]="pieChartPlugins"
+        [legend]="pieChartLegend">
+      </canvas>
+    </div>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Okay</button>
+  </mat-dialog-actions>
+</div>
+
+

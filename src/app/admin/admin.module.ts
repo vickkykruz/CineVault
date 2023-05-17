@@ -6,6 +6,13 @@ import { AdminComponent } from './admin.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AsideBarComponent } from './partials/aside-bar/aside-bar.component';
 import { HeaderComponent } from './partials/header/header.component';
+import {MatTableModule} from '@angular/material/table';
+import { NgChartsModule } from 'ng2-charts';
+import { AnalyticDataComponent } from './partials/analytic-data/analytic-data.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { FooterComponent } from './partials/footer/footer.component';
 
 
 @NgModule({
@@ -13,11 +20,18 @@ import { HeaderComponent } from './partials/header/header.component';
     AdminComponent,
     HomeComponent,
     AsideBarComponent,
-    HeaderComponent
+    HeaderComponent,
+    AnalyticDataComponent,
+    FooterComponent
   ],
   imports: [
     CommonModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    NgChartsModule,
+    MatTableModule,
+    MatDialogModule,
+    MatButtonModule,
+    FormsModule
   ]
 })
 export class AdminModule { }

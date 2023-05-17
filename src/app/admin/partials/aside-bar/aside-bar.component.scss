@@ -1,12 +1,23 @@
-.sidebar {
+
+.sidebars {
   width: 280px;
   position: fixed;
-  left: 0;
+  // left: 0;
   top: 0;
   height: 100%;
   padding: 1rem 1.5rem;
   background: var(--bg-secondary-color);
   color: var(--text-color);
+  z-index: 20;
+  transition: left 300ms;
+}
+
+.sidebars.active {
+  left: -100% !important;
+}
+
+.sidebars.deactive {
+  left: 0 !important;
 }
 
 .sidebar-brand {
@@ -16,6 +27,12 @@
 .brand-flex {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.brand-icons {
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -76,4 +93,28 @@
   font-size: 1.5rem;
   display: inline-block;
   margin-right: .8rem;
+}
+
+.mobile-toggle {
+  display: none;
+}
+
+@media only screen and (max-width: 1124px) {
+  .sidebars {
+    overflow-y: scroll;
+    // left: -100% !important;
+    z-index: 30;
+  }
+
+  .sidebars.active {
+    left: 0 !important;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+
+  .sidebars.deactive {
+    left: -100% !important;
+  }
 }

@@ -4,6 +4,7 @@ import {
 } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { doc, setDoc } from 'firebase/firestore';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,6 +13,18 @@ export class AuthService {
   constructor(
     private fireStore: Firestore,
   ) { }
+
+  // Shae Data
+  private isCheckedSubject = new BehaviorSubject<boolean>(true);
+
+  set isChecked(value: boolean) {
+    this.isCheckedSubject.next(value);
+  }
+
+  get isChecked$() {
+    return this.isCheckedSubject.asObservable();
+  }
+
 
   // Crate a Function to store the data to a session
   private readonly key: string = 'data';

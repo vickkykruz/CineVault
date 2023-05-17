@@ -1,10 +1,12 @@
 .main-content {
   margin-left: 280px;
+  transition: margin-left 300ms;
 }
 
 main {
   padding: 1.5rem;
   min-height: calc(100vh - 70px);
+  margin-top: 70px;
 }
 
 .page-header {
@@ -124,6 +126,58 @@ main {
   font-size: .9rem;
 }
 
+.jobs {
+  background: var(--bg-secondary-color);
+  padding: 1rem;
+  color: var(--text-color);
+}
+
 .jobs table {
   border-collapse: collapse;
+  // margin-top: 1rem;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow-x: auto !important;
+}
+
+.jobs table td,
+.jobs table th {
+  color: var(--text-color) !important;
+}
+
+.table_responsive {
+  overflow: auto !important;
+}
+
+@media only screen and (max-width: 1124px) {
+  .main-content {
+    margin-left: 0;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .cards {
+    grid-template-columns: 100%;
+  }
+
+  .job-grid {
+    grid-template-columns: 100%;
+  }
+
+  .page-header {
+    display: block;
+  }
+
+  .header-actions {
+    margin-top: 1rem;
+    text-align: right;
+  }
+
+  .header-actions button:first-child {
+    margin-left: 0rem;
+  }
 }

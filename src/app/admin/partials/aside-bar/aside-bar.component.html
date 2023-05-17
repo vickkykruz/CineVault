@@ -1,73 +1,163 @@
-<div class="sidebar">
-  <div class="sidebar-brand">
-    <div class="brand-flex">
-      <img src="../../../../assets/images/logo/OIP.jpeg" width="50px" height="40px" alt="brand loggo">
+<ng-container *ngIf="isChecked; else elseTemplate">
+  <div class="sidebars active">
+    <div class="sidebar-brand">
+      <div class="brand-flex">
+        <img
+          src="../../../../assets/images/logo/OIP.jpeg"
+          width="50px"
+          height="40px"
+          alt="brand loggo"
+        />
 
-      <div class="brand-icons">
-        <span><i class="bx bx-bell"></i></span>
-        <span><i class="bx bx-user"></i></span>
+        <div class="brand-icons">
+
+          <span><i class="bx bx-user"></i></span>
+
+          <label for="sidebar-toggle" class="mobile-toggle">
+            <span><i class='bx bx-x'></i></span>
+          </label>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-main">
+      <div class="sidebar-user">
+        <img src="../../../../assets/images/logo/img-1.jpg" alt="user pic" />
+        <div class="">
+          <h3>Victor Chukwuemeka</h3>
+          <span>Adminstrator</span>
+        </div>
       </div>
 
+      <div class="sidebar-menu">
+        <div class="menu-head">
+          <span>Dashboard</span>
+        </div>
+        <ul>
+          <li>
+            <a href="">
+              <span><i class="bx bx-user-plus"></i></span>
+              Members
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <span><i class="bx bx-tv"></i></span>
+              Movies
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <span><i class="bx bx-user-pin"></i></span>
+              Subscribes
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <span><i class="bx bx-envelope"></i></span>
+              Inbox
+            </a>
+          </li>
+        </ul>
+        <div class="menu-head">
+          <span>Account</span>
+        </div>
+        <ul>
+          <li>
+            <a href="">
+              <span><i class="bx bx-lock-open-alt"></i></span>
+              Change Password
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <span><i class="bx bx-log-out-circle"></i></span>
+              Logout
+            </a>
+          </li>
+        </ul>
+        <div class="menu-block"></div>
+      </div>
     </div>
   </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <div class="sidebars deactive">
+    <div class="sidebar-brand">
+      <div class="brand-flex">
+        <img
+          src="../../../../assets/images/logo/OIP.jpeg"
+          width="50px"
+          height="40px"
+          alt="brand loggo"
+        />
 
-  <div class="sidebar-main">
-    <div class="sidebar-user">
-      <img src="../../../../assets/images/logo/img-1.jpg" alt="user pic">
-      <div class="">
-        <h3>Victor Chukwuemeka</h3>
-        <span>Adminstrator</span>
+        <div class="brand-icons">
+          <!-- <span><i class="bx bx-bell"></i></span> -->
+          <span><i class="bx bx-user"></i></span>
+        </div>
       </div>
     </div>
 
-    <div class="sidebar-menu">
-      <div class="menu-head">
-        <span>Dashboard</span>
+    <div class="sidebar-main">
+      <div class="sidebar-user">
+        <img src="../../../../assets/images/logo/img-1.jpg" alt="user pic" />
+        <div class="">
+          <h3>Victor Chukwuemeka</h3>
+          <span>Adminstrator</span>
+        </div>
       </div>
-      <ul>
-        <li>
-          <a href="">
-            <span><i class='bx bx-user-plus'></i></span>
-            Members
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <span><i class='bx bx-tv' ></i></span>
-            Movies
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <span><i class='bx bx-user-pin'></i></span>
-            Subscribes
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <span><i class='bx bx-envelope'></i></span>
-            Inbox
-          </a>
-        </li>
-      </ul>
-      <div class="menu-head">
-        <span>Account</span>
+
+      <div class="sidebar-menu">
+        <div class="menu-head">
+          <span>Dashboard</span>
+        </div>
+        <ul>
+          <li>
+            <a href="">
+              <span><i class="bx bx-user-plus"></i></span>
+              Members
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <span><i class="bx bx-tv"></i></span>
+              Movies
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <span><i class="bx bx-user-pin"></i></span>
+              Subscribes
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <span><i class="bx bx-envelope"></i></span>
+              Inbox
+            </a>
+          </li>
+        </ul>
+        <div class="menu-head">
+          <span>Account</span>
+        </div>
+        <ul>
+          <li>
+            <a href="">
+              <span><i class="bx bx-lock-open-alt"></i></span>
+              Change Password
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <span><i class="bx bx-log-out-circle"></i></span>
+              Logout
+            </a>
+          </li>
+        </ul>
+        <div class="menu-block"></div>
       </div>
-      <ul>
-        <li>
-          <a href="">
-            <span><i class='bx bx-lock-open-alt'></i></span>
-            Change Password
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <span><i class='bx bx-log-out-circle'></i></span>
-            Logout
-          </a>
-        </li>
-      </ul>
-      <div class="menu-block"></div>
     </div>
   </div>
-</div>
+</ng-template>
