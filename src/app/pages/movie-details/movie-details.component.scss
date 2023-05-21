@@ -188,6 +188,20 @@
   right: 0.8rem;
 }
 
+.grid_cast {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.castDes {
+  margin-left: 5px;
+}
+
+.castDes h6 {
+  font-size: 1.1rem;
+}
+
 @media only screen and (max-width: 600px) {
   .movie-heading h1 {
     font-size: 1.6rem;

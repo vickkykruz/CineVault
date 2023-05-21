@@ -15,6 +15,7 @@ export class MovieDetailsComponent implements OnInit {
   loading: boolean = true;
   movieDetails:any;
   movieVideoResults: any;
+  movieCastResult!: any[];
 
   trendingMoviesResults!:any[];
   constructor(private service: MovieApiServiceService, private router: ActivatedRoute) {};
@@ -23,6 +24,7 @@ export class MovieDetailsComponent implements OnInit {
     this.getMovieDeatils(this.id);
     console.log(this.id, 'ParamsId#');
     this.getMovieVideos(this.id);
+    this.getMovieCast(this.id);
   }
 
   id: any = this.router.snapshot.paramMap.get('id');
@@ -59,7 +61,9 @@ export class MovieDetailsComponent implements OnInit {
   getMovieCast(id:any) {
     this.service.getMovieCast(id).subscribe((result) => {
       console.log(result, 'getMoieCast###');
+      this.movieCastResult = result.cast;
     }, ((err) => {
+      // console.log(err, 'getMovieCastErr##');
       this.errorStatus = err.status;
       this.errorMessage = err.message;
       this.loading = false;

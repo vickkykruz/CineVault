@@ -61,4 +61,39 @@ export class MovieApiServiceService {
       .get(`${this.baseUrl}/movie/${data}/credits?api_key=${this.apiKey}`)
       .pipe(catchError(this.handleError));
   };
+
+  // Action
+  getActionMovies(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=28`);
+  }
+
+  // Adventure
+  getAdventureMovies(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=12`);
+  }
+
+  // Animation
+  getAnimationMovies(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=16`);
+  }
+
+  // Comedy
+  getComedyMovies(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=35`);
+  }
+
+  // Documentary
+  getDocumentaryMovies(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=99`);
+  }
+
+  // Sci-Fi
+  getSciFiMovies(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=878`);
+  }
+
+  // Thriller
+  getThrillerMovies(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=53`);
+  }
 }

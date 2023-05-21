@@ -11,6 +11,13 @@ export class HomeComponent implements OnInit {
 
   bannerApiData: any = [];
   trendingMoviesResults: any = [];
+  actionMoviesResults: any = [];
+  adventureMoviesResults: any = [];
+  animationMoviesResults: any = [];
+  comedyMoviesResults: any = [];
+  documentaryMoviesResults: any = [];
+  scifiMoviesResults: any = [];
+  thrillerMoviesResults: any = [];
   loading: boolean = true;
   errorStatus!: number;
   errorMessage!: string;
@@ -19,6 +26,13 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.bannerData();
     this.trendingData();
+    this.actionMovieData();
+    this.adventureMovieData();
+    this.animationMovieData();
+    this.comedyMoviesData();
+    this.documentaryMovieData();
+    this.scfiMovieData();
+    this.thrillerMovieData();
   }
 
   bannerData() {
@@ -37,6 +51,83 @@ export class HomeComponent implements OnInit {
       this.service.trendingMoviesApi().subscribe((result)=> {
         console.log(result, 'trendingMovies');
         this.trendingMoviesResults = result.results;
+      }, ((err) => {
+        this.errorStatus = err.status;
+        this.errorMessage = err.message;
+        this.loading = false;
+      }))
+    }
+
+    actionMovieData() {
+      this.service.getActionMovies().subscribe((res) => {
+        console.log(res, 'ActionMovies');
+        this.actionMoviesResults = res.results;
+      }, ((err) => {
+        this.errorStatus = err.status;
+        this.errorMessage = err.message;
+        this.loading = false;
+      }));
+    }
+
+    adventureMovieData() {
+      this.service.getAdventureMovies().subscribe((res) => {
+        console.log(res, 'Adventure Move##');
+        this.adventureMoviesResults = res.results;
+      }, ((err) => {
+        this.errorStatus = err.status;
+        this.errorMessage = err.message;
+        this.loading = false;
+      }))
+    }
+
+    animationMovieData() {
+      this.service.getAnimationMovies().subscribe((res) => {
+        console.log(res, 'Animation##');
+        this.animationMoviesResults = res.results;
+      }, ((err) => {
+        this.errorStatus = err.status;
+        this.errorMessage = err.message;
+        this.loading = false;
+      }))
+    }
+
+    comedyMoviesData() {
+      this.service.getComedyMovies().subscribe((res) => {
+        console.log(res, 'ComedyResult##');
+        this.comedyMoviesResults = res.results;
+      }, ((err) => {
+        this.errorStatus = err.status;
+        this.errorMessage = err.message;
+        this.loading = false;
+      }))
+    }
+
+    documentaryMovieData() {
+      this.service.getDocumentaryMovies().subscribe((res) => {
+        console.log(res, 'DocumentaryMovies###');
+        this.documentaryMoviesResults = res.results;
+      }, ((err) => {
+        this.errorStatus = err.status;
+        this.errorMessage = err.message;
+        this.loading = false;
+      }))
+    }
+
+    scfiMovieData() {
+      this.service.getSciFiMovies().subscribe((res) => {
+        console.log(res, 'SCi-Fi Movies##');
+        this.scifiMoviesResults = res.results;
+      }, ((err) => {
+        this.errorStatus = err.status;
+        this.errorMessage = err.message;
+        this.loading = false;
+      }))
+    }
+
+    thrillerMovieData() {
+      this.service.getThrillerMovies().subscribe((res) => {
+        console.log(res, 'Thriller Movies##');
+        this.thrillerMoviesResults = res.results;
       }, ((err) => {
         this.errorStatus = err.status;
         this.errorMessage = err.message;

@@ -5,6 +5,7 @@ import { MovieDetailsComponent } from './pages/movie-details/movie-details.compo
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { SearchComponent } from './pages/search/search.component';
 import { AuthComponent } from './auth/auth.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -16,8 +17,15 @@ const routes: Routes = [
   {path: '**', component: NotFoundComponent}
 ];
 
+// interface NgxSpinnerConfig {
+//   type?: string;
+// }
+
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes)
+    // NgxSpinnerModule.forRoot({ type: 'square-jelly-box' })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

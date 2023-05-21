@@ -64,7 +64,25 @@
               </a>
             </div>
           </div>
+
         </div>
+      </div>
+      <h2 class="mt-4">Top Casts</h2>
+      <hr>
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-3" *ngFor="let data of movieCastResult">
+          <div class="row mt-2 mb-2">
+            <div class="col-lg-2 col-md-2 col-sm-12">
+              <img src="https://image.tmdb.org/t/p/original{{ data.profile_path }}" class="img-fluid w-100" alt="cast_img">
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <h6>Name: {{ data.original_name }}</h6>
+              <p><b>Role Played:</b> {{ data.known_for_department }} <br>
+                <b>Chareter Name:</b> {{ data.character }} </p>
+            </div>
+          </div>
+        </div>
+
       </div>
       <!-- Other Novies -->
       <div class="row trending-info mt-5">
