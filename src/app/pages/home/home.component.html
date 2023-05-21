@@ -1,7 +1,7 @@
+<ng-container *ngIf="loading; else elseTemplate">
 <!-- Navbar -->
 <app-nav></app-nav>
 <!-- Navbar End -->
-<ng-container *ngIf="loading; else elseTemplate">
 
 <!-- Banner Start -->
 <owl-carousel-o [options]="customOptions">
@@ -242,22 +242,25 @@
       </div>
   </div>
 </section>
+<div class="mt-5 pt-5"></div>
+<!-- Footer -->
+<app-footer></app-footer>
+<!-- End Footer -->
 </ng-container>
 <ng-template #elseTemplate>
   <div class="container mt-5">
     <div class="error-container text-center">
       <ng-container *ngIf="errorStatus === 0; else elseTemplates">
-        <h1><i class='bx bx-error'></i></h1>
+        <h1><i class='bx bx-wifi-off'></i></h1>
       </ng-container>
       <ng-template #elseTemplates>
         <h1><i class='bx bx-error'></i> {{ errorStatus }}</h1>
       </ng-template>
-      <small>{{ errorMessage}}</small>
-      <h5>Something Bad Happened. Please Try Again Later.</h5>
+      <div class="display_err">
+        <small>{{ errorMessage}}</small>
+        <h5>Something Bad Happened. Please Try Again Later.</h5>
+      </div>
     </div>
   </div>
 </ng-template>
-<div class="mt-5 pt-5"></div>
-<!-- Footer -->
-<app-footer></app-footer>
-<!-- End Footer -->
+
