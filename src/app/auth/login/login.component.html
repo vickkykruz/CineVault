@@ -61,11 +61,12 @@
           </div>
           <div class="signup">Don't have an account?
             <ng-container *ngIf="id != null; else elseTemplate">
-              <a [routerLink]="['/auth/register/', id]"></a>
+              <a [routerLink]="['/auth/register/', id]">Signup Now</a>
             </ng-container>
             <ng-template #elseTemplate>
               <a [routerLink]="['/auth/register']">Signup Now</a>
             </ng-template>
+            Or <a [routerLink]="['/home']">Go home.</a>
           </div>
       </form>
   </div>
