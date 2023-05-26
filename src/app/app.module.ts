@@ -30,6 +30,8 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
 import { DownloadMoviesComponent } from './pages/download-movies/download-movies.component';
 import { AuthService } from './service/auth.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { VideoTrailerComponent } from './partials/video-trailer/video-trailer.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     NavComponent,
     FooterComponent,
     AsideBarComponent,
-    DownloadMoviesComponent
+    DownloadMoviesComponent,
+    VideoTrailerComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +64,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     providePerformance(() => getPerformance()),
     provideRemoteConfig(() => getRemoteConfig()),
     provideStorage(() => getStorage()),
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MatDialogModule
   ],
   providers: [
     MovieApiServiceService,

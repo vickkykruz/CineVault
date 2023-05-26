@@ -1,7 +1,10 @@
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { VideoTrailerComponent } from 'src/app/partials/video-trailer/video-trailer.component';
 import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-movie-details',
@@ -16,15 +19,22 @@ export class MovieDetailsComponent implements OnInit {
   movieDetails:any;
   movieVideoResults: any;
   movieCastResult!: any[];
+  videoPlayer!: string;
 
   trendingMoviesResults!:any[];
-  constructor(private service: MovieApiServiceService, private router: ActivatedRoute) {};
+  constructor(
+    private service: MovieApiServiceService,
+    private router: ActivatedRoute,
+    public dialog: MatDialog,
+    private sanitizer: DomSanitizer
+    ) {};
   ngOnInit(): void {
     this.trendingData();
     this.getMovieDeatils(this.id);
     console.log(this.id, 'ParamsId#');
     this.getMovieVideos(this.id);
     this.getMovieCast(this.id);
+    // this.trailerDialog();
   }
 
   id: any = this.router.snapshot.paramMap.get('id');
@@ -48,6 +58,7 @@ export class MovieDetailsComponent implements OnInit {
       result.results.forEach((element:any) => {
         if(element.name == "Official Trailer") {
           this.movieVideoResults = element.key;
+          this.videoPlayer = 'https://www.youtube.com/watch?v=qEVUtrk8_B4';
         }
       });
     }, ((err) => {
@@ -55,6 +66,11 @@ export class MovieDetailsComponent implements OnInit {
       this.errorMessage = err.message;
       this.loading = false;
     }))
+  }
+
+  getSafeVideoUrl(): SafeResourceUrl {
+    const videoUrl = `https://www.youtube.com/embed/${this.movieVideoResults}`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
   }
 
   // Get Movie Casts
@@ -79,6 +95,16 @@ export class MovieDetailsComponent implements OnInit {
       this.errorMessage = err.message;
       this.loading = false;
     }))
+  }
+
+  trailerDialog(key: any) {
+    console.log(key, "Passing Dialog ##");
+    this.dialog.open(
+      VideoTrailerComponent,
+      {
+       data: { Videokey: key }
+      }
+    );
   }
 
   tendingSlide: OwlOptions = {

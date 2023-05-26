@@ -52,17 +52,27 @@
             <h5>Description</h5>
             <p>{{ movieDetails.overview }}</p>
           </div>
+          <hr>
+          <h5>Watch Trailer</h5>
+          <!-- <iframe width="1366" class="w-100" height="368" src="https://www.youtube.com/embed/{{ movieVideoResults }}" title="John Wick: Chapter 4 (2023 Movie) Official Trailer – Keanu Reeves, Donnie Yen, Bill Skarsgård" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
+          <!-- <video class="w-100" controls>
+            <source [src]="videoPlayer" type="video/mp4">
+          </video> -->
+          <iframe width="1366" class="w-100" height="230" [src]="getSafeVideoUrl()" title="John Wick: Chapter 4 (2023 Movie) Official Trailer – Keanu Reeves, Donnie Yen, Bill Skarsgård" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           <div class="movie-link">
             <div class="movie-watch">
               <a [routerLink]="['/auth/login', movieDetails.id]">
                 <i class='bx bx-download'></i> <span> Download</span>
               </a>
             </div>
-            <div class="movie-download">
+            <!-- <div class="movie-download">
+              <!-- <button (click)="trailerDialog(movieVideoResults)">
+                <i class='bx bx-play-circle'></i> <span> Watch Trailer</span>
+              </button>
               <a href="https://www.themoviedb.org/video/play?key={{ movieVideoResults }}" target="_blank">
                 <i class='bx bx-play-circle'></i> <span> Watch Trailer</span>
               </a>
-            </div>
+            </div> -->
           </div>
 
         </div>
