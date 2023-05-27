@@ -24,20 +24,26 @@ export class SearchComponent implements OnInit{
   loading: boolean = true;
 
   http_issuse!: boolean;
-  typeInput: string = this.route.snapshot.params['input'];
-  getResult() {
-    this.service.getSearchMovie(this.typeInput).subscribe((result) => {
-      console.log(result, 'SearchResult***');
-      this.searchResult = result.results;
+  // typeInput: string = this.route.snapshot.params['input'];
+  typeInput: any;
+  // = this.route.snapshot.paramMap.get('input');
 
-      if(this.searchResult.length === 0) {
-        this.resulterr = false;
-      }
-    }, ((err) => {
-      this.errorStatus = err.status;
-      this.errorMessage= err.message;
-      this.loading = false;
-    }))
+  getResult() {
+    this.route.paramMap.subscribe((parms) => {
+      this.typeInput = parms.get('input');
+      this.service.getSearchMovie(this.typeInput).subscribe((result) => {
+        console.log(result, 'SearchResult***');
+        this.searchResult = result.results;
+
+        if(this.searchResult.length === 0) {
+          this.resulterr = false;
+        }
+      }, ((err) => {
+        this.errorStatus = err.status;
+        this.errorMessage= err.message;
+        this.loading = false;
+      }));
+    });
   }
 
   trendingData() {
