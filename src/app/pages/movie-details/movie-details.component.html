@@ -44,7 +44,10 @@
             </div>
             <div class="move-gentic">
               <h5>Genres:</h5>
-              <h6 *ngFor="let gentic of movieDetails.genres">{{ gentic.name }}</h6>
+              <h6 *ngFor="let gentic of movieDetails.genres; let last = last">
+                {{ gentic.name }}
+                <span *ngIf="!last">, </span>
+              </h6>
             </div>
           </div>
           <hr style="margin-top: -2px;">
