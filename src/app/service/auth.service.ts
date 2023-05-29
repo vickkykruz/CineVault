@@ -3,8 +3,10 @@ import {
   updateProfile,
 } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
-import { doc, setDoc } from 'firebase/firestore';
-import { BehaviorSubject } from 'rxjs';
+import { getFirestore } from '@angular/fire/firestore';
+import { initializeApp } from 'firebase/app';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -30,6 +32,10 @@ export class AuthService {
   private readonly key: string = 'data';
   saveDataInSessionStorage(array: any[]) {
     sessionStorage.setItem(this.key, JSON.stringify(array));
+  }
+
+  removeDataInSession(): any {
+    return sessionStorage.removeItem(this.key);
   }
 
   // Get the session data
@@ -71,6 +77,7 @@ export class AuthService {
     }
   }
 
+
   sendVerificationEmail(user: any, username?: any) {
     user // Send a verfication Mail To user
       .sendEmailVerification()
@@ -79,6 +86,30 @@ export class AuthService {
       })
       .catch(() => console.log("Error: Failed to send verified email"));
   };
+
+ // Fetch User Identity
+//  app = initializeApp(firebas);
+ db = getFirestore();
+
+ async fetctdata(docKey: any) {
+  const docRef = doc(this.db, "users", docKey);
+
+  try {
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      return docSnap.data();
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+      throw new Error("No such documents!");
+    }
+  } catch (error) {
+    throw error;
+  }
+
+ }
 
   // auth: any = getAuth();
   // userEffect() {

@@ -15,10 +15,27 @@
           <div class="movie-share">
             <h5><i class='bx bx-share-alt'></i> Share Movie</h5>
             <div class="movie-icon">
-              <div class="movie-each-icon"><i class='bx bxl-facebook-circle'></i></div>
-              <div class="movie-each-icon"><i class='bx bxl-whatsapp' ></i></div>
-              <div class="movie-each-icon"><i class='bx bxl-twitter' ></i></div>
-              <div class="movie-each-icon"><i class='bx bxs-paper-plane'></i></div>
+
+              <div class="movie-each-icon">
+                <a href="" target="_blank">
+                  <i class='bx bxl-facebook-circle'></i>
+                </a>
+              </div>
+              <div class="movie-each-icon">
+                <a href="" target="_blank">
+                  <i class='bx bxl-whatsapp' ></i>
+                </a>
+              </div>
+              <div class="movie-each-icon">
+                <a href="" target="_blank">
+                  <i class='bx bxl-twitter' ></i>
+                </a>
+              </div>
+              <div class="movie-each-icon">
+                <a href="" target="_blank">
+                  <i class='bx bxs-paper-plane'></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -57,25 +74,14 @@
           </div>
           <hr>
           <h5>Watch Trailer</h5>
-          <!-- <iframe width="1366" class="w-100" height="368" src="https://www.youtube.com/embed/{{ movieVideoResults }}" title="John Wick: Chapter 4 (2023 Movie) Official Trailer – Keanu Reeves, Donnie Yen, Bill Skarsgård" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
-          <!-- <video class="w-100" controls>
-            <source [src]="videoPlayer" type="video/mp4">
-          </video> -->
           <iframe width="1366" class="w-100" height="230" [src]="getSafeVideoUrl()" title="John Wick: Chapter 4 (2023 Movie) Official Trailer – Keanu Reeves, Donnie Yen, Bill Skarsgård" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-          <div class="movie-link">
+          
+          <div class="movie-link mt-4">
             <div class="movie-watch">
               <a [routerLink]="['/auth/login', movieDetails.id]">
-                <i class='bx bx-download'></i> <span> Download</span>
+                <h6> <i class='bx bx-download'></i> <span> Download</span> </h6>
               </a>
             </div>
-            <!-- <div class="movie-download">
-              <!-- <button (click)="trailerDialog(movieVideoResults)">
-                <i class='bx bx-play-circle'></i> <span> Watch Trailer</span>
-              </button>
-              <a href="https://www.themoviedb.org/video/play?key={{ movieVideoResults }}" target="_blank">
-                <i class='bx bx-play-circle'></i> <span> Watch Trailer</span>
-              </a>
-            </div> -->
           </div>
 
         </div>

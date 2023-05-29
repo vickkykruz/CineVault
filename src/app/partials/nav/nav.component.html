@@ -8,18 +8,19 @@
       </a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
-            <div class="user_info" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <div class="img">
-                <img src="../../../assets/images/logo/img-1.jpg" alt="">
+          <li class="nav-item" >
+
+            <div class="dropdowns">
+              <div class="dropbtn img">
+                <img src="../../../assets/images/logo/img-1.jpg" width="50" height="50" alt="">
+                <h6>{{ userData.name}} <span><i style="font-size: 1.2rem; font-weight:500;" class="bx bx-chevron-down"></i></span></h6>
               </div>
-              <h6>Edward Victor <i class="bx bx-chevron-down"></i></h6>
+              <div class="dropdown-content">
+                <a href="javascript:void(0);">Profile</a>
+                <a (click)="logout()">Sign Out</a>
+              </div>
             </div>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
+
           </li>
         </ul>
       </div>

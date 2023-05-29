@@ -19,9 +19,23 @@
   flex-wrap: wrap;
 }
 
+.movie-each-icon {
+  border: 1px solid #fff;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.movie-each-icon:hover {
+  border: 1px solid var(--main-color);
+} 
+.movie-each-icon a .bx:hover {
+  color: var(--main-color);
+}
+
 .movie-each-icon .bx {
   font-size: 1.4rem;
   font-weight: 600;
+  color: #fff;
 }
 
 .movie-details {
@@ -80,11 +94,12 @@
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .movie-watch, .movie-download {
   border: 0;
+  width:100%;
   margin: 0 10px;
   padding: 3px 20px;
   background: none;
@@ -97,6 +112,11 @@
 
 .movie-watch a, .movie-download a {
   color: #fff;
+  text-align: center;
+}
+
+.movie-watch a h6 {
+  text-align: center;
 }
 
 .movie-watch a .bx, .movie-download a .bx {

@@ -3,7 +3,8 @@ import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
-import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
+import { AuthService } from 'src/app/service/auth.service';
+import { take, timer } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit {
     private router: ActivatedRoute,
     private moveRoute: Router,
     private fireauth: AngularFireAuth,
-    private service: MovieApiServiceService) {}
+    private service: AuthService) {}
   ngOnInit(): void {
 
   }
@@ -36,23 +37,34 @@ export class LoginComponent implements OnInit {
   feedback!: any;
   user: any;
   submitForm() {
-    this.fireauth.signInWithEmailAndPassword(this.userInfo.email, this.userInfo.password).then((response) =>
-    {
+    this.fireauth.signInWithEmailAndPassword(this.userInfo.email, this.userInfo.password)
+    .then((response) => {
+      const datas: any = {
+        id: response.user?.uid,
+        status: 'active'
+      };
+      this.service.saveDataInSessionStorage(datas);
+      const redirectDisplay: number = 5000;
+      alert('Redirecting...');
+      const timer$ = timer(redirectDisplay);
+
+      timer$.pipe(take(1)).subscribe(() => {
+        if (this.id != null){
+          this.moveRoute.navigate([`/movie/${this.id}`]);
+        }else {
+          this.moveRoute.navigate(['/home']);
+        }
+      });
+
       // this.user = response.user;
       // console.log(response);
-      this.defaultError = {
-        'display': 'block'
-      }
-      this.ValidateForm = true;
-      // this.service.userEffect();
+      // this.defaultError = {
+      //   'display': 'block'
+      // }
+      // this.ValidateForm = true;
+      // // this.service.userEffect();
 
-      this.message = "Created an account successfully";
-
-      if (this.id != null){
-        this.moveRoute.navigate([`/movie/${this.id}`]);
-      }else {
-        this.moveRoute.navigate(['/home']);
-      }
+      // this.message = "Created an account successfully";
 
     }, err=> {
       this.defaultError = {

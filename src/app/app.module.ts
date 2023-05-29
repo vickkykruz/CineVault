@@ -65,7 +65,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     provideRemoteConfig(() => getRemoteConfig()),
     provideStorage(() => getStorage()),
     NgxSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
+
   ],
   providers: [
     MovieApiServiceService,

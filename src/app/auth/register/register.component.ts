@@ -3,6 +3,8 @@ import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from 'src/app/service/auth.service';
+import { Observable, timer } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register',
@@ -39,18 +41,27 @@ export class RegisterComponent implements OnInit {
       // Process The Registration
       this.fireAuth.createUserWithEmailAndPassword(this.userInfo.email, this.userInfo.password)
       .then((response) => {
-        alert(this.userInfo.username);
+        // alert(this.userInfo.username);
         const datas: any = {
           id: response.user?.uid,
           status: 'active'
         };
         this.service.saveDataInSessionStorage(datas);
         this.service.sendVerificationEmail(response.user, this.userInfo.username); // Send a verfiied email
-        if (this.id != null) {
-          this.router.navigate([`/movie/${this.id}`]);
-        } else {
-          this.router.navigate(['/home']);
-        };
+
+        const redirectDisplay: number = 5000;
+
+        alert('Redirecting...');
+        const timer$ = timer(redirectDisplay);
+
+
+        timer$.pipe(take(1)).subscribe(() => {
+          if (this.id != null) {
+            this.router.navigate([`/movie/${this.id}`]);
+          } else {
+            this.router.navigate(['/home']);
+          };
+        });
       })
       .catch((err) => {
         this.defaultError = {
