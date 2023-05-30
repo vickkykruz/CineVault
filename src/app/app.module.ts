@@ -19,7 +19,7 @@ import { AsideBarComponent } from './partials/aside-bar/aside-bar.component';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService } from '@angular/fire/analytics';
-import { provideAuth,getAuth, AuthModule } from '@angular/fire/auth';
+import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { provideFunctions,getFunctions } from '@angular/fire/functions';
@@ -32,6 +32,8 @@ import { AuthService } from './service/auth.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { VideoTrailerComponent } from './partials/video-trailer/video-trailer.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
+import { ShareIconsModule } from 'ngx-sharebuttons/icons';
 
 @NgModule({
   declarations: [
@@ -66,7 +68,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     provideStorage(() => getStorage()),
     NgxSpinnerModule,
     MatDialogModule,
-
+    ShareButtonsModule.withConfig({debug: true}),
+    ShareIconsModule
   ],
   providers: [
     MovieApiServiceService,
