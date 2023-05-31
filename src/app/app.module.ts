@@ -32,8 +32,7 @@ import { AuthService } from './service/auth.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { VideoTrailerComponent } from './partials/video-trailer/video-trailer.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
-import { ShareIconsModule } from 'ngx-sharebuttons/icons';
+
 
 @NgModule({
   declarations: [
@@ -68,8 +67,7 @@ import { ShareIconsModule } from 'ngx-sharebuttons/icons';
     provideStorage(() => getStorage()),
     NgxSpinnerModule,
     MatDialogModule,
-    ShareButtonsModule.withConfig({debug: true}),
-    ShareIconsModule
+
   ],
   providers: [
     MovieApiServiceService,

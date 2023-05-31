@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { VideoTrailerComponent } from 'src/app/partials/video-trailer/video-trailer.component';
 import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, Meta, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-movie-details',
@@ -26,7 +26,9 @@ export class MovieDetailsComponent implements OnInit {
     private service: MovieApiServiceService,
     private router: ActivatedRoute,
     public dialog: MatDialog,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private meta: Meta
+
     ) {};
   ngOnInit(): void {
     this.trendingData();
@@ -34,10 +36,35 @@ export class MovieDetailsComponent implements OnInit {
     console.log(this.id, 'ParamsId#');
     this.getMovieVideos(this.id);
     this.getMovieCast(this.id);
+
+    this.meta.updateTag({ property: 'og:title', content: this.movieDetails.title });
+    this.meta.updateTag({ property: 'og:description', content: this.movieDetails.overview });
+    this.meta.updateTag({ property: 'og:image', content: `https://image.tmdb.org/t/p/original${ this.movieDetails.poster_path }` });
     // this.trailerDialog();
   }
 
   id: any = this.router.snapshot.paramMap.get('id');
+  // currentLocation: string = encodeURI(window.location.href);
+  currentLocation: string = encodeURI('https://www.cruztv.netlify.app/movie/569094');
+  message: string = encodeURIComponent('Hey I just found this movie i would like to share...');
+
+  share(title: string, media: string) {
+    const movietitle: string = encodeURIComponent(title);
+
+    switch (media) {
+      case 'facebook':
+        window.open(`https://www.facebook.com/share.php?u=${this.currentLocation}`, '_blank');
+        break;
+      case 'twitter':
+        window.open(`http://www.twitter.com/share?&url=${this.currentLocation}&text=${this.message}&hashtags=${movietitle},cruztv`);
+        break;
+
+      default:
+        break;
+    }
+
+    console.log([movietitle, this.currentLocation, this.message, this.movieDetails.overview]);
+  }
 
   getMovieDeatils(id:any): void {
     this.service.getMovieDetails(id).subscribe((result)=> {

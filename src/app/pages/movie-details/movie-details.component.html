@@ -14,20 +14,21 @@
           <hr>
           <div class="movie-share">
             <h5><i class='bx bx-share-alt'></i> Share Movie</h5>
+
             <div class="movie-icon">
 
               <div class="movie-each-icon">
-                <a href="" target="_blank">
+                <a (click)="share(movieDetails.title, 'facebook')" target="_blank">
                   <i class='bx bxl-facebook-circle'></i>
                 </a>
               </div>
               <div class="movie-each-icon">
-                <a href="" target="_blank">
+                <a (click)="share(movieDetails.title, 'whatsapp')" target="_blank">
                   <i class='bx bxl-whatsapp' ></i>
                 </a>
               </div>
               <div class="movie-each-icon">
-                <a href="" target="_blank">
+                <a (click)="share(movieDetails.title, 'twitter')" target="_blank">
                   <i class='bx bxl-twitter' ></i>
                 </a>
               </div>
@@ -37,6 +38,7 @@
                 </a>
               </div>
             </div>
+
           </div>
         </div>
         <div class="col-lg-9 col-md-9 col-sm-12 mt-2">
