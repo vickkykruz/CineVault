@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
 
@@ -12,8 +13,13 @@ export class SearchComponent implements OnInit{
   searchResult:any;
   trendingMoviesResults: any;
 
-  constructor(private route: ActivatedRoute, private service: MovieApiServiceService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private service: MovieApiServiceService,
+    private title: Title) {}
+  SearchInput: string = this.route.snapshot.params['input'];
   ngOnInit(): void {
+    this.title.setTitle('Search For' + this.SearchInput);
     this.getResult();
     this.trendingData();
   }
@@ -24,7 +30,7 @@ export class SearchComponent implements OnInit{
   loading: boolean = true;
 
   http_issuse!: boolean;
-  // typeInput: string = this.route.snapshot.params['input'];
+
   typeInput: any;
   // = this.route.snapshot.paramMap.get('input');
 

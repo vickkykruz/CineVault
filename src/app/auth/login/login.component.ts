@@ -5,6 +5,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 import { AuthService } from 'src/app/service/auth.service';
 import { take, timer } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -28,9 +29,10 @@ export class LoginComponent implements OnInit {
     private router: ActivatedRoute,
     private moveRoute: Router,
     private fireauth: AngularFireAuth,
-    private service: AuthService) {}
+    private service: AuthService,
+    private title: Title) {}
   ngOnInit(): void {
-
+    this.title.setTitle('Cruz Tv || Login');
   }
 
   id: any = this.router.snapshot.paramMap.get('id');

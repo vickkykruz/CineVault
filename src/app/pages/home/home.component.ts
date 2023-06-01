@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -22,8 +23,9 @@ export class HomeComponent implements OnInit {
   errorStatus!: number;
   errorMessage!: string;
 
-  constructor(private service: MovieApiServiceService) {}
+  constructor(private service: MovieApiServiceService, private title: Title) {}
   ngOnInit(): void {
+    this.title.setTitle('cruztv.netlify.app || Welcome to cruztv, where we offer latest and trending movies.');
     this.bannerData();
     this.trendingData();
     this.actionMovieData();

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import { AnalyticDataComponent } from '../../partials/analytic-data/analytic-data.component';
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -20,14 +21,10 @@ export class HomeComponent implements OnInit {
     // console.log(checked, "SideToggle");
   }
 
-
-
-
-  constructor(private dialog: MatDialog ) {}
-
+  constructor(private dialog: MatDialog, private title: Title) {}
 
   ngOnInit(): void {
-
+    this.title.setTitle('Cruz Tv || Adminstration Home');
   }
 
 

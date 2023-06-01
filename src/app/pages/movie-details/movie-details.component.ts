@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { VideoTrailerComponent } from 'src/app/partials/video-trailer/video-trailer.component';
 import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
-import { DomSanitizer, Meta, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-movie-details',
@@ -27,8 +27,8 @@ export class MovieDetailsComponent implements OnInit {
     private router: ActivatedRoute,
     public dialog: MatDialog,
     private sanitizer: DomSanitizer,
-    private meta: Meta
-
+    private meta: Meta,
+    private title: Title
     ) {};
   ngOnInit(): void {
     this.trendingData();
@@ -36,46 +36,76 @@ export class MovieDetailsComponent implements OnInit {
     console.log(this.id, 'ParamsId#');
     this.getMovieVideos(this.id);
     this.getMovieCast(this.id);
-
-    this.meta.updateTag({ property: 'og:title', content: this.movieDetails.title });
-    this.meta.updateTag({ property: 'og:description', content: this.movieDetails.overview });
-    this.meta.updateTag({ property: 'og:image', content: `https://image.tmdb.org/t/p/original${ this.movieDetails.poster_path }` });
     // this.trailerDialog();
   }
 
+
+
   id: any = this.router.snapshot.paramMap.get('id');
-  // currentLocation: string = encodeURI(window.location.href);
-  currentLocation: string = encodeURI('https://www.cruztv.netlify.app/movie/569094');
+  currentLocation: string = encodeURI(window.location.href);
+  // currentLocation: string = encodeURI('https://www.cruztv.netlify.app/movie/569094');
   message: string = encodeURIComponent('Hey I just found this movie i would like to share...');
-
-  share(title: string, media: string) {
-    const movietitle: string = encodeURIComponent(title);
-
-    switch (media) {
-      case 'facebook':
-        window.open(`https://www.facebook.com/share.php?u=${this.currentLocation}`, '_blank');
-        break;
-      case 'twitter':
-        window.open(`http://www.twitter.com/share?&url=${this.currentLocation}&text=${this.message}&hashtags=${movietitle},cruztv`);
-        break;
-
-      default:
-        break;
-    }
-
-    console.log([movietitle, this.currentLocation, this.message, this.movieDetails.overview]);
-  }
 
   getMovieDeatils(id:any): void {
     this.service.getMovieDetails(id).subscribe((result)=> {
       console.log(result, 'getTheMovieDetails');
       this.movieDetails = result;
+      this.updateMetadata();
 
     }, ((err) => {
       this.errorStatus = err.status;
       this.errorMessage = err.message;
       this.loading = false;
     }))
+  }
+
+  updateMetadata(): void {
+    if (this.movieDetails.title != '' || this.movieDetails.title != null) {
+      this.title.setTitle(this.movieDetails.title);
+    }else {
+      this.title.setTitle('Movie');
+    }
+      this.meta.updateTag({property: 'og:title', content: this.movieDetails.title});
+      this.meta.updateTag({property: 'og:description', content: this.movieDetails.overview});
+      this.meta.updateTag({property: 'og:image', itemprop: 'image', content: `https://image.tmdb.org/t/p/original${ this.movieDetails.poster_path }`});
+      this.meta.updateTag({property: 'og:type', content: 'website'});
+      this.meta.addTags([
+        // Side For image
+        {property: 'og:image:type', content: 'image/jpg'},
+        {property: 'og:image:width', content: '300'},
+        {property: 'og:image:height', content: '300'},
+        {property: 'og:url', content: `https://www.cruztv.netlify.app/movie/${this.id}`},
+        {property: 'og:site_name', content: 'CruzTv'},
+        {property: 'og:locale', content: 'en_Us'}
+      ]);
+      this.meta.updateTag({name: 'twitter:card', content: 'summary_large_image'});
+      this.meta.updateTag({name: 'twitter:title', content: this.movieDetails.title});
+      this.meta.updateTag({name: 'twitter: description', content: this.movieDetails.overview});
+      this.meta.updateTag({name: 'twitter:image', content: `https://image.tmdb.org/t/p/original${ this.movieDetails.poster_path }`});
+  }
+
+  //Share Post
+
+  share(title: string, media: string) {
+    const movietitle: string = encodeURIComponent(title);
+    const altimage: string = encodeURI(`https://image.tmdb.org/t/p/original${ this.movieDetails.poster_path }`);
+
+    switch (media) {
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${this.currentLocation}`, '_blank');
+        break;
+      case 'twitter':
+        window.open(`https://www.twitter.com/intent/tweet?&url=${this.currentLocation}&text=${this.message}&hashtags=${movietitle},cruztv`);
+        break;
+      case 'whatsapp':
+        window.open(`https://api.whatsapp.com/send?text=${this.message}&amp;url=${this.currentLocation}&amp;source=${`https://image.tmdb.org/t/p/original${ this.movieDetails.poster_path }`}&amp;data=${altimage}`);
+        break;
+      case 'telegram':
+        window.open(`https://www.t.me/share/url?url=${this.currentLocation}&text=${this.message}`);
+        break;
+    }
+
+    console.log([movietitle, this.currentLocation, this.message, this.movieDetails.overview]);
   }
 
   // Get Movie Videos
@@ -96,8 +126,15 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   getSafeVideoUrl(): SafeResourceUrl {
-    const videoUrl = `https://www.youtube.com/embed/${this.movieVideoResults}`;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
+    try {
+      const videoUrl = `https://www.youtube.com/embed/${this.movieVideoResults}`;
+      return this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
+    }
+    catch (error) {
+      console.error('An error occurred while generating the safe video URL:', error);
+      return this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/error');
+    }
+
   }
 
   // Get Movie Casts

@@ -5,6 +5,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from 'src/app/service/auth.service';
 import { Observable, timer } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-register',
@@ -31,9 +32,10 @@ export class RegisterComponent implements OnInit {
     private routeId: ActivatedRoute,
     private fireAuth: AngularFireAuth,
     private router: Router,
-    private service: AuthService) {}
+    private service: AuthService,
+    private title: Title) {}
   ngOnInit(): void {
-
+    this.title.setTitle('Cruz Tv || Register');
   }
 
   id: any = this.routeId.snapshot.paramMap.get('id');

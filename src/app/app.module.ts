@@ -67,12 +67,12 @@ import { MatDialogModule } from '@angular/material/dialog';
     provideStorage(() => getStorage()),
     NgxSpinnerModule,
     MatDialogModule,
-
   ],
   providers: [
     MovieApiServiceService,
     AuthService,
-    ScreenTrackingService,UserTrackingService
+    ScreenTrackingService,
+    UserTrackingService,
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
