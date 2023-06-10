@@ -1,11 +1,48 @@
-.mat-mdc-dialog-surface {
-  background: var(--bg-color) !important;
+.movie-heading h1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--main-color);
 }
 
-.mat-dialog-title {
-  color: var(--main-color) !important;
+.container-fluid h2 {
+  color: var(--text-color);
+  margin-top: -15px;
+  font-size: 1.3rem;
+  margin-bottom: 5px;
+  font-weight: 500;
 }
 
-.mat-dialog-content {
-  color: var(--text-color) !important;
+.movie-link {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.movie-watch, .movie-download {
+  border: 0;
+  width:100%;
+  margin: 0 10px;
+  padding: 3px 20px;
+  background: none;
+  font-size: 16px;
+  padding: 0 12px 3px 12px;
+  background: var(--main-color);
+  color: #fff;
+  transition: 0.3s;
+}
+
+.movie-watch a, .movie-download a {
+  color: #fff;
+  text-align: center;
+}
+
+.movie-watch a h6 {
+  text-align: center;
+}
+
+.movie-watch a .bx, .movie-download a .bx {
+  margin-top: 2px;
+  font-size: 1.4rem;
+  padding-left: 10px;
 }

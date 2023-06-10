@@ -103,7 +103,7 @@ export class MovieDetailsComponent implements OnInit {
         window.open(`https://www.twitter.com/intent/tweet?&url=${this.currentLocation}&text=${this.message}&hashtags=${movietitle},cruztv`);
         break;
       case 'whatsapp':
-        window.open(`https://we.me/?text=${this.message}%20${this.currentLocation}`);
+        window.open(`https://wa.me/?text=${this.message}%20${this.currentLocation}`);
         break;
       case 'telegram':
         window.open(`https://www.t.me/share/url?url=${this.currentLocation}&text=${this.message}`);

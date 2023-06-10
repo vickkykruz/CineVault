@@ -57,6 +57,8 @@ $Netflix_Clone-theme: mat.define-light-theme((
   border: 0;
 }
 
+html, body { height: 100%; }
+
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -335,8 +337,9 @@ a {
   text-decoration: underline;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-mdc-dialog-surface {
+  background: var(--bg-color) !important;
+}
 
 // Admin Toggle
 #sidebar-toggle {
