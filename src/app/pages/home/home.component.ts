@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
   scifiMoviesResults: any = [];
   thrillerMoviesResults: any = [];
   loading: boolean = true;
+  error: Error | null = null;
   errorStatus!: number;
   errorMessage!: string;
 
@@ -38,103 +39,122 @@ export class HomeComponent implements OnInit {
   }
 
   bannerData() {
-    this.service.bannerApiData().subscribe((result)=> {
-      console.log(result, 'bannerResult#');
-      this.bannerApiData = result.results;
-    }, (err) => {
-      console.error(err, 'errors#')
-      this.errorStatus = err.status;
-      this.errorMessage = err.message;
-      this.loading = false;
-    })
+    try {
+      this.service.bannerApiData().subscribe((result)=> {
+        this.bannerApiData = result.results;
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.warn(error, "bannerError##");
+        this.errorMessage = error.message;
+        this.loading = false;
+      }
     }
+  }
 
-    trendingData() {
+  trendingData() {
+    try {
       this.service.trendingMoviesApi().subscribe((result)=> {
-        console.log(result, 'trendingMovies');
         this.trendingMoviesResults = result.results;
-      }, ((err) => {
-        this.errorStatus = err.status;
-        this.errorMessage = err.message;
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        // this.errorStatus = err.status;
+        this.errorMessage = error.message;
         this.loading = false;
-      }))
+      }
     }
+  }
 
-    actionMovieData() {
+  actionMovieData() {
+    try {
       this.service.getActionMovies().subscribe((res) => {
-        console.log(res, 'ActionMovies');
         this.actionMoviesResults = res.results;
-      }, ((err) => {
-        this.errorStatus = err.status;
-        this.errorMessage = err.message;
+      });
+    } catch (error) {
+      if (error instanceof Error){
+        this.errorMessage = error.message;
         this.loading = false;
-      }));
+      }
     }
+  }
 
     adventureMovieData() {
-      this.service.getAdventureMovies().subscribe((res) => {
-        console.log(res, 'Adventure Move##');
-        this.adventureMoviesResults = res.results;
-      }, ((err) => {
-        this.errorStatus = err.status;
-        this.errorMessage = err.message;
-        this.loading = false;
-      }))
+      try {
+        this.service.getAdventureMovies().subscribe((res) => {
+          this.adventureMoviesResults = res.results;
+        });
+      } catch (error) {
+        if (error instanceof Error){
+          this.errorMessage = error.message;
+          this.loading = false;
+        }
+      }
     }
 
     animationMovieData() {
-      this.service.getAnimationMovies().subscribe((res) => {
-        console.log(res, 'Animation##');
-        this.animationMoviesResults = res.results;
-      }, ((err) => {
-        this.errorStatus = err.status;
-        this.errorMessage = err.message;
-        this.loading = false;
-      }))
+      try {
+        this.service.getAnimationMovies().subscribe((res) => {
+          this.animationMoviesResults = res.results;
+        });
+      } catch (error) {
+        if (error instanceof Error){
+          this.errorMessage = error.message;
+          this.loading = false;
+        }
+      }
     }
 
     comedyMoviesData() {
-      this.service.getComedyMovies().subscribe((res) => {
-        console.log(res, 'ComedyResult##');
-        this.comedyMoviesResults = res.results;
-      }, ((err) => {
-        this.errorStatus = err.status;
-        this.errorMessage = err.message;
-        this.loading = false;
-      }))
+      try {
+        this.service.getComedyMovies().subscribe((res) => {
+          this.comedyMoviesResults = res.results;
+        });
+      } catch (error) {
+        if (error instanceof Error){
+          this.errorMessage = error.message;
+          this.loading = false;
+        }
+      }
     }
 
     documentaryMovieData() {
-      this.service.getDocumentaryMovies().subscribe((res) => {
-        console.log(res, 'DocumentaryMovies###');
-        this.documentaryMoviesResults = res.results;
-      }, ((err) => {
-        this.errorStatus = err.status;
-        this.errorMessage = err.message;
-        this.loading = false;
-      }))
+      try {
+        this.service.getDocumentaryMovies().subscribe((res) => {
+          this.documentaryMoviesResults = res.results;
+        });
+      } catch (error) {
+        if (error instanceof Error){
+          this.errorMessage = error.message;
+          this.loading = false;
+        }
+      }
     }
 
     scfiMovieData() {
-      this.service.getSciFiMovies().subscribe((res) => {
-        console.log(res, 'SCi-Fi Movies##');
-        this.scifiMoviesResults = res.results;
-      }, ((err) => {
-        this.errorStatus = err.status;
-        this.errorMessage = err.message;
-        this.loading = false;
-      }))
+      try {
+        this.service.getSciFiMovies().subscribe((res) => {
+          this.scifiMoviesResults = res.results;
+        });
+      } catch (error) {
+        if (error instanceof Error){
+          this.errorMessage = error.message;
+          this.loading = false;
+        }
+      }
     }
 
     thrillerMovieData() {
-      this.service.getThrillerMovies().subscribe((res) => {
-        console.log(res, 'Thriller Movies##');
-        this.thrillerMoviesResults = res.results;
-      }, ((err) => {
-        this.errorStatus = err.status;
-        this.errorMessage = err.message;
-        this.loading = false;
-      }))
+      try {
+        this.service.getThrillerMovies().subscribe((res) => {
+          this.thrillerMoviesResults = res.results;
+        });
+      } catch (error) {
+        if (error instanceof Error){
+          this.errorMessage = error.message;
+          this.loading = false;
+        }
+      }
     }
 
     customOptions: OwlOptions = {
@@ -147,20 +167,7 @@ export class HomeComponent implements OnInit {
     navText: ['<', '>'],
     autoplay: true,
     autoplayTimeout: 10000,
-    responsive: {
-      0: {
-        items: 1
-      },
-      400: {
-        items: 1
-      },
-      740: {
-        items: 1
-      },
-      940: {
-        items: 1
-      }
-    },
+    responsive: { 0: { items: 1 }, 400: { items: 1 }, 740: { items: 1 }, 940: { items: 1 } },
     nav: false
   }
 
@@ -176,31 +183,7 @@ export class HomeComponent implements OnInit {
     autoplayTimeout: 10000,
     items: 2,
     // margin: 10,
-    responsive: {
-      0: {
-        items: 1,
-        margin: 5
-      },
-      280: {
-        items: 1,
-        margin: 5
-      },
-      320: {
-        items: 2,
-        margin: 5
-      },
-      510: {
-        items: 2,
-        margin: 5
-      },
-      758: {
-        items: 3,
-        margin: 10
-      },
-      900: {
-        items: 4,
-        margin: 15
-      }
-    }
+    responsive: { 0: { items: 1, margin: 5 }, 280: { items: 1, margin: 5 }, 320: { items: 2, margin: 5 }, 510: { items: 2, margin: 5 }, 758: { items: 3, margin: 10 }, 900: { items: 4, margin: 15 } }
   }
+
 }

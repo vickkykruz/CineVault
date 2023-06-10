@@ -1,5 +1,5 @@
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { VideoTrailerComponent } from 'src/app/partials/video-trailer/video-trailer.component';
@@ -12,14 +12,16 @@ import { DomSanitizer, SafeResourceUrl, Meta, Title } from '@angular/platform-br
   styleUrls: ['./movie-details.component.scss']
 })
 export class MovieDetailsComponent implements OnInit {
+  @ViewChild('youtubeVideo', { static: true }) youtubeVideo!: ElementRef<HTMLIFrameElement>;
 
   errorStatus!: number;
   errorMessage!: string;
   loading: boolean = true;
-  movieDetails:any;
+  movieDetails:any = {};
   movieVideoResults: any;
   movieCastResult!: any[];
   videoPlayer!: string;
+  error: Error | null = null;
 
   trendingMoviesResults!:any[];
   constructor(
@@ -33,9 +35,9 @@ export class MovieDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.trendingData();
     this.getMovieDeatils(this.id);
-    console.log(this.id, 'ParamsId#');
+    // console.log(this.id, 'ParamsId#');
     this.getMovieVideos(this.id);
-    this.getMovieCast(this.id);
+    // this.getMovieCast(this.id);
     // this.trailerDialog();
   }
 
@@ -47,16 +49,20 @@ export class MovieDetailsComponent implements OnInit {
   message: string = encodeURIComponent('Hey I just found this movie i would like to share...');
 
   getMovieDeatils(id:any): void {
-    this.service.getMovieDetails(id).subscribe((result)=> {
-      console.log(result, 'getTheMovieDetails');
-      this.movieDetails = result;
-      this.updateMetadata();
-
-    }, ((err) => {
-      this.errorStatus = err.status;
-      this.errorMessage = err.message;
-      this.loading = false;
-    }))
+    try {
+      this.service.getMovieDetails(id).subscribe((result)=> {
+        if (result != undefined || result != null) {
+          this.movieDetails = result;
+          this.updateMetadata();
+        }
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.warn(error, "Details##");
+        this.errorMessage = error.message;
+        this.loading = false;
+      }
+    }
   }
 
   updateMetadata(): void {
@@ -84,8 +90,7 @@ export class MovieDetailsComponent implements OnInit {
       this.meta.updateTag({name: 'twitter:image', content: `https://image.tmdb.org/t/p/original${ this.movieDetails.poster_path }`});
   }
 
-  //Share Post
-
+  //Share Post To Exertal Soical Media
   share(title: string, media: string) {
     const movietitle: string = encodeURIComponent(title);
     const altimage: string = encodeURI(`https://image.tmdb.org/t/p/original${ this.movieDetails.poster_path }`);
@@ -98,7 +103,7 @@ export class MovieDetailsComponent implements OnInit {
         window.open(`https://www.twitter.com/intent/tweet?&url=${this.currentLocation}&text=${this.message}&hashtags=${movietitle},cruztv`);
         break;
       case 'whatsapp':
-        window.open(`https://api.whatsapp.com/send?text=${this.message}&amp;url=${this.currentLocation}&amp;source=${`https://image.tmdb.org/t/p/original${ this.movieDetails.poster_path }`}&amp;data=${altimage}`);
+        window.open(`https://we.me/?text=${this.message}%20${this.currentLocation}`);
         break;
       case 'telegram':
         window.open(`https://www.t.me/share/url?url=${this.currentLocation}&text=${this.message}`);
@@ -110,66 +115,76 @@ export class MovieDetailsComponent implements OnInit {
 
   // Get Movie Videos
   getMovieVideos(id:any) {
-    this.service.getMovieVideo(id).subscribe((result) => {
-      console.log(result, 'movieVideos###');
-      result.results.forEach((element:any) => {
-        if(element.name == "Official Trailer") {
-          this.movieVideoResults = element.key;
-          this.videoPlayer = 'https://www.youtube.com/watch?v=qEVUtrk8_B4';
-        }
-      });
-    }, ((err) => {
-      this.errorStatus = err.status;
-      this.errorMessage = err.message;
-      this.loading = false;
-    }))
-  }
-
-  getSafeVideoUrl(): SafeResourceUrl {
     try {
-      const videoUrl = `https://www.youtube.com/embed/${this.movieVideoResults}`;
-      return this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
+      this.service.getMovieVideo(id).subscribe((result) => {
+        result.results.forEach((element:any) => {
+          if(element.name == "Official Trailer") {
+            this.movieVideoResults = element.key;
+            this.embedVideo(this.movieVideoResults);
+          }
+        });
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.warn(error, "Details##");
+        this.errorMessage = error.message;
+        this.loading = false;
+      }
     }
-    catch (error) {
-      console.error('An error occurred while generating the safe video URL:', error);
-      return this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/error');
-    }
-
   }
+
+  embedVideo(videoId: string) {
+    const iframe = this.youtubeVideo.nativeElement;
+    iframe.src = `https://www.youtube.com/embed/${videoId}`;
+  }
+
+  // getSafeVideoUrl(): SafeResourceUrl {
+  //   try {
+  //     const videoUrl = `https://www.youtube.com/embed/${this.movieVideoResults}`;
+  //     return this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
+  //   }
+  //   catch (error) {
+  //     console.error('An error occurred while generating the safe video URL:', error);
+  //     return this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/error');
+  //   }
+  // }
 
   // Get Movie Casts
-  getMovieCast(id:any) {
-    this.service.getMovieCast(id).subscribe((result) => {
-      console.log(result, 'getMoieCast###');
-      this.movieCastResult = result.cast;
-    }, ((err) => {
-      // console.log(err, 'getMovieCastErr##');
-      this.errorStatus = err.status;
-      this.errorMessage = err.message;
-      this.loading = false;
-    }))
-  }
+  // getMovieCast(id:any) {
+  //   this.service.getMovieCast(id).subscribe((result) => {
+  //     // console.log(result, 'getMoieCast###');
+  //     this.movieCastResult = result.cast;
+  //   }, ((err) => {
+  //     // console.log(err, 'getMovieCastErr##');
+  //     this.errorStatus = err.status;
+  //     this.errorMessage = err.message;
+  //     this.loading = false;
+  //   }))
+  // }
 
   trendingData() {
-    this.service.trendingMoviesApi().subscribe((result)=> {
-      console.log(result, 'trendingMovies');
-      this.trendingMoviesResults = result.results;
-    }, ((err) => {
-      this.errorStatus = err.status;
-      this.errorMessage = err.message;
-      this.loading = false;
-    }))
+    try {
+      this.service.trendingMoviesApi().subscribe((result)=> {
+        this.trendingMoviesResults = result.results;
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.warn(error, "Details##");
+        this.errorMessage = error.message;
+        this.loading = false;
+      }
+    }
   }
 
-  trailerDialog(key: any) {
-    console.log(key, "Passing Dialog ##");
-    this.dialog.open(
-      VideoTrailerComponent,
-      {
-       data: { Videokey: key }
-      }
-    );
-  }
+  // trailerDialog(key: any) {
+  //   console.log(key, "Passing Dialog ##");
+  //   this.dialog.open(
+  //     VideoTrailerComponent,
+  //     {
+  //      data: { Videokey: key }
+  //     }
+  //   );
+  // }
 
   tendingSlide: OwlOptions = {
     loop: true,
@@ -183,31 +198,7 @@ export class MovieDetailsComponent implements OnInit {
     autoplayTimeout: 10000,
     items: 2,
     // margin: 10,
-    responsive: {
-      0: {
-        items: 1,
-        margin: 5
-      },
-      280: {
-        items: 1,
-        margin: 5
-      },
-      320: {
-        items: 2,
-        margin: 5
-      },
-      510: {
-        items: 2,
-        margin: 5
-      },
-      758: {
-        items: 3,
-        margin: 10
-      },
-      900: {
-        items: 4,
-        margin: 15
-      }
-    }
+    responsive: { 0: { items: 1, margin: 5 }, 280: { items: 1, margin: 5 }, 320: { items: 2, margin: 5 }, 510: { items: 2, margin: 5 }, 758: { items: 3, margin: 10 }, 900: { items: 4, margin: 15 } }
   }
+
 }

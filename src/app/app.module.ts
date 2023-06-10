@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -32,6 +32,7 @@ import { AuthService } from './service/auth.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { VideoTrailerComponent } from './partials/video-trailer/video-trailer.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { CustomErrorHandler } from './service/custom-error-handler.service';
 
 
 @NgModule({
@@ -73,6 +74,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     AuthService,
     ScreenTrackingService,
     UserTrackingService,
+    {
+      provide: ErrorHandler,
+      useClass: CustomErrorHandler
+    }
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

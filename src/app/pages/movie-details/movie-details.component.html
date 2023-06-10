@@ -9,7 +9,7 @@
       <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-12">
           <div class="move-img">
-            <img src="https://image.tmdb.org/t/p/original{{ movieDetails.poster_path }}" alt="" class="w-100 img-fluid">
+            <img [src]="'https://image.tmdb.org/t/p/original' + movieDetails.poster_path" alt="" class="w-100 img-fluid">
           </div>
           <hr>
           <div class="movie-share">
@@ -76,8 +76,9 @@
           </div>
           <hr>
           <h5>Watch Trailer</h5>
-          <iframe width="1366" class="w-100" height="230" [src]="getSafeVideoUrl()" title="John Wick: Chapter 4 (2023 Movie) Official Trailer – Keanu Reeves, Donnie Yen, Bill Skarsgård" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          <!-- <iframe width="1366" class="w-100" height="230" [src]="getSafeVideoUrl()" title="John Wick: Chapter 4 (2023 Movie) Official Trailer – Keanu Reeves, Donnie Yen, Bill Skarsgård" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
 
+          <iframe #youtubeVideo width="1366" class="w-100" height="230" title="movieDetails.title" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           <div class="movie-link mt-4">
             <div class="movie-watch">
               <a [routerLink]="['/auth/login', movieDetails.id]">
@@ -88,7 +89,7 @@
 
         </div>
       </div>
-      <h2 class="mt-4">Top Casts</h2>
+      <!-- <h2 class="mt-4">Top Casts</h2>
       <hr>
       <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-12 mt-3" *ngFor="let data of movieCastResult">
@@ -104,7 +105,8 @@
           </div>
         </div>
 
-      </div>
+      </div> -->
+
       <!-- Other Novies -->
       <div class="row trending-info mt-5">
         <div class="trending-heading">

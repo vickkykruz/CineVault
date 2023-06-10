@@ -38,7 +38,7 @@
           <div class="item-action top-down delay-6">
             <a href="#" class="btn btn-hover">
               <i class="bx bxs-right-arrow"></i>
-              <span>Watch now</span>
+              <span>Watch Trailer</span>
             </a>
           </div>
         </div>
@@ -59,12 +59,12 @@
 
           <owl-carousel-o [options]="tendingSlide">
             <ng-template carouselSlide *ngFor="let data of trendingMoviesResults">
-              <div class="movie-box">
+              <div class="movie-box" [routerLink]="['/movie', data.id]">
                 <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
                 <div class="box-text">
                   <h5 class="movie-title">{{ data.original_title }}</h5>
                   <span class="movie-type">{{data.media_type}}</span>
-                  <a  [routerLink]="['/movie', data.id]" class="watch-btn play-btn">
+                  <a href="javascript:void(0)" class="watch-btn play-btn">
                     <i class="bx bx-right-arrow"></i>
                   </a>
                 </div>
@@ -82,12 +82,12 @@
 
           <owl-carousel-o [options]="tendingSlide">
             <ng-template carouselSlide *ngFor="let data of adventureMoviesResults">
-              <div class="movie-box">
+              <div class="movie-box" [routerLink]="['/movie', data.id]">
                 <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
                 <div class="box-text">
                   <h5 class="movie-title">{{ data.original_title }}</h5>
                   <span class="movie-type">{{data.media_type}}</span>
-                  <a  [routerLink]="['/movie', data.id]" class="watch-btn play-btn">
+                  <a href="javascript:void(0)" class="watch-btn play-btn">
                     <i class="bx bx-right-arrow"></i>
                   </a>
                 </div>
@@ -105,12 +105,12 @@
 
           <owl-carousel-o [options]="tendingSlide">
             <ng-template carouselSlide *ngFor="let data of actionMoviesResults">
-              <div class="movie-box">
-                <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
+              <div class="movie-box" [routerLink]="['/movie', data.id]">
+                <img [src]="'https://image.tmdb.org/t/p/original' + data.backdrop_path" width="250px" height="250px" alt="" class="movie-box-img">
                 <div class="box-text">
                   <h5 class="movie-title">{{ data.original_title }}</h5>
                   <span class="movie-type">{{data.media_type}}</span>
-                  <a  [routerLink]="['/movie', data.id]" class="watch-btn play-btn">
+                  <a href="javascript:void(0)" class="watch-btn play-btn">
                     <i class="bx bx-right-arrow"></i>
                   </a>
                 </div>
@@ -128,12 +128,12 @@
 
           <owl-carousel-o [options]="tendingSlide">
             <ng-template carouselSlide *ngFor="let data of animationMoviesResults">
-              <div class="movie-box">
+              <div class="movie-box" [routerLink]="['/movie', data.id]">
                 <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
                 <div class="box-text">
                   <h5 class="movie-title">{{ data.original_title }}</h5>
                   <span class="movie-type">{{data.media_type}}</span>
-                  <a  [routerLink]="['/movie', data.id]" class="watch-btn play-btn">
+                  <a href="javascript:void(0)" class="watch-btn play-btn">
                     <i class="bx bx-right-arrow"></i>
                   </a>
                 </div>
@@ -151,12 +151,12 @@
 
           <owl-carousel-o [options]="tendingSlide">
             <ng-template carouselSlide *ngFor="let data of scifiMoviesResults">
-              <div class="movie-box">
+              <div class="movie-box" [routerLink]="['/movie', data.id]">
                 <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
                 <div class="box-text">
                   <h5 class="movie-title">{{ data.original_title }}</h5>
                   <span class="movie-type">{{data.media_type}}</span>
-                  <a  [routerLink]="['/movie', data.id]" class="watch-btn play-btn">
+                  <a href="javascript:void(0)" class="watch-btn play-btn">
                     <i class="bx bx-right-arrow"></i>
                   </a>
                 </div>
@@ -174,12 +174,12 @@
 
           <owl-carousel-o [options]="tendingSlide">
             <ng-template carouselSlide *ngFor="let data of comedyMoviesResults">
-              <div class="movie-box">
+              <div class="movie-box" [routerLink]="['/movie', data.id]">
                 <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
                 <div class="box-text">
                   <h5 class="movie-title">{{ data.original_title }}</h5>
                   <span class="movie-type">{{data.media_type}}</span>
-                  <a  [routerLink]="['/movie', data.id]" class="watch-btn play-btn">
+                  <a href="javascript:void(0)" class="watch-btn play-btn">
                     <i class="bx bx-right-arrow"></i>
                   </a>
                 </div>
@@ -197,12 +197,12 @@
 
           <owl-carousel-o [options]="tendingSlide">
             <ng-template carouselSlide *ngFor="let data of documentaryMoviesResults">
-              <div class="movie-box">
+              <div class="movie-box" [routerLink]="['/movie', data.id]">
                 <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
                 <div class="box-text">
                   <h5 class="movie-title">{{ data.original_title }}</h5>
                   <span class="movie-type">{{data.media_type}}</span>
-                  <a  [routerLink]="['/movie', data.id]" class="watch-btn play-btn">
+                  <a href="javascript:void(0);" class="watch-btn play-btn">
                     <i class="bx bx-right-arrow"></i>
                   </a>
                 </div>
@@ -220,12 +220,12 @@
 
           <owl-carousel-o [options]="tendingSlide">
             <ng-template carouselSlide *ngFor="let data of thrillerMoviesResults">
-              <div class="movie-box">
+              <div class="movie-box" [routerLink]="['/movie', data.id]">
                 <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
                 <div class="box-text">
                   <h5 class="movie-title">{{ data.original_title }}</h5>
                   <span class="movie-type">{{data.media_type}}</span>
-                  <a  [routerLink]="['/movie', data.id]" class="watch-btn play-btn">
+                  <a href="javascript:void(0)" class="watch-btn play-btn">
                     <i class="bx bx-right-arrow"></i>
                   </a>
                 </div>
@@ -248,7 +248,7 @@
 <!-- End Footer -->
 </ng-container>
 <ng-template #elseTemplate>
-  <div class="container mt-5">
+  <div class="container errDis mt-5">
     <div class="error-container text-center">
       <ng-container *ngIf="errorStatus === 0; else elseTemplates">
         <h1><i class='bx bx-wifi-off'></i></h1>
@@ -257,7 +257,7 @@
         <h1><i class='bx bx-error'></i> {{ errorStatus }}</h1>
       </ng-template>
       <div class="display_err">
-        <small>{{ errorMessage}}</small>
+
         <h5>Something Bad Happened. Please Try Again Later.</h5>
       </div>
     </div>
