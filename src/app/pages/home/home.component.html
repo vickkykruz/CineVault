@@ -19,7 +19,7 @@
           <div class="movie-infos top-down delay-2">
             <div class="movie-info">
               <i class="bx bxs-star"></i>
-              <span>9.5</span>
+              <span>{{ data.vote_average }}</span>
             </div>
             <div class="movie-info">
               <i class="bx bxs-time"></i>
@@ -36,7 +36,7 @@
             {{ data.overview.substring(0, 150) }}... <a [routerLink]="['/movie', data.id]" routerLinkActive="router-link-active"  style="padding:10px 0">Show More</a>
           </div>
           <div class="item-action top-down delay-6">
-            <a href="#" class="btn btn-hover">
+            <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="btn btn-hover">
               <i class="bx bxs-right-arrow"></i>
               <span>Watch Trailer</span>
             </a>

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { Title } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
+import { VideoTrailerComponent } from 'src/app/partials/video-trailer/video-trailer.component';
 
 @Component({
   selector: 'app-home',
@@ -24,7 +26,7 @@ export class HomeComponent implements OnInit {
   errorStatus!: number;
   errorMessage!: string;
 
-  constructor(private service: MovieApiServiceService, private title: Title) {}
+  constructor(private service: MovieApiServiceService, private title: Title, public dialog: MatDialog) {}
   ngOnInit(): void {
     this.title.setTitle('cruztv.netlify.app || Welcome to cruztv, where we offer latest and trending movies.');
     this.bannerData();
@@ -41,6 +43,7 @@ export class HomeComponent implements OnInit {
   bannerData() {
     try {
       this.service.bannerApiData().subscribe((result)=> {
+        // console.log(result, 'bannerResult##');
         this.bannerApiData = result.results;
       });
     } catch (error) {
@@ -184,6 +187,17 @@ export class HomeComponent implements OnInit {
     items: 2,
     // margin: 10,
     responsive: { 0: { items: 1, margin: 5 }, 280: { items: 1, margin: 5 }, 320: { items: 2, margin: 5 }, 510: { items: 2, margin: 5 }, 758: { items: 3, margin: 10 }, 900: { items: 4, margin: 15 } }
+  }
+
+  // Watch Trailer
+  openVideo(id: number, enterAnimationDuration: string, exitAnimationDuration: string) {
+    this.dialog.open(VideoTrailerComponent, {
+      width: '100%',
+      height: '500px',
+      data: { id: id },
+      enterAnimationDuration,
+      exitAnimationDuration,
+    })
   }
 
 }

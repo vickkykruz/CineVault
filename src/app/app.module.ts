@@ -33,6 +33,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { VideoTrailerComponent } from './partials/video-trailer/video-trailer.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CustomErrorHandler } from './service/custom-error-handler.service';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { CustomErrorHandler } from './service/custom-error-handler.service';
     provideStorage(() => getStorage()),
     NgxSpinnerModule,
     MatDialogModule,
+    MatButtonModule
   ],
   providers: [
     MovieApiServiceService,
