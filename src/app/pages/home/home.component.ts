@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
     this.documentaryMovieData();
     this.scfiMovieData();
     this.thrillerMovieData();
+    this.imbTrendingData();
   }
 
   bannerData() {
@@ -51,6 +52,18 @@ export class HomeComponent implements OnInit {
         console.warn(error, "bannerError##");
         this.errorMessage = error.message;
         this.loading = false;
+      }
+    }
+  }
+
+  imbTrendingData() {
+    try {
+      this.service.imdbTrendingMoivesApi().subscribe((result) => {
+        // console.log(result, 'Imdb Data');
+      })
+    } catch (error) {
+      if (error instanceof Error) {
+        console.warn(error, 'Imdb Trending Error');
       }
     }
   }

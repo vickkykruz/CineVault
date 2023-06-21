@@ -27,12 +27,12 @@ export class AppComponent implements OnInit {
       {name: 'canonical', url: 'https://www.cruztv.netlify.app'},
       {property: 'og:title', content: 'Cruz Tv || Latest and Trending Movies'},
       {property: 'og:description', content: 'This is an application that gives you access to the lastest and trending movies accross the world'},
-      {property: 'og:image', itemprop: 'image', content: 'https://www.cruztv.netlify.app/assets/images/logo/OIP.jpeg'},
+      {property: 'og:image', content: 'https://www.cruztv.netlify.app/assets/images/logo/net_logo.png'},
       {property: 'og:type', content: 'website'},
       {name: 'twitter:card', content: 'summary_large_image'},
       {name: 'twitter:title', content: 'Cruz Tv || Latest and Trending Movies'},
       {name: 'twitter: description', content: 'This is an application that gives you access to the lastest and trending movies accross the world'},
-      {name: 'twitter:image', content: 'https://www.cruztv.netlify.app/assets/images/logo/OIP.jpeg'},
+      {name: 'twitter:image', content: 'https://www.cruztv.netlify.app/assets/images/logo/net_logo.png'},
       // {name: 'date', content: '2023-01-24', scheme: 'YYYY-MM-DD'},
     ]);
 

@@ -16,7 +16,9 @@ export class MovieApiServiceService {
   }
 
   baseUrl = 'https://api.themoviedb.org/3';
+  altBaseUrl = 'https://imdb-api.com/en/API/';
   apiKey = '08cc33bd5ae3a747598ce2ad84376e66';
+  altApiKey = 'k_w6zpo7f7';
 
   bannerApiData(): Observable<any> {
     return this.http
@@ -31,6 +33,12 @@ export class MovieApiServiceService {
     return this.http
       .get(`${this.baseUrl}/trending/movie/day?api_key=${this.apiKey}`)
       .pipe(catchError(this.handleError));
+  }
+
+  imdbTrendingMoivesApi(): Observable<any> {
+    return this.http
+    .get(`${this.altBaseUrl}MostPopularMovies/${this.altApiKey}`)
+    .pipe(catchError(this.handleError));
   }
 
   // SearchMovie

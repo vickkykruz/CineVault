@@ -34,6 +34,7 @@ import { VideoTrailerComponent } from './partials/video-trailer/video-trailer.co
 import { MatDialogModule } from '@angular/material/dialog';
 import { CustomErrorHandler } from './service/custom-error-handler.service';
 import { MatButtonModule } from '@angular/material/button';
+import { CommentSectionComponent } from './partials/comment-section/comment-section.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { MatButtonModule } from '@angular/material/button';
     FooterComponent,
     AsideBarComponent,
     DownloadMoviesComponent,
-    VideoTrailerComponent
+    VideoTrailerComponent,
+    CommentSectionComponent
   ],
   imports: [
     BrowserModule,
