@@ -1,168 +1,233 @@
 <div class="mt-4"></div>
 <h2>Comments (5)</h2>
-<hr style="margin-top: -5px;">
+<hr style="margin-top: -5px" />
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12">
     <div class="media g-mb-30 media-comment">
-      <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
+      <img
+        class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15"
+        src="https://bootdey.com/img/Content/avatar/avatar7.png"
+        alt="Image Description"
+      />
       <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
         <div class="g-mb-15">
           <h5 class="h5 g-color-gray-dark-v1 mb-0">John Doe</h5>
           <span class="g-color-gray-dark-v4 g-font-size-12">5 days ago</span>
         </div>
 
-        <p> I so much love this movie... They really tried
-        </p>
+        <p>I so much love this movie... They really tried</p>
 
-        <div class="" style="display: flex; align-items: center; justify-content:space-around;">
-          <ul class="list-inline d-sm-flex my-0">
-            <li class="list-inline-item g-mr-20">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-like g-pos-rel g-top-1 g-mr-3'></i>
-                <span>300k</span>
-              </a>
-            </li>
-            <li class="list-inline-item g-mr-20">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-dislike g-pos-rel g-top-1 g-mr-3' ></i>
-                <span>54</span>
-              </a>
-            </li>
-            <li class="list-inline-item ml-auto">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" (click)="toggleReplies()">
-                <i class='bx bx-show g-pos-rel g-top-1 g-mr-3'></i>
-                <span>Replies (12)</span>
-              </a>
-            </li>
-          </ul>
-          <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!" style="float: right !important;">
-            <i class='bx bx-reply g-pos-rel g-top-1 g-mr-3'></i>
-            <span>Reply</span>
-          </a>
-        </div>
-
-
+        <ul class="list-inline d-sm-flex my-0">
+          <li class="list-inline-item g-mr-20">
+            <a
+              class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+              href="#!"
+            >
+              <i class="bx bx-like g-pos-rel g-top-1 g-mr-3"></i>
+              <span class="span-text">300k</span>
+            </a>
+          </li>
+          <li class="list-inline-item g-mr-20">
+            <a
+              class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+              href="#!"
+            >
+              <i class="bx bx-dislike g-pos-rel g-top-1 g-mr-3"></i>
+              <span class="span-text">54</span>
+            </a>
+          </li>
+          <li class="list-inline-item ml-auto">
+            <a
+              class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+              (click)="toggleReplies()"
+            >
+              <i class="bx bx-show g-pos-rel g-top-1 g-mr-3"></i>
+              <span class="span-text">Replies (12)</span>
+            </a>
+          </li>
+          <li class="list-inline-item ml-auto">
+            <a
+              class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+              href="#!"
+              style="float: right !important"
+            >
+              <i class="bx bx-reply g-pos-rel g-top-1 g-mr-3"></i>
+              <span class="span-text">Reply</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
     <ng-container *ngIf="expanded">
       <div class="media g-mb-30 media-comment" style="margin-left: 5.2rem">
-        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
+        <img
+          class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15"
+          src="https://bootdey.com/img/Content/avatar/avatar7.png"
+          alt="Image Description"
+        />
         <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
           <div class="g-mb-15">
             <h5 class="h5 g-color-gray-dark-v1 mb-0">John Doe</h5>
             <span class="g-color-gray-dark-v4 g-font-size-12">5 days ago</span>
           </div>
 
-          <p> I so much love this movie... They really tried
-          </p>
+          <p>I so much love this movie... They really tried</p>
 
           <ul class="list-inline d-sm-flex my-0">
             <li class="list-inline-item g-mr-20">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-like g-pos-rel g-top-1 g-mr-3'></i>
+              <a
+                class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+                href="#!"
+              >
+                <i class="bx bx-like g-pos-rel g-top-1 g-mr-3"></i>
                 <span>45</span>
               </a>
             </li>
             <li class="list-inline-item g-mr-20">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-dislike g-pos-rel g-top-1 g-mr-3' ></i>
+              <a
+                class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+                href="#!"
+              >
+                <i class="bx bx-dislike g-pos-rel g-top-1 g-mr-3"></i>
                 <span>23</span>
               </a>
             </li>
             <li class="list-inline-item ml-auto">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-reply g-pos-rel g-top-1 g-mr-3'></i>
+              <a
+                class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+                href="#!"
+              >
+                <i class="bx bx-reply g-pos-rel g-top-1 g-mr-3"></i>
                 <span>Reply</span>
               </a>
             </li>
           </ul>
-
         </div>
       </div>
     </ng-container>
-
   </div>
   <div class="col-lg-12 col-md-12 col-sm-12">
     <div class="media g-mb-30 media-comment">
-      <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
+      <img
+        class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15"
+        src="https://bootdey.com/img/Content/avatar/avatar7.png"
+        alt="Image Description"
+      />
       <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
         <div class="g-mb-15">
           <h5 class="h5 g-color-gray-dark-v1 mb-0">John Doe</h5>
           <span class="g-color-gray-dark-v4 g-font-size-12">5 days ago</span>
         </div>
 
-        <p> I so much love this movie... They really tried
-        </p>
+        <p>Nice movie... What can i say, They really tried as well as the crew. Like what am I say?? Everyone who played a role in this movie tried. Thank you...</p>
 
-        <div class="" style="display: flex; align-items: center; justify-content:space-around;">
-          <ul class="list-inline d-sm-flex my-0">
-            <li class="list-inline-item g-mr-20">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-like g-pos-rel g-top-1 g-mr-3'></i>
-                <span>300k</span>
-              </a>
-            </li>
-            <li class="list-inline-item g-mr-20">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-dislike g-pos-rel g-top-1 g-mr-3' ></i>
-                <span>54</span>
-              </a>
-            </li>
-            <li class="list-inline-item ml-auto">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" (click)="toggleReplies()">
-                <i class='bx bx-show g-pos-rel g-top-1 g-mr-3'></i>
-                <span>Replies (12)</span>
-              </a>
-            </li>
-          </ul>
-          <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!" style="float: right !important;">
-            <i class='bx bx-reply g-pos-rel g-top-1 g-mr-3'></i>
-            <span>Reply</span>
-          </a>
-        </div>
-
-
+        <ul class="list-inline d-sm-flex my-0">
+          <li class="list-inline-item g-mr-20">
+            <a
+              class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+              href="#!"
+            >
+              <i class="bx bx-like g-pos-rel g-top-1 g-mr-3"></i>
+              <span class="span-text">300k</span>
+            </a>
+          </li>
+          <li class="list-inline-item g-mr-20">
+            <a
+              class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+              href="#!"
+            >
+              <i class="bx bx-dislike g-pos-rel g-top-1 g-mr-3"></i>
+              <span class="span-text">54</span>
+            </a>
+          </li>
+          <li class="list-inline-item ml-auto">
+            <a
+              class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+              (click)="toggleReplies()"
+            >
+              <i class="bx bx-show g-pos-rel g-top-1 g-mr-3"></i>
+              <span class="span-text">Replies (12)</span>
+            </a>
+          </li>
+          <li class="list-inline-item ml-auto">
+            <a
+              class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+              href="#!"
+              style="float: right !important"
+            >
+              <i class="bx bx-reply g-pos-rel g-top-1 g-mr-3"></i>
+              <span class="span-text">Reply</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
     <ng-container *ngIf="expanded">
       <div class="media g-mb-30 media-comment" style="margin-left: 5.2rem">
-        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
+        <img
+          class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15"
+          src="https://bootdey.com/img/Content/avatar/avatar7.png"
+          alt="Image Description"
+        />
         <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
           <div class="g-mb-15">
             <h5 class="h5 g-color-gray-dark-v1 mb-0">John Doe</h5>
             <span class="g-color-gray-dark-v4 g-font-size-12">5 days ago</span>
           </div>
 
-          <p> I so much love this movie... They really tried
-          </p>
+          <p>I so much love this movie... They really tried</p>
 
           <ul class="list-inline d-sm-flex my-0">
             <li class="list-inline-item g-mr-20">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-like g-pos-rel g-top-1 g-mr-3'></i>
+              <a
+                class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+                href="#!"
+              >
+                <i class="bx bx-like g-pos-rel g-top-1 g-mr-3"></i>
                 <span>45</span>
               </a>
             </li>
             <li class="list-inline-item g-mr-20">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-dislike g-pos-rel g-top-1 g-mr-3' ></i>
+              <a
+                class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+                href="#!"
+              >
+                <i class="bx bx-dislike g-pos-rel g-top-1 g-mr-3"></i>
                 <span>23</span>
               </a>
             </li>
             <li class="list-inline-item ml-auto">
-              <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                <i class='bx bx-reply g-pos-rel g-top-1 g-mr-3'></i>
+              <a
+                class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+                href="#!"
+              >
+                <i class="bx bx-reply g-pos-rel g-top-1 g-mr-3"></i>
                 <span>Reply</span>
               </a>
             </li>
           </ul>
-
         </div>
       </div>
     </ng-container>
-
   </div>
 </div>
-
+<div class="mt-3"></div>
+<h2>Add Comment</h2>
+<hr style="margin-top: -5px" />
+<textarea
+  name=""
+  id=""
+  cols="30"
+  placeholder="Drop Comments Here..."
+  rows="10"
+></textarea>
+<div class="movie-link mt-4">
+  <div class="movie-watch">
+    <a href="#">
+      <h6><span> Drop Comment...</span></h6>
+    </a>
+  </div>
+</div>
+<div class="mb-3"></div>
