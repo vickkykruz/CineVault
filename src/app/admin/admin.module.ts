@@ -13,6 +13,8 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { FooterComponent } from './partials/footer/footer.component';
+import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { InboxComponent } from './pages/inbox/inbox.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { FooterComponent } from './partials/footer/footer.component';
     AsideBarComponent,
     HeaderComponent,
     AnalyticDataComponent,
-    FooterComponent
+    FooterComponent,
+    ChangePasswordComponent,
+    InboxComponent
   ],
   imports: [
     CommonModule,

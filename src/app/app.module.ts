@@ -32,7 +32,7 @@ import { AuthService } from './service/auth.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { VideoTrailerComponent } from './partials/video-trailer/video-trailer.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { CustomErrorHandler } from './service/custom-error-handler.service';
+// import { CustomErrorHandler } from './service/custom-error-handler.service';
 import { MatButtonModule } from '@angular/material/button';
 import { CommentSectionComponent } from './partials/comment-section/comment-section.component';
 
@@ -78,10 +78,10 @@ import { CommentSectionComponent } from './partials/comment-section/comment-sect
     AuthService,
     ScreenTrackingService,
     UserTrackingService,
-    {
-      provide: ErrorHandler,
-      useClass: CustomErrorHandler
-    }
+    // {
+    //   provide: ErrorHandler,
+    //   useClass: CustomErrorHandler
+    // }
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

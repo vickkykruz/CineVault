@@ -46,12 +46,14 @@ export class HomeComponent implements OnInit {
       this.service.bannerApiData().subscribe((result)=> {
         // console.log(result, 'bannerResult##');
         this.bannerApiData = result.results;
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        console.warn(error, "bannerError##");
+      }, error => {
+        this.errorStatus = error.status;
         this.errorMessage = error.message;
         this.loading = false;
+      })
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
       }
     }
   }
@@ -62,9 +64,7 @@ export class HomeComponent implements OnInit {
         // console.log(result, 'Imdb Data');
       })
     } catch (error) {
-      if (error instanceof Error) {
-        console.warn(error, 'Imdb Trending Error');
-      }
+
     }
   }
 
@@ -72,12 +72,14 @@ export class HomeComponent implements OnInit {
     try {
       this.service.trendingMoviesApi().subscribe((result)=> {
         this.trendingMoviesResults = result.results;
+      }, error => {
+        this.errorStatus = error.status;
+        this.errorMessage = error.message;
+        this.loading = false;
       });
     } catch (error) {
       if (error instanceof Error) {
-        // this.errorStatus = err.status;
-        this.errorMessage = error.message;
-        this.loading = false;
+        throw error;
       }
     }
   }
@@ -86,11 +88,14 @@ export class HomeComponent implements OnInit {
     try {
       this.service.getActionMovies().subscribe((res) => {
         this.actionMoviesResults = res.results;
+      }, error => {
+        this.errorStatus = error.status;
+        this.errorMessage = error.message;
+        this.loading = false;
       });
     } catch (error) {
       if (error instanceof Error){
-        this.errorMessage = error.message;
-        this.loading = false;
+        throw error;
       }
     }
   }
@@ -99,11 +104,14 @@ export class HomeComponent implements OnInit {
       try {
         this.service.getAdventureMovies().subscribe((res) => {
           this.adventureMoviesResults = res.results;
+        }, error => {
+          this.errorStatus = error.status;
+          this.errorMessage = error.message;
+          this.loading = false;
         });
       } catch (error) {
         if (error instanceof Error){
-          this.errorMessage = error.message;
-          this.loading = false;
+          throw error;
         }
       }
     }
@@ -112,11 +120,14 @@ export class HomeComponent implements OnInit {
       try {
         this.service.getAnimationMovies().subscribe((res) => {
           this.animationMoviesResults = res.results;
+        }, error => {
+          this.errorStatus = error.status;
+          this.errorMessage = error.message;
+          this.loading = false;
         });
       } catch (error) {
         if (error instanceof Error){
-          this.errorMessage = error.message;
-          this.loading = false;
+          throw error;
         }
       }
     }
@@ -125,11 +136,14 @@ export class HomeComponent implements OnInit {
       try {
         this.service.getComedyMovies().subscribe((res) => {
           this.comedyMoviesResults = res.results;
+        }, error => {
+          this.errorStatus = error.status;
+          this.errorMessage = error.message;
+          this.loading = false;
         });
       } catch (error) {
         if (error instanceof Error){
-          this.errorMessage = error.message;
-          this.loading = false;
+          throw error;
         }
       }
     }
@@ -138,11 +152,14 @@ export class HomeComponent implements OnInit {
       try {
         this.service.getDocumentaryMovies().subscribe((res) => {
           this.documentaryMoviesResults = res.results;
+        }, error => {
+          this.errorStatus = error.status;
+          this.errorMessage = error.message;
+          this.loading = false;
         });
       } catch (error) {
         if (error instanceof Error){
-          this.errorMessage = error.message;
-          this.loading = false;
+          throw error;
         }
       }
     }
@@ -151,11 +168,14 @@ export class HomeComponent implements OnInit {
       try {
         this.service.getSciFiMovies().subscribe((res) => {
           this.scifiMoviesResults = res.results;
+        }, error => {
+          this.errorStatus = error.status;
+          this.errorMessage = error.message;
+          this.loading = false;
         });
       } catch (error) {
         if (error instanceof Error){
-          this.errorMessage = error.message;
-          this.loading = false;
+          throw error;
         }
       }
     }
@@ -164,11 +184,14 @@ export class HomeComponent implements OnInit {
       try {
         this.service.getThrillerMovies().subscribe((res) => {
           this.thrillerMoviesResults = res.results;
+        }, error => {
+          this.errorStatus = error.status;
+          this.errorMessage = error.message;
+          this.loading = false;
         });
       } catch (error) {
         if (error instanceof Error){
-          this.errorMessage = error.message;
-          this.loading = false;
+          throw error;
         }
       }
     }

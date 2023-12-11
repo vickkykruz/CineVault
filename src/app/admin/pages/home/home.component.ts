@@ -23,24 +23,20 @@ export class HomeComponent implements OnInit {
 
   constructor(private dialog: MatDialog, private title: Title) {}
 
+  // Meta Title
   ngOnInit(): void {
-    this.title.setTitle('Cruz Tv || Adminstration Home');
+    this.title.setTitle('Cruz Tv || Adminstration || Home');
   }
 
 
-
-  // if (isChecked == true){
-  //
-  // }else {
-  //
-  // }
-
-
+  // Chart Analysis Dialog
   openDialog() {
     const dialogRef = this.dialog.open(AnalyticDataComponent);
   }
 
 }
+
+// Create Table Records
 export interface PeriodicElement {
   name: string;
   position: number;
