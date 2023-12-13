@@ -9,7 +9,8 @@ const routes: Routes = [
   { path: '', component: AdminComponent },
   { path: 'home', component: HomeComponent },
   { path: 'change-password', component: ChangePasswordComponent},
-  { path: 'inbox', component: InboxComponent}
+  { path: 'inbox', component: InboxComponent},
+  { path: 'admin/auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) }
 ];
 
 @NgModule({

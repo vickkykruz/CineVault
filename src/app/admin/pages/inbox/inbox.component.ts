@@ -1,14 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-inbox',
   templateUrl: './inbox.component.html',
   styleUrls: ['./inbox.component.scss']
 })
-export class InboxComponent {
+export class InboxComponent implements OnInit {
   displayedColumns: string[] = ['position', 'name',  'email', 'symbol'];
   dataSource = ELEMENT_DATA;
   toggle!: any;
+
+  constructor(private title: Title) {}
+
+  ngOnInit(): void {
+    this.title.setTitle('Cruz Tv || Adminstration || Inboxs');
+  }
 
   checkBoxChecker: boolean = false;
   handleCheckboxChange(checked: boolean) {
