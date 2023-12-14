@@ -1,0 +1,27 @@
+const surname: string = "Edward";
+        const name: string = "Victor";
+        const lastname: string = "Chukwuemeka";
+        const username: string | null |undefined = userCredentials.user?.displayName;
+        const email = userCredentials.user?.email;
+        const emailVaildation = userCredentials.user?.emailVerified;
+
+        const createTime = userCredentials.user?.metadata.creationTime;
+        const phoneNo = userCredentials.user?.phoneNumber;
+        const photoURL = userCredentials.user?.photoURL;
+
+        if (aUser !== undefined) {
+          const db = getDatabase();
+
+          set(ref(db, "admin/" + aUser), {
+            surname: surname,
+            name: name,
+            lastname: lastname,
+            username: username,
+            email: email,
+            emailVaildation: emailVaildation,
+            phoneNo: phoneNo,
+            photoURL: photoURL,
+            lastSign: lastSign,
+            createdTime: createTime
+          });
+        }

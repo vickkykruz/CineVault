@@ -7,4 +7,5 @@ export const environment = {
     authDomain: 'kruztv-77cf2.firebaseapp.com',
     messagingSenderId: '425933622447',
     measurementId: 'G-8ECE7YDDQG',
+    databaseURL: 'https://kruztv-77cf2-default-rtdb.firebaseio.com',
   },};

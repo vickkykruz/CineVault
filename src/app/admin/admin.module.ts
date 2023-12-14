@@ -15,6 +15,10 @@ import { FormsModule } from '@angular/forms';
 import { FooterComponent } from './partials/footer/footer.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { InboxComponent } from './pages/inbox/inbox.component';
+import { RouterModule } from '@angular/router';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from 'src/environments/environment';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 
 
 @NgModule({
@@ -35,7 +39,10 @@ import { InboxComponent } from './pages/inbox/inbox.component';
     MatTableModule,
     MatDialogModule,
     MatButtonModule,
-    FormsModule
+    FormsModule,
+    RouterModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
   ]
 })
 export class AdminModule { }
