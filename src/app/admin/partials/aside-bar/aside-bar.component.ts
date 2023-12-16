@@ -1,4 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 
 
 @Component({
@@ -10,9 +12,20 @@ export class AsideBarComponent implements OnInit, OnChanges{
 
   @Input() isChecked!: boolean;
 
-  constructor() {}
+  adminFirstName: string = '{{ firstName}}';
+  adminLastName: string = '{{ lastName }}';
+  constructor(
+    private router: Router,
+    private authService: AuthService
+    ) {}
+
+
 
   ngOnInit() {
+    this.displayAdminInfo();
+    this.adminFirstName;
+    this.adminLastName;
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -25,8 +38,24 @@ export class AsideBarComponent implements OnInit, OnChanges{
     }
   }
 
+  displayAdminInfo() {
+    this.authService.getAdminDetails().then((adminInfo: any) => {
+    // Display the firstname and lastname
+      this.adminFirstName = adminInfo.firstname;
+      this.adminLastName = adminInfo.lastname;
+      console.log(adminInfo);
+    })
+    .catch((err: any) => {
+      console.warn(err);
+    })
+  }
 
 
-
-
+  logout() {
+    // Logout Admin
+    sessionStorage.removeItem('SSID');
+    sessionStorage.setItem('isAuthenticated', 'false');
+    // Redirect the admin tologin
+    this.router.navigate(['/admin/auth/login']);
+  }
 }

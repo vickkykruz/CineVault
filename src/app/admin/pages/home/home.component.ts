@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import { AnalyticDataComponent } from '../../partials/analytic-data/analytic-data.component';
 import { Title } from '@angular/platform-browser';
+import { AuthService } from '../../auth/auth.service';
 
 
 @Component({
@@ -13,6 +14,8 @@ export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['position', 'name',  'symbol'];
   dataSource = ELEMENT_DATA;
   toggle!: any;
+  adminUsername!: string;
+  lastSignIn!: string;
 
   checkBoxChecker: boolean = false;
 
@@ -21,14 +24,25 @@ export class HomeComponent implements OnInit {
     // console.log(checked, "SideToggle");
   }
 
-  constructor(private dialog: MatDialog, private title: Title) {}
+  constructor(
+    private dialog: MatDialog,
+    private title: Title,
+    private authService: AuthService
+    ) {}
 
   // Meta Title
   ngOnInit(): void {
     this.title.setTitle('Cruz Tv || Adminstration || Home');
+    this.adminUsername;
+    this.lastSignIn;
   }
 
-
+  getAdminInfo() {
+    this.authService.getAdminDetails().then((adminInfo: any) => {
+      this.adminUsername = adminInfo.displayname;
+      this.lastSignIn = adminInfo.lastSignIn;
+    })
+  }
   // Chart Analysis Dialog
   openDialog() {
     const dialogRef = this.dialog.open(AnalyticDataComponent);

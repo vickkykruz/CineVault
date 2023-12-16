@@ -25,7 +25,7 @@
       <div class="sidebar-user">
         <img src="../../../../assets/images/logo/img-1.jpg" alt="user pic" />
         <div class="">
-          <h3>Victor Chukwuemeka</h3>
+          <h3>{{ adminFirstName }} {{ adminLastName}}</h3>
           <span>Adminstrator</span>
         </div>
       </div>
@@ -35,6 +35,12 @@
           <span>Dashboard</span>
         </div>
         <ul>
+          <li>
+            <a [routerLink]="['/admin/dashboard']" routerLinkActive="dashboard">
+              <span><i class="bx bx-user-plus"></i></span>
+              Dashboard
+            </a>
+          </li>
           <li>
             <a href="">
               <span><i class="bx bx-user-plus"></i></span>
@@ -54,7 +60,7 @@
             </a>
           </li>
           <li>
-            <a href="">
+            <a [routerLink]="['/admin/inbox']" routerLinkActive="inbox">
               <span><i class="bx bx-envelope"></i></span>
               Inbox
             </a>
@@ -65,13 +71,13 @@
         </div>
         <ul>
           <li>
-            <a href="">
+            <a [routerLink]="['/admin/change-password']" routerLinkActive="change-password">
               <span><i class="bx bx-lock-open-alt"></i></span>
               Change Password
             </a>
           </li>
           <li>
-            <a href="">
+            <a (click)="logout()">
               <span><i class="bx bx-log-out-circle"></i></span>
               Logout
             </a>
@@ -115,7 +121,7 @@
         </div>
         <ul>
           <li>
-            <a [routerLink]="['/admin/home']" routerLinkActive="home" >
+            <a [routerLink]="['/admin/dashboard']" routerLinkActive="dashboard" >
               <span><i class="bx bx-home"></i></span>
               Dashboard
             </a>

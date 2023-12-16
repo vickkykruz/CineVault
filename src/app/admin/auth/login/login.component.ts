@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit{
 
   private displaySnackBar(message: string) {
     this._snackbar.open(message, "Close", {
-      duration: 1500,
+      duration: 3500,
     })
   }
 
@@ -72,27 +72,25 @@ export class LoginComponent implements OnInit{
             // If the user exist
             if (snapshot.exists()) {
               // Update the last Sign In
-              const db = getDatabase();
-              set(ref(db, `admin/${aUser}`), {
-                lastSignIn: lastSign
+              this.authService.updateAdminLastSignIn(aUser, lastSign).then(()=> {
+                // Activate Login Session
+                sessionStorage.setItem('SSID', aUser);
+                sessionStorage.setItem('isAuthenticated', 'true');
+                this.displaySnackBar("Welcome"); // Give the user a message
+
+                // Redirect the admin to the dashboard
+                this.router.navigate(['/admin/dashboard']);
               })
-
-              // Activate Login Session
-              sessionStorage.setItem('SSID', aUser);
-              sessionStorage.setItem('isAuthenticated', 'true');
-              this.displaySnackBar("Welcome"); // Give the user a message
-
-              // Redirect the admin to the dashboard
-              this.router.navigate(['/admin/dashboard']);
+              .catch((err) => {
+                this.displaySnackBar("Error: Internal Update Failed");
+              });
             }else {
               this.displaySnackBar("Error: This record is not found");
-            }
-          })
+            };
+          });
         }else {
           this.displaySnackBar("Error: Unable to get data");
-        }
-        // Let the lastLogin Date From the admin Stoarge
-        // console.log(aUser);
+        };
       })
       .catch((err) => {
         this.displaySnackBar("Warnng: Login attempt failed");
