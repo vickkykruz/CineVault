@@ -47,13 +47,4 @@ export class AuthService {
       }
     })
   }
-
-  updateAdminLastSignIn(adminID: string, nwLastSignIN: string) {
-    // Update the value
-    const updates: Record<string, any> = {};
-    updates[`/admin/${adminID}/lastSignIn`] = nwLastSignIN;
-
-    // Perform the action
-    return update(ref(this.db) as DatabaseReference, updates);
-  }
 }

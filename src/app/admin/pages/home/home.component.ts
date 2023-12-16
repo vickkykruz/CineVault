@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
   // Meta Title
   ngOnInit(): void {
     this.title.setTitle('Cruz Tv || Adminstration || Home');
+    this.getAdminInfo();
     this.adminUsername;
     this.lastSignIn;
   }

@@ -6,6 +6,9 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from 'src/app/service/auth.service';
 import { take, timer } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { child, get, getDatabase, ref } from 'firebase/database';
+import { UserService } from 'src/app/user.service';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +21,7 @@ export class LoginComponent implements OnInit {
     email: '',
     password: ''
   }
+  isProcessing: boolean = false;
 
   message!:string;
   ValidateForm!: boolean;
@@ -29,8 +33,23 @@ export class LoginComponent implements OnInit {
     private router: ActivatedRoute,
     private moveRoute: Router,
     private fireauth: AngularFireAuth,
-    private service: AuthService,
+    private authService: AuthService,
+    private userService: UserService,
+    private _snackbar: MatSnackBar,
     private title: Title) {}
+  private db = getDatabase();
+  private displaySnackBar(message: string) {
+    this._snackbar.open(message, "Close", {
+      duration: 3500,
+    });
+  }
+
+  private showProcessingMessage() {
+    this._snackbar.open("Processing...", "", {
+      duration: 2500,
+    });
+  }
+
   ngOnInit(): void {
     this.title.setTitle('Cruz Tv || Login');
   }
@@ -39,50 +58,59 @@ export class LoginComponent implements OnInit {
   feedback!: any;
   user: any;
   submitForm() {
+    //* Preventing the function from continuing futher if the processing is true to avoid conflict
+    if (this.isProcessing) {
+      return;
+    }
+
+    //* Disable the formand showing procaessing meassage
+    this.isProcessing = true;
+    this.showProcessingMessage();
+
     this.fireauth.signInWithEmailAndPassword(this.userInfo.email, this.userInfo.password)
-    .then((response) => {
-      const datas: any = {
-        id: response.user?.uid,
-        status: 'active'
-      };
-      this.service.saveDataInSessionStorage(datas);
-      const redirectDisplay: number = 5000;
-      alert('Redirecting...');
-      const timer$ = timer(redirectDisplay);
+    .then((userCredentials) => {
 
-      timer$.pipe(take(1)).subscribe(() => {
-        if (this.id != null){
-          this.moveRoute.navigate([`/movie/${this.id}`]);
-        }else {
-          this.moveRoute.navigate(['/home']);
-        }
-      });
+      // Get the user ID and lastSignDate
+      const userID: string | undefined = userCredentials.user?.uid;
+      const lastSignIn: any  = userCredentials.user?.metadata.lastSignInTime;
 
-      // this.user = response.user;
-      // console.log(response);
-      // this.defaultError = {
-      //   'display': 'block'
-      // }
-      // this.ValidateForm = true;
-      // // this.service.userEffect();
-
-      // this.message = "Created an account successfully";
-
-    }, err=> {
-      this.defaultError = {
-        'display': 'block'
-      }
-
-      if (err.message == "Firebase: Error (auth/user-not-found).") {
-        this.message = "No Accound Found With The Email Address";
+      if (userID !== undefined) {
+        //* Fetch and undate the lastLogin
+        const dbRef = ref(this.db);
+        get(child(dbRef, `users\${userID}`)).then((snapshot) => {
+          if (snapshot.exists()) {
+            // Upadet the lastSignIN
+            const table = "users";
+            this.userService.updateAdminLastSignIn(table, userID, lastSignIn).then(() => {
+              // Activate Login Session
+              sessionStorage.setItem('SSID', userID);
+              sessionStorage.setItem('isAuthenticated', 'true');
+              sessionStorage.setItem('userCatigory', 'user');
+              this.displaySnackBar("Welcome"); // Give the user a message
+              this.isProcessing = false;
+              if (this.id != null){ 
+                this.moveRoute.navigate([`/download/${this.id}`]);
+              }else {
+                this.moveRoute.navigate(['/home']);
+              }
+            })
+            .catch((err) => {
+              this.displaySnackBar("Error: Login session failed");
+              this.isProcessing = false;
+            })
+          }else {
+            this.displaySnackBar("Error: Record not found");
+            this.isProcessing = false;
+          }
+        })
       }else {
-        this.message = "Network connection failed";
+        this.displaySnackBar("Error: Unable to get record");
+        this.isProcessing = false;
       }
-      this.ValidateForm = false;
-      // this.message = err.message;
-
+    })
+    .catch((err) => {
+      this.displaySnackBar("Error: Unable to connect...");
+      this.isProcessing = false;
     });
   }
-
-
 }

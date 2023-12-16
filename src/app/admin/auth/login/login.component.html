@@ -26,7 +26,7 @@
             <small class="float-start mb-2 fw-bolder text-danger">Password should be minimum of 6 characters</small>
           </div>
           <div class="field space">
-              <button type="submit" [disabled]="loginForm.invalid" id="submit">LOGIN</button>
+              <button type="submit" [disabled]="loginForm.invalid || isProcessing" id="submit">LOGIN</button>
           </div>
           <div>
               <p class="message"></p>

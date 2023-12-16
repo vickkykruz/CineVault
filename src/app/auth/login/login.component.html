@@ -1,21 +1,5 @@
 <div class="bg-img">
   <div class="content">
-    <ng-container *ngIf="ValidateForm; else elseLogin">
-      <div class="container-fluid">
-        <div class="alert alert-success">
-          <h6 class="text-white">Successfully Login</h6>
-        </div>
-      </div>
-    </ng-container>
-    <ng-template #elseLogin>
-      <div class="container-fluid" [ngStyle]="defaultError">
-        <div class="alert alert-danger">
-          <h6 class="text-white">{{ message }}</h6>
-        </div>
-      </div>
-    </ng-template>
-
-
       <header class="display-3 text-center">Login</header>
       <!-- {{ userInfo | json}} -->
       <form #loginForm="ngForm" (ngSubmit)="submitForm()">
@@ -41,7 +25,7 @@
             <small class="float-start mb-2 fw-bolder text-danger">Password should be minimum of 6 characters</small>
           </div>
           <div class="field space">
-              <button type="submit" [disabled]="loginForm.invalid" id="submit">LOGIN</button>
+              <button type="submit" [disabled]="loginForm.invalid || isProcessing" id="submit">LOGIN</button>
           </div>
           <div>
               <p class="message"></p>
@@ -55,9 +39,7 @@
                   <a href="#" id="noy">
                     <i class="bx bxl-facebook"><span>Facebook</span></i></a>
               </div>
-              <!-- <div class="instagram">
-                  <i class="bx bxl-instagram"><span>Instagram</span></i>
-              </div> -->
+              
               <div class="google">
                   <i class="bx bxl-google"><span>Google</span></i>
               </div>

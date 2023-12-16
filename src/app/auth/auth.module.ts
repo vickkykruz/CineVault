@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { AuthRoutingModule } from './auth-routing.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AuthRoutingModule } from './auth-routing.module';
     AuthRoutingModule,
     FormsModule,
     RouterModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    MatSnackBarModule,
   ],
 
 })
