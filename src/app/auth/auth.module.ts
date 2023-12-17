@@ -6,8 +6,6 @@ import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { AuthComponent } from './auth.component';
 import { RouterModule } from '@angular/router';
-import { AngularFireModule } from '@angular/fire/compat';
-import { environment } from 'src/environments/environment';
 import { AuthRoutingModule } from './auth-routing.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -23,7 +21,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     AuthRoutingModule,
     FormsModule,
     RouterModule,
-    AngularFireModule.initializeApp(environment.firebase),
     MatSnackBarModule,
   ],
 

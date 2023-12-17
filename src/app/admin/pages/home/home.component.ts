@@ -14,8 +14,8 @@ export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['position', 'name',  'symbol'];
   dataSource = ELEMENT_DATA;
   toggle!: any;
-  adminUsername!: string;
-  lastSignIn!: string;
+  adminUsername: string = "{{ username }}";
+  lastSignIn: string = "{{ lastSignIn }}";
 
   checkBoxChecker: boolean = false;
 

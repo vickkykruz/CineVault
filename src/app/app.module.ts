@@ -35,6 +35,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 // import { CustomErrorHandler } from './service/custom-error-handler.service';
 import { MatButtonModule } from '@angular/material/button';
 import { CommentSectionComponent } from './partials/comment-section/comment-section.component';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { UserService } from './user.service';
 
 
 @NgModule({
@@ -59,6 +61,7 @@ import { CommentSectionComponent } from './partials/comment-section/comment-sect
     CarouselModule,
     BrowserAnimationsModule,
     FormsModule,
+    AngularFireDatabaseModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),
@@ -76,6 +79,7 @@ import { CommentSectionComponent } from './partials/comment-section/comment-sect
   providers: [
     MovieApiServiceService,
     AuthService,
+    UserService,
     ScreenTrackingService,
     UserTrackingService,
     // {

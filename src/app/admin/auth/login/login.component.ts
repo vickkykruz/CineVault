@@ -75,51 +75,17 @@ export class LoginComponent implements OnInit{
     if (this.loginAttempts >= this.maxAttempts) {
       this.displaySnackBar('Error: Login attempts exceeded!');
     } else {
-
-      this.fireauth.signInWithEmailAndPassword(this.userInfo.email, this.userInfo.password)
-      .then((userCredentials) => {
-
-        const aUser: string | undefined = userCredentials.user?.uid;
-        const lastSign: any  = userCredentials.user?.metadata.lastSignInTime;
-
-        // Condition to Check if the userId is undefined
-        if (aUser !== undefined) {
-          // Fetch and Update the admin last login
-          const dbRef = ref(this.db);
-          get(child(dbRef, `admin/${aUser}`)).then((snapshot) => {
-            // If the user exist
-            if (snapshot.exists()) {
-              // Update the last Sign In
-              const table = "admin";
-              this.userService.updateAdminLastSignIn(table, aUser, lastSign).then(()=> {
-                // Activate Login Session
-                sessionStorage.setItem('SSID', aUser);
-                sessionStorage.setItem('isAuthenticated', 'true');
-                sessionStorage.setItem('userCatigory', 'admin');
-                this.displaySnackBar("Welcome"); // Give the user a message
-                this.isProcessing = false;
-                localStorage.setItem(this.STORAGE_KEY, '0'); // Reset the Login Attempt
-                // Redirect the admin to the dashboard
-                this.router.navigate(['/admin/dashboard']);
-
-              })
-              .catch((err) => {
-                this.displaySnackBar("Error: Internal Update Failed");
-                this.isProcessing = false;
-              });
-            }else {
-              this.displaySnackBar("Error: This record is not found");
-              this.isProcessing = false;
-            };
-          });
-        }else {
-          this.displaySnackBar("Error: Unable to get data");
-        };
-      })
-      .catch((err) => {
-        this.displaySnackBar("Warnng: Login attempt failed");
+      this.userService.siginWithEmailAndPassword("admin", this.userInfo.email, this.userInfo.password)
+      .then(() => {
+        this.displaySnackBar("Welcome");
         this.isProcessing = false;
-      });
+        localStorage.setItem(this.STORAGE_KEY, '0');
+        this.router.navigate(['/admin/dashboard']);
+      })
+      .catch((error) => {
+        this.displaySnackBar(error);
+        this.isProcessing = false;
+      })
     }
   }
 }

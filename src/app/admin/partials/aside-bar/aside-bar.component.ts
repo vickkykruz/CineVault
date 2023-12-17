@@ -12,7 +12,7 @@ export class AsideBarComponent implements OnInit, OnChanges{
 
   @Input() isChecked!: boolean;
 
-  adminFirstName: string = '{{ firstName}}';
+  adminFirstName: string = '{{ firstname }}';
   adminLastName: string = '{{ lastName }}';
   constructor(
     private router: Router,
@@ -55,6 +55,7 @@ export class AsideBarComponent implements OnInit, OnChanges{
     // Logout Admin
     sessionStorage.removeItem('SSID');
     sessionStorage.setItem('isAuthenticated', 'false');
+    sessionStorage.removeItem('userCatigory');
     // Redirect the admin tologin
     this.router.navigate(['/admin/auth/login']);
   }

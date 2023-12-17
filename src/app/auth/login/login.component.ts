@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/service/auth.service';
 import { take, timer } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { child, get, getDatabase, ref } from 'firebase/database';
+import { child, get, getDatabase, ref, set } from 'firebase/database';
 import { UserService } from 'src/app/user.service';
 
 @Component({
@@ -66,51 +66,19 @@ export class LoginComponent implements OnInit {
     //* Disable the formand showing procaessing meassage
     this.isProcessing = true;
     this.showProcessingMessage();
-
-    this.fireauth.signInWithEmailAndPassword(this.userInfo.email, this.userInfo.password)
-    .then((userCredentials) => {
-
-      // Get the user ID and lastSignDate
-      const userID: string | undefined = userCredentials.user?.uid;
-      const lastSignIn: any  = userCredentials.user?.metadata.lastSignInTime;
-
-      if (userID !== undefined) {
-        //* Fetch and undate the lastLogin
-        const dbRef = ref(this.db);
-        get(child(dbRef, `users\${userID}`)).then((snapshot) => {
-          if (snapshot.exists()) {
-            // Upadet the lastSignIN
-            const table = "users";
-            this.userService.updateAdminLastSignIn(table, userID, lastSignIn).then(() => {
-              // Activate Login Session
-              sessionStorage.setItem('SSID', userID);
-              sessionStorage.setItem('isAuthenticated', 'true');
-              sessionStorage.setItem('userCatigory', 'user');
-              this.displaySnackBar("Welcome"); // Give the user a message
-              this.isProcessing = false;
-              if (this.id != null){ 
-                this.moveRoute.navigate([`/download/${this.id}`]);
-              }else {
-                this.moveRoute.navigate(['/home']);
-              }
-            })
-            .catch((err) => {
-              this.displaySnackBar("Error: Login session failed");
-              this.isProcessing = false;
-            })
-          }else {
-            this.displaySnackBar("Error: Record not found");
-            this.isProcessing = false;
-          }
-        })
+    this.userService.siginWithEmailAndPassword("users", this.userInfo.email, this.userInfo.password)
+    .then(() => {
+      this.displaySnackBar("Welcome");
+      this.isProcessing = false;
+      if (this.id != null) {
+        this.moveRoute.navigate([`/download/${this.id}`]);
       }else {
-        this.displaySnackBar("Error: Unable to get record");
-        this.isProcessing = false;
+        this.moveRoute.navigate(['/home']);
       }
     })
-    .catch((err) => {
-      this.displaySnackBar("Error: Unable to connect...");
+    .catch((error) => {
+      this.displaySnackBar(error);
       this.isProcessing = false;
-    });
+    })
   }
 }

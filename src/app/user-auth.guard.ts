@@ -16,10 +16,10 @@ export class UserAuthGuard implements CanActivate {
     return new Promise<boolean>((resolve) => {
 
       const userCatigory = this.userService.getUserCatigory();
-      
+
       //! Check if the user is logged in
       if(this.userService.isLogging()) {
-        if(userCatigory  === 'user') {
+        if(userCatigory  === 'users') {
           resolve(true); //* User is authenicated, continue with navigaion
         }else {
           //* User is not authenicated,redirect to login
@@ -33,5 +33,5 @@ export class UserAuthGuard implements CanActivate {
       }
     })
   }
-  
+
 }
