@@ -41,8 +41,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
     MatButtonModule,
     FormsModule,
     RouterModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireDatabaseModule,
+    // AngularFireModule.initializeApp(environment.firebase),
+    // AngularFireDatabaseModule,
   ]
 })
 export class AdminModule { }

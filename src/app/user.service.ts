@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { DatabaseReference, child, get, getDatabase, ref, update } from 'firebase/database';
+import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { DatabaseReference, child, get, getDatabase, ref, update } from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ import { DatabaseReference, child, get, getDatabase, ref, update } from 'firebas
 export class UserService {
 
   constructor(
-    private fireauth: AngularFireAuth,
+    private fireauth: Auth,
     ) { }
 
   private db = getDatabase();
@@ -57,7 +57,7 @@ export class UserService {
   // Create a sign service
   siginWithEmailAndPassword(table: string, email: string, password: string): Promise<void> {
     return new Promise<void> ((resolve, reject) => {
-      this.fireauth.signInWithEmailAndPassword(email, password)
+      signInWithEmailAndPassword(this.fireauth, email, password)
       .then((userCredentials) => {
         const userId: string | undefined = userCredentials.user?.uid;
         const lastSign: any = userCredentials.user?.metadata.lastSignInTime;

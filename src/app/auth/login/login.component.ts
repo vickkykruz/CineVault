@@ -1,13 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-
-import { AuthService } from 'src/app/service/auth.service';
-import { take, timer } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { child, get, getDatabase, ref, set } from 'firebase/database';
 import { UserService } from 'src/app/user.service';
 
 @Component({
@@ -32,12 +27,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: ActivatedRoute,
     private moveRoute: Router,
-    private fireauth: AngularFireAuth,
-    private authService: AuthService,
     private userService: UserService,
     private _snackbar: MatSnackBar,
     private title: Title) {}
-  private db = getDatabase();
   private displaySnackBar(message: string) {
     this._snackbar.open(message, "Close", {
       duration: 3500,

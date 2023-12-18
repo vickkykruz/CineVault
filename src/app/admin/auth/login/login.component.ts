@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Auth } from 'src/app/auth/auth';
 import { AuthService } from '../auth.service';
-import { child, get, getDatabase, ref, set } from 'firebase/database';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/user.service';
 
@@ -26,7 +25,6 @@ export class LoginComponent implements OnInit{
   }
 
   constructor (
-    private fireauth: AngularFireAuth,
     private authService: AuthService,
     private userService: UserService,
     private _snackbar: MatSnackBar,
@@ -37,7 +35,6 @@ export class LoginComponent implements OnInit{
   private getLoginAttempts() {
     this.loginAttempts = this.authService.getLoginAttempts();
   }
-  private db = getDatabase();
   private displaySnackBar(message: string) {
     this._snackbar.open(message, "Close", {
       duration: 3500,
