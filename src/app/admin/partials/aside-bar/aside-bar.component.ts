@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { UserService } from 'src/app/service/user.service';
 
 
 @Component({
@@ -12,11 +13,12 @@ export class AsideBarComponent implements OnInit, OnChanges{
 
   @Input() isChecked!: boolean;
 
-  adminFirstName: string = '{{ firstname }}';
-  adminLastName: string = '{{ lastName }}';
+  adminFirstName: string = '';
+  adminLastName: string = '';
   constructor(
     private router: Router,
-    private authService: AuthService
+    private userService: UserService,
+    private authService: AuthService,
     ) {}
 
 
@@ -39,15 +41,22 @@ export class AsideBarComponent implements OnInit, OnChanges{
   }
 
   displayAdminInfo() {
-    this.authService.getAdminDetails().then((adminInfo: any) => {
-    // Display the firstname and lastname
-      this.adminFirstName = adminInfo.firstname;
-      this.adminLastName = adminInfo.lastname;
-      console.log(adminInfo);
+    this.userService.getCurrentUserProfie().then(() => {
+      this.authService.getAdminDetails().then((adminInfo: any) => {
+        // Display the firstname and lastname
+        this.adminFirstName = adminInfo.firstname;
+        this.adminLastName = adminInfo.lastname;
+        console.log(adminInfo);
+      })
+      .catch((err: any) => {
+        this.adminFirstName = '{{ firstname }}';
+        this.adminLastName = '{{ lastName }}';
+      })
     })
-    .catch((err: any) => {
-      console.warn(err);
-    })
+    .catch(() => {
+      this.adminFirstName = '{{ firstname }}';
+      this.adminLastName = '{{ lastName }}';
+    });
   }
 
 

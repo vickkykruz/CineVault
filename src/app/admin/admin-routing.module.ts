@@ -4,7 +4,7 @@ import { AdminComponent } from './admin.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { InboxComponent } from './pages/inbox/inbox.component';
-import { AdminAuthGuard } from './admin-auth.guard';
+import { AdminAuthGuard } from './guard/admin-auth.guard';
 
 const routes: Routes = [
   { path: '', canActivate: [AdminAuthGuard], component: AdminComponent,  children: [

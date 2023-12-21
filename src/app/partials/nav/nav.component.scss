@@ -1,6 +1,55 @@
 .navbar {
   padding: 0 25px;
-  // background-color: rgba(0, 0, 0, 0.8);
+}
+
+.navbar .menu {
+  width: 100%;
+  margin: auto;
+  padding: 5px 0;
+}
+
+.navbar .menu .menu-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar .menu .menu-container ul {
+  list-style: none;
+  display: flex;
+}
+
+.navbar .menu .menu-container ul li a{
+  margin: 0 10px;
+  text-decoration: none;
+  font-size: 19px;
+  color: var(--main-color);
+  font-weight: 700;
+  display: inline-flex;
+  padding: 5px 6px;
+  position: relative;
+}
+
+.navbar .menu .menu-container ul li:last-child{
+  background: red;
+  color: #fff;
+  border-radius: 4px;
+  text-align: center !important;
+  font-size: 18px;
+  padding: 6px 12px;
+  box-shadow: -3px -3px 7px rgba(0, 0, 0, 0.8),
+    3px 3px 5px rgba(0, 0, 0, 0.8);
+}
+
+.navbar .menu .menu-container ul li a:hover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset -3px -3px 7px rgba(0, 0, 0, 0.8),
+    inset 3px 3px 5px rgba(0, 0, 0, 0.8);
 }
 
 #disktop-logo {

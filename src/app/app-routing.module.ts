@@ -7,12 +7,13 @@ import { SearchComponent } from './pages/search/search.component';
 import { AuthComponent } from './auth/auth.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DownloadMoviesComponent } from './pages/download-movies/download-movies.component';
+import { UserAuthGuard } from './guard/user-auth.guard';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'search/:input', component: SearchComponent},
   {path: 'movie/:id', component: MovieDetailsComponent},
-  {path: 'download/:movieid', component: DownloadMoviesComponent},
+  {path: 'download/:movieid', canActivate: [UserAuthGuard], component: DownloadMoviesComponent},
   {path: 'auth', loadChildren: () => import('./auth/auth.module').then( m => m.AuthModules)},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },

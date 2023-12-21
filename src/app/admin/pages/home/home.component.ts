@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import { AnalyticDataComponent } from '../../partials/analytic-data/analytic-data.component';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../auth/auth.service';
+import { UserService } from 'src/app/service/user.service';
 
 
 @Component({
@@ -14,8 +15,8 @@ export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['position', 'name',  'symbol'];
   dataSource = ELEMENT_DATA;
   toggle!: any;
-  adminUsername: string = "{{ username }}";
-  lastSignIn: string = "{{ lastSignIn }}";
+  adminUsername!: string | null | undefined;
+  lastSignIn!: string | undefined;
 
   checkBoxChecker: boolean = false;
 
@@ -27,7 +28,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private title: Title,
-    private authService: AuthService
+    private userService: UserService,
+    // private authService: AuthService
     ) {}
 
   // Meta Title
@@ -39,11 +41,16 @@ export class HomeComponent implements OnInit {
   }
 
   getAdminInfo() {
-    this.authService.getAdminDetails().then((adminInfo: any) => {
-      this.adminUsername = adminInfo.displayname;
-      this.lastSignIn = adminInfo.lastSignIn;
+    this.userService.getCurrentUserProfie().then((userData) => {
+      this.adminUsername = userData?.displayName;
+      this.lastSignIn = userData?.metadata.lastSignInTime;
+    })
+    .catch(() => {
+      this.adminUsername = "{{ username }}";
+      this.lastSignIn = "{{ lastSignIn }}";
     })
   }
+
   // Chart Analysis Dialog
   openDialog() {
     const dialogRef = this.dialog.open(AnalyticDataComponent);

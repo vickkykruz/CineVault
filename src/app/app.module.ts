@@ -36,7 +36,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { CommentSectionComponent } from './partials/comment-section/comment-section.component';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
-import { UserService } from './user.service';
+import { UserService } from './service/user.service';
 
 
 @NgModule({

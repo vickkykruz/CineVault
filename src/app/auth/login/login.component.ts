@@ -3,7 +3,7 @@ import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserService } from 'src/app/user.service';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-login',

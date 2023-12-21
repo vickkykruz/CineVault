@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, User, getAuth, signInWithEmailAndPassword, updatePassword } from '@angular/fire/auth';
 import { DatabaseReference, child, get, getDatabase, ref, update } from '@angular/fire/database';
 
 @Injectable({
@@ -11,6 +11,8 @@ export class UserService {
     private fireauth: Auth,
     ) { }
 
+  private auth = getAuth();
+  private user = this.auth.currentUser; //* Get the authenicated User
   private db = getDatabase();
 
   private updateAdminLastSignIn(table: string, userId: string, nwLastSignIN: string): Promise<void> {
@@ -45,13 +47,46 @@ export class UserService {
   }
 
   isLogging(): boolean {
-    const isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
-    //* Return true else false
-    return (isAuthenticated) ? true : false;
+
+    //* The Observer check If the current user is signed in
+    if (this.user) {
+      //* Session check if your are previously availabled
+      const isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
+      //* Return true else false
+      return (isAuthenticated) ? true : false;
+    }else {
+      return false;
+    }
   }
 
   getUserCatigory(): string | null {
     return sessionStorage.getItem('userCatigory');
+  }
+
+  getCurrentUserProfie(): Promise<User | null> {
+    return new Promise(resolve => {
+      if (this.user !== null) {
+        resolve(this.user);
+      }else {
+        resolve(null);
+      }
+    });
+  }
+
+  updateUserPassword(newPassword: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (this.user) {
+        updatePassword(this.user, newPassword)
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject('Error: Failed to update password');
+        });
+      }else {
+        reject('Error: User not found');
+      }
+    });
   }
 
   // Create a sign service

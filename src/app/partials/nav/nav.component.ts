@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-nav',
@@ -17,7 +18,8 @@ export class NavComponent implements OnInit{
   constructor(
     private service: AuthService,
     private routeId: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private userService: UserService
     ) {}
 
   loginStatus: boolean = this.service.arrayExistsInSessionStorage();
@@ -26,27 +28,17 @@ export class NavComponent implements OnInit{
   // docKey = this.docData.id;
 
   ngOnInit(): void {
-    this.getUserIdenty();
+    this.checkUserStatus();
   }
 
   userData: any;
   id: any;
 
-  async getUserIdenty(): Promise<void> {
-    if (this.loginStatus == true) {
-      this.authStatus = true;
-      this.docData = this.service.getArrayDataInSessionStorage();
-      const docKey = this.docData.id;
-      console.log(docKey, "userId###");
-
-      try {
-        this.userData = await this.service.fetctdata(docKey);
-        console.log(this.userData, "Status###");
-
-      } catch (error) {
-        console.log(error);
-      }
-      // this.userData = this.service.fetctdata(docKey);
+  checkUserStatus() {
+    if(this.userService.isLogging()) {
+      this.authStatus = false;
+    }else {
+      this.authStatus = false;
     }
   }
 

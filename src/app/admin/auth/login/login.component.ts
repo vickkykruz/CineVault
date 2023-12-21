@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { Auth } from 'src/app/auth/auth';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/user.service';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-login',
