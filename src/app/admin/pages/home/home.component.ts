@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import { AnalyticDataComponent } from '../../partials/analytic-data/analytic-data.component';
 import { Title } from '@angular/platform-browser';
-import { AuthService } from '../../auth/auth.service';
 import { UserService } from 'src/app/service/user.service';
 
 
@@ -29,7 +28,6 @@ export class HomeComponent implements OnInit {
     private dialog: MatDialog,
     private title: Title,
     private userService: UserService,
-    // private authService: AuthService
     ) {}
 
   // Meta Title

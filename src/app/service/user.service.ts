@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Auth, User, getAuth, signInWithEmailAndPassword, updatePassword } from '@angular/fire/auth';
+import { Auth, User, getAuth, signInWithEmailAndPassword, signOut, updatePassword } from '@angular/fire/auth';
 import { DatabaseReference, child, get, getDatabase, ref, update } from '@angular/fire/database';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ export class UserService {
 
   constructor(
     private fireauth: Auth,
+    private _snackbar: MatSnackBar,
     ) { }
 
   private auth = getAuth();
@@ -59,6 +61,18 @@ export class UserService {
     }
   }
 
+  displaySnackBar(message: string) {
+    this._snackbar.open(message, "Close", {
+      duration: 3500,
+    });
+  }
+
+  showProcessingMessage() {
+    this._snackbar.open("Processing...", "", {
+      duration: 2500,
+    });
+  }
+
   getUserCatigory(): string | null {
     return sessionStorage.getItem('userCatigory');
   }
@@ -73,6 +87,7 @@ export class UserService {
     });
   }
 
+  // Update user password
   updateUserPassword(newPassword: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (this.user) {
@@ -86,6 +101,25 @@ export class UserService {
       }else {
         reject('Error: User not found');
       }
+    });
+  }
+
+  // SignOut the user
+  userSignOut(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      signOut(this.auth)
+      .then(() => {
+        // Remove the sessions
+        sessionStorage.removeItem('SSID');
+        sessionStorage.removeItem('isAuthenticated');
+        sessionStorage.removeItem('userCatigory');
+
+        // Resolve the Promise
+        resolve();
+      })
+      .catch(() => {
+        reject('Error: Failed to signout');
+      });
     });
   }
 

@@ -37,6 +37,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommentSectionComponent } from './partials/comment-section/comment-section.component';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { UserService } from './service/user.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { UserService } from './service/user.service';
     provideStorage(() => getStorage()),
     NgxSpinnerModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSnackBarModule,
   ],
   providers: [
     MovieApiServiceService,

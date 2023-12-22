@@ -18,7 +18,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
     AuthRoutingModule,
     FormsModule,
-    MatSnackBarModule,
   ]
 })
 export class AuthModule { }

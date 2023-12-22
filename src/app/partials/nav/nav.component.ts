@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -14,44 +15,41 @@ export class NavComponent implements OnInit{
 
   navbar: any;
   authStatus: boolean = false;
-  userData$!: Observable<any>;
+
   constructor(
-    private service: AuthService,
     private routeId: ActivatedRoute,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
     ) {}
 
-  loginStatus: boolean = this.service.arrayExistsInSessionStorage();
-  docData!: any;
-  // docData: any = this.service.getArrayDataInSessionStorage();
-  // docKey = this.docData.id;
+  
 
   ngOnInit(): void {
     this.checkUserStatus();
   }
 
-  userData: any;
-  id: any;
+  id: any = this.routeId.snapshot.paramMap.get('id');
 
   checkUserStatus() {
     if(this.userService.isLogging()) {
-      this.authStatus = false;
+      this.authStatus = true;
     }else {
       this.authStatus = false;
     }
   }
 
   logout() {
-    if (this.loginStatus == true){
-      this.service.removeDataInSession();
-      this.id = this.routeId.snapshot.paramMap.get('id');
+    this.userService.userSignOut()
+    .then(() => {
       if (this.id != null) {
         this.router.navigate([`/movie/${this.id}`]);
       }else {
         this.router.navigate(['/home']);
       }
-    }
+    })
+    .catch((err) => {
+      this.userService.displaySnackBar(err);
+    });
   }
 
 

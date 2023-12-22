@@ -1,100 +1,33 @@
 <!-- Navbar Start -->
-<ng-container *ngIf="authStatus; else navelse">
-  <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top" [ngStyle]="navbar">
-    <div class="container-fluid">
-      <a class="navbar-brand" [routerLink]="['/home']" routerLinkActive="router-link-active" >
+<nav class="navbar fixed-top" [ngStyle]="navbar">
+  <div class="menu">
+    <div class="menu-container">
+      <input type="checkbox" id="check">
+      <a class="navbar-brand" [routerLink]="['/home']" routerLinkActive="home" >
         <img src="../assets/images/logo/Netflix-Logo.png" alt="Logo" width="100" height="60" id="disktop-logo" class="d-inline-block align-text-top">
         <img src="../assets/images/logo/net_logo.png" alt="Logo" width="60" height="40" id="mobile-logo" class="d-inline-block align-text-top">
       </a>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item" >
+      <ul>
+        <label class="button btncancel" for="check"><i class="bx bx-menu-alt-right"></i></label>
+        <li><a [routerLink]="['/home']" routerLinkActive="home" >Home</a></li>
+        <li><a [routerLink]="['/movies']" routerLinkActive="movies" >Movies</a></li>
+        <ng-container *ngIf="authStatus; else notAuth"></ng-container>
+          <li><a [routerLink]="['/account']" routerLinkActive="account" >My Account</a></li>
+          <li><a (click)="logout()">SignOut</a></li>
+        <ng-template #notAuth>
+          <ng-container ngIf="id !== null; else idNull">
+            <li><a [routerLink]="['/auth/login', id]" routerLinkActive="login" >SignIn</a></li>
+            <li><a [routerLink]="['/auth/signup', id]" routerLinkActive="signup" >SignUp</a></li>
+            <ng-template #idNull>
+              <li><a [routerLink]="['/auth/login']" routerLinkActive="login" >SignIn</a></li>
+              <li><a [routerLink]="['/auth/signup']" routerLinkActive="signup" >SignUp</a></li>
+            </ng-template>
 
-            <div class="dropdowns">
-              <div class="dropbtn img">
-                <img src="../../../assets/images/logo/img-1.jpg" width="50" height="50" alt="">
-                <h6>{{ userData.name}} <span><i style="font-size: 1.2rem; font-weight:500;" class="bx bx-chevron-down"></i></span></h6>
-              </div>
-              <div class="dropdown-content">
-                <a href="javascript:void(0);">Profile</a>
-                <a (click)="logout()">Sign Out</a>
-              </div>
-            </div>
-
-          </li>
-        </ul>
-      </div>
-       <div class="user_info moblie-anoch">
-
-        <div class="dropdowns">
-          <div class="dropbtn img">
-            <img src="../../../assets/images/logo/img-1.jpg" width="30" height="30" alt="">
-            <h6><span><i style="font-size: 1.2rem; font-weight:500;" class="bx bx-chevron-down"></i></span></h6>
-          </div>
-          <div class="dropdown-content">
-            <a href="javascript:void(0);">Profile</a>
-            <a (click)="logout()">Sign Out</a>
-          </div>
-        </div>
-
-      </div>
-
+          </ng-container>
+        </ng-template>
+      </ul>
+      <label class="button bars" for="check"><i class="bx bx-menu"></i></label>
     </div>
-  </nav>
-</ng-container>
-<ng-template #navelse>
-
-  <nav class="navbar fixed-top" [ngStyle]="navbar">
-    <div class="menu">
-      <div class="menu-container">
-        <a class="navbar-brand" [routerLink]="['/home']" routerLinkActive="router-link-active" >
-          <img src="../assets/images/logo/Netflix-Logo.png" alt="Logo" width="100" height="60" id="disktop-logo" class="d-inline-block align-text-top">
-          <img src="../assets/images/logo/net_logo.png" alt="Logo" width="60" height="40" id="mobile-logo" class="d-inline-block align-text-top">
-        </a>
-        <ul>
-          <li><a href="">Home</a></li>
-          <li><a href="">Movies</a></li>
-          <li><a href="">SignIn</a></li>
-          <li><a href="">SignUp</a></li>
-        </ul>
-        <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item"></li>
-          </ul>
-          <div class="toggle-icons">
-            <div class="searchbar">
-              <a class="nav-link active" aria-current="page" [routerLink]="['/auth/login']" routerLinkActive="router-link-active" >
-                <i class='bx bx-search-alt'></i>
-              </a>
-            </div>
-            <div class="loginnav">
-              <a class="nav-link active" aria-current="page" [routerLink]="['/auth/login']" routerLinkActive="router-link-active" >
-                <i class='bx bx-log-in'></i>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="moblie-anoch">
-          <div class="toggle-icons">
-            <div class="searchbar">
-              <a class="nav-link active" aria-current="page" [routerLink]="['/auth/login']" routerLinkActive="router-link-active" >
-                <i class='bx bx-search-alt'></i>
-              </a>
-            </div>
-            <div class="loginnav">
-              <a class="nav-link active" aria-current="page" [routerLink]="['/auth/login']" routerLinkActive="router-link-active" >
-                <i class='bx bx-log-in'></i>
-              </a>
-            </div>
-          </div>
-        </div> -->
-        <!-- <a  [routerLink]="['/auth/login']" routerLinkActive="router-link-active"  class="moblie-anoch">
-          <i class='bx bx-log-in'></i> </a> -->
-      </div>
-    </div>
-  </nav>
-
-</ng-template>
-
-
+  </div>
+</nav>
 <!-- End Navbar -->

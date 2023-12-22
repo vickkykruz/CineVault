@@ -28,10 +28,11 @@
   display: inline-flex;
   padding: 5px 6px;
   position: relative;
+  transition: all 0.3s ease;
 }
 
-.navbar .menu .menu-container ul li:last-child{
-  background: red;
+.navbar .menu .menu-container ul li:last-child a{
+  background: var(--main-color);
   color: #fff;
   border-radius: 4px;
   text-align: center !important;
@@ -52,6 +53,27 @@
     inset 3px 3px 5px rgba(0, 0, 0, 0.8);
 }
 
+// .navbar .menu .menu-container ul li a:hover {
+
+// }
+
+.navbar .menu .menu-container label.button {
+  color: var(--main-color);
+  font-size: 35px;
+  cursor: pointer;
+  display: none;
+}
+
+.navbar .menu .menu-container label.cancel {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+}
+
+#check {
+  display: none;
+}
+
 #disktop-logo {
   display: block !important;
 }
@@ -66,100 +88,51 @@
   font-weight: 700;
 }
 
-.user_info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.user_info .img {
-  padding: 0 5px 0 0;
-}
-
-.user_info .img h6 i {
-  font-size: .3rem;
-}
-
-.user_info .img img{
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* Style The Dropdown Button */
-.dropbtn {
-  // background-color: #4CAF50;
-  color: white;
-  // padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.dropbtn img {
-  border-radius: 50%;
-}
-
-.dropbtn h6 {
-  margin-left: 5px;
-  font-size: 1.1rem;
-  font-weight: 500;
-}
-
-.toggle-icons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.toggle-icons .searchbar {
-  border-right: 2px solid red;
-  padding-right: 5px;
-}
-
-.toggle-icons .searchbar a, .toggle-icons .loginnav a {
-  font-size: 2rem;
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdowns {
-  position: relative;
-  display: inline-block;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  // top: 60px;
-  background: rgba(0, 0, 0, 0.8);
-  min-width: -webkit-fill-available;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: #fff;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  border-bottom: 2px solid #fff;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background: rgba(0,0,0,0.9);}
-
-/* Show the dropdown menu on hover */
-.dropdowns:hover .dropdown-content {
-  display: block;
-}
-
 @media only screen and (max-width: 992px) {
+  .navbar .menu .menu-container ul {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    max-width: 100%;
+    padding-top: 45px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8),
+      0px 0px 20px rgba(0, 0, 0, 0.8);
+    z-index: 12;
+    transition: all 0.3s ease;
+  }
+
+  .navbar .menu .menu-container ul li a {
+    display: block;
+    font-size: 1.2rem;
+    margin: 10px 5px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar .menu .menu-container ul li a:hover::before {
+    box-shadow: none;
+  }
+
+  .navbar .menu .menu-container label.bars {
+    display: block;
+  }
+
+  #check:checked ~ .bars {
+    display: none;
+  }
+
+  #check:checked ~ .btncancel {
+    display: block !important;
+  }
+
+  #check:checked ~ ul {
+    left: 0;
+  }
+
   #mobile-logo, .moblie-anoch {
     display: block !important;
   }

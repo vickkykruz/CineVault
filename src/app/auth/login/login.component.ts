@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'src/app/service/user.service';
 
 @Component({
@@ -28,20 +27,8 @@ export class LoginComponent implements OnInit {
     private router: ActivatedRoute,
     private moveRoute: Router,
     private userService: UserService,
-    private _snackbar: MatSnackBar,
     private title: Title) {}
-  private displaySnackBar(message: string) {
-    this._snackbar.open(message, "Close", {
-      duration: 3500,
-    });
-  }
-
-  private showProcessingMessage() {
-    this._snackbar.open("Processing...", "", {
-      duration: 2500,
-    });
-  }
-
+  
   ngOnInit(): void {
     this.title.setTitle('Cruz Tv || Login');
   }
@@ -57,10 +44,10 @@ export class LoginComponent implements OnInit {
 
     //* Disable the formand showing procaessing meassage
     this.isProcessing = true;
-    this.showProcessingMessage();
+    this.userService.showProcessingMessage();
     this.userService.siginWithEmailAndPassword("users", this.userInfo.email, this.userInfo.password)
     .then(() => {
-      this.displaySnackBar("Welcome");
+      this.userService.displaySnackBar("Welcome");
       this.isProcessing = false;
       if (this.id != null) {
         this.moveRoute.navigate([`/download/${this.id}`]);
@@ -69,7 +56,7 @@ export class LoginComponent implements OnInit {
       }
     })
     .catch((error) => {
-      this.displaySnackBar(error);
+      this.userService.displaySnackBar(error);
       this.isProcessing = false;
     })
   }

@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../auth/auth.service';
 import { UserService } from 'src/app/service/user.service';
+import { AuthService } from '../../auth/service/auth.service';
 
 
 @Component({
@@ -62,10 +62,12 @@ export class AsideBarComponent implements OnInit, OnChanges{
 
   logout() {
     // Logout Admin
-    sessionStorage.removeItem('SSID');
-    sessionStorage.setItem('isAuthenticated', 'false');
-    sessionStorage.removeItem('userCatigory');
-    // Redirect the admin tologin
-    this.router.navigate(['/admin/auth/login']);
+    this.userService.userSignOut().then(() => {
+      // Redirect the admin tologin
+      this.router.navigate(['/admin/auth/login']);
+    })
+    .catch((err) => {
+      this.userService.displaySnackBar(err);
+    });
   }
 }
