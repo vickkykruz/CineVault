@@ -8,23 +8,23 @@
         <img src="../assets/images/logo/net_logo.png" alt="Logo" width="60" height="40" id="mobile-logo" class="d-inline-block align-text-top">
       </a>
       <ul>
-        <li><label class="button" id="btncancel" for="check"><i class="bx bx-menu-alt-right"></i></label></li>
+        <label class="button" id="btncancel" for="check"><i class="bx bx-menu-alt-right"></i></label>
         <li><a [routerLink]="['/home']" routerLinkActive="home" >Home</a></li>
         <li><a [routerLink]="['/movies']" routerLinkActive="movies" >Movies</a></li>
-        <ng-container *ngIf="authStatus; else notAuth">
+        <ng-container *ngIf="authStatus; else elseTemplate">
           <li><a [routerLink]="['/account']" routerLinkActive="account" >My Account</a></li>
           <li><a (click)="logout()">SignOut</a></li>
-          <ng-template #notAuth>
-            <ng-container ngIf="id !== null; else idNull">
-              <li><a [routerLink]="['/auth/login', id]" routerLinkActive="login" >SignIn</a></li>
-              <li><a [routerLink]="['/auth/signup', id]" routerLinkActive="signup" >SignUp</a></li>
-              <ng-template #idNull>
-                <li><a [routerLink]="['/auth/login']" routerLinkActive="login" >SignIn</a></li>
-                <li><a [routerLink]="['/auth/signup']" routerLinkActive="signup" >SignUp</a></li>
-              </ng-template>
-            </ng-container>
-          </ng-template>
         </ng-container>
+        <ng-template #elseTemplate>
+          <ng-container *ngIf="id !== null; else elseTemplates">
+            <li><a [routerLink]="['/auth/login', id]" routerLinkActive="login" >SignIn</a></li>
+            <li><a [routerLink]="['/auth/signup', id]" routerLinkActive="signup" >SignUp</a></li>
+          </ng-container>
+          <ng-template #elseTemplates>
+            <li><a [routerLink]="['/auth/login']" routerLinkActive="login" >SignIn</a></li>
+            <li><a [routerLink]="['/auth/signup']" routerLinkActive="signup" >SignUp</a></li>
+          </ng-template>
+        </ng-template>
       </ul>
       <label class="button bars" for="check"><i class="bx bx-menu"></i></label>
     </div>
