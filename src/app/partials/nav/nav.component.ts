@@ -1,9 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { Observable } from 'rxjs';
-import { AuthService } from 'src/app/service/auth.service';
 import { UserService } from 'src/app/service/user.service';
 
 @Component({
@@ -14,7 +11,7 @@ import { UserService } from 'src/app/service/user.service';
 export class NavComponent implements OnInit{
 
   navbar: any;
-  authStatus: boolean = false;
+  authStatus!: boolean;
 
   constructor(
     private routeId: ActivatedRoute,
@@ -31,11 +28,8 @@ export class NavComponent implements OnInit{
   id: any = this.routeId.snapshot.paramMap.get('id');
 
   checkUserStatus() {
-    if(this.userService.isLogging()) {
-      this.authStatus = true;
-    }else {
-      this.authStatus = false;
-    }
+    this.authStatus = this.userService.isLogging();
+    console.log(this.authStatus);
   }
 
   logout() {
