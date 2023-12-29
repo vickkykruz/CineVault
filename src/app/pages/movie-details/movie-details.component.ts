@@ -5,6 +5,7 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { VideoTrailerComponent } from 'src/app/partials/video-trailer/video-trailer.component';
 import { MovieApiServiceService } from 'src/app/service/movie-api-service.service';
 import { DomSanitizer, SafeResourceUrl, Meta, Title } from '@angular/platform-browser';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-movie-details',
@@ -22,6 +23,7 @@ export class MovieDetailsComponent implements OnInit {
   movieCastResult!: any[];
   videoPlayer!: string;
   error: Error | null = null;
+  authStatus: boolean = false;
 
   trendingMoviesResults!:any[];
   constructor(
@@ -30,15 +32,23 @@ export class MovieDetailsComponent implements OnInit {
     public dialog: MatDialog,
     private sanitizer: DomSanitizer,
     private meta: Meta,
-    private title: Title
+    private title: Title,
+    private userService: UserService
     ) {};
+
   ngOnInit(): void {
     this.trendingData();
     this.getMovieDeatils(this.id);
+    this.checkUserStatus();
     // console.log(this.id, 'ParamsId#');
     this.getMovieVideos(this.id);
     // this.getMovieCast(this.id);
     // this.trailerDialog();
+  }
+
+  checkUserStatus() {
+    this.authStatus = this.userService.isLogging();
+    // console.log(this.authStatus);
   }
 
 

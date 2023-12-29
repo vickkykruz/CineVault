@@ -1,20 +1,5 @@
 <div class="bg-img">
   <div class="content">
-    <!-- <ng-container *ngIf="ValidateForm; else elseLogin">
-      <div class="container-fluid">
-        <div class="alert alert-success">
-          <h6 class="text-white">Successfully Login</h6>
-        </div>
-      </div>
-    </ng-container>
-    <ng-template #elseLogin>
-      <div class="container-fluid" [ngStyle]="defaultError">
-        <div class="alert alert-danger">
-          <h6 class="text-white">{{ message }}</h6>
-        </div>
-      </div>
-    </ng-template> -->
-
     <header class="display-3 text-center">Register</header>
     <!-- {{ userInfo | json}} -->
     <form #loginForm="ngForm" (ngSubmit)="submitForm()">
@@ -96,7 +81,7 @@
       >
     </div>
       <div class="field space">
-        <button type="submit" [disabled]="loginForm.invalid" id="submit">
+        <button type="submit" [disabled]="loginForm.invalid || isProcessing" id="submit">
           REGISTER
         </button>
       </div>

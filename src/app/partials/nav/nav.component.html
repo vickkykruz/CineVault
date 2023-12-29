@@ -8,7 +8,7 @@
         <img src="../assets/images/logo/net_logo.png" alt="Logo" width="60" height="40" id="mobile-logo" class="d-inline-block align-text-top">
       </a>
       <ul>
-        <label class="button" id="btncancel" for="check"><i class="bx bx-menu-alt-right"></i></label>
+        <label class="button cancel" for="check"><i class="bx bx-menu-alt-right"></i></label>
         <li><a [routerLink]="['/home']" routerLinkActive="home" >Home</a></li>
         <li><a [routerLink]="['/movies']" routerLinkActive="movies" >Movies</a></li>
         <ng-container *ngIf="authStatus; else elseTemplate">

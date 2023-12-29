@@ -1,8 +1,11 @@
 export interface UserDertail {
-  id: string,
-  displayName?: string,
-  photoURL?: string
-  email?: any,
-  uid?:string,
-  status?:boolean
+  displayName?: string | null,
+  email?: string | null,
+  emailVaildation?: boolean,
+  photoURL?: string | null,
+  phoneNo?: string | null,
+  lastSign: any,
+  uid:string | undefined,
+  authStatus?:boolean | null,
+  createdTime?: any
 }

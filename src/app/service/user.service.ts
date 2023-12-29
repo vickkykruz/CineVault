@@ -1,26 +1,86 @@
 import { Injectable } from '@angular/core';
-import { Auth, User, getAuth, signInWithEmailAndPassword, signOut, updatePassword } from '@angular/fire/auth';
-import { DatabaseReference, child, get, getDatabase, ref, update } from '@angular/fire/database';
+import { Auth, User, createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, signOut, updatePassword } from '@angular/fire/auth';
+import { DatabaseReference, child, get, getDatabase, ref, set, update } from '@angular/fire/database';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserDertail } from './userdetails';
+import { Subscription, Unsubscribable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
+  private user: any;
+  // private authSubscription: Subscription | Unsubscribable | null = null;
+  private db = getDatabase();
+  private userKeys: UserDertail = {
+    uid: "",
+    lastSign: "",
+    displayName: "",
+    email: "",
+    emailVaildation: false,
+    phoneNo: null,
+    photoURL: null,
+    createdTime: "",
+    authStatus: false
+  }
+
   constructor(
     private fireauth: Auth,
     private _snackbar: MatSnackBar,
-    ) { }
+    ) {
+       this.fireauth.onAuthStateChanged((user) => {
+        this.user = user;
+        console.warn('Authentication state changed:', this.user);
+      })
+    }
 
-  private auth = getAuth();
-  private user = this.auth.currentUser; //* Get the authenicated User
-  private db = getDatabase();
+  private auth = this.fireauth;
+
+  //* Initializaed the User
+  private async initializeUser() {
+    // Wait for the inital authenication state to be recieved
+    await new Promise<void>((resolve) => {
+      if(this.user !== null) {
+        resolve();
+      } else {
+        const sub = this.fireauth.onAuthStateChanged((user) => {
+          if (user !== null) {
+            resolve();
+          }
+        });
+      }
+    });
+    this.user = this.fireauth.currentUser; //* Get the authenicated User
+  }
+
+  //* Refresh Users (user & admin) access token
+  private async refreshAuthToken(): Promise<void> {
+    try {
+      await this.initializeUser(); //* Call the initialzedUser
+      if (this.user !== null) {
+        await this.user.getIdToken(true);
+      }else {
+        throw Error;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 
   private updateAdminLastSignIn(table: string, userId: string, nwLastSignIN: string): Promise<void> {
     //* Update the value
     const updates: Record<string, any> = {};
     updates[`/${table}/${userId}/lastSignIn`] = nwLastSignIN;
+    //* Perform the action
+    return update(ref(this.db) as DatabaseReference, updates);
+  }
+
+  //* Update the User Auth status  from the backend
+  private updateAuthStatus(table: string, userId: string, status: boolean): Promise<void> {
+    //* Update the value
+    const updates: Record<string, any> = {};
+    updates[`/${table}/${userId}/authStatus`] = status;
     //* Perform the action
     return update(ref(this.db) as DatabaseReference, updates);
   }
@@ -31,34 +91,25 @@ export class UserService {
       get(child(dbRef, `${table}/${userId}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          this.updateAdminLastSignIn(table, userId, lastSignIn)
-          .then(() => {
+          this.updateAdminLastSignIn(table, userId, lastSignIn).then(() => {
             resolve();
-          })
-          .catch(() => {
+          }).catch(() => {
             reject('Internal Error: Failed to update');
-          })
+          });
         }else {
           reject('Internal Error: Rocord not found');
         }
-      })
-      .catch(() => {
+      }).catch(() => {
         reject('Internal Error: Failed to fetch record');
       });
     });
   }
 
-  isLogging(): boolean {
-
-    //* The Observer check If the current user is signed in
-    if (this.user) {
-      //* Session check if your are previously availabled
-      const isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
-      //* Return true else false
-      return (isAuthenticated) ? true : false;
-    }else {
-      return false;
-    }
+  isLogging(): boolean | any {
+    //* Session check if your are previously availabled
+    const isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
+    //* Return true else false
+    return (isAuthenticated) ? true : false;
   }
 
   displaySnackBar(message: string) {
@@ -109,12 +160,18 @@ export class UserService {
     return new Promise<void>((resolve, reject) => {
       signOut(this.auth)
       .then(() => {
-        // Remove the sessions
+        //* Update the ServerAuth Status
+        const table = this.getUserCatigory();
+        const SSID = sessionStorage.getItem('SSID');
+        if (table !== null && SSID !== null) {
+          this.updateAuthStatus(table, SSID, false);
+        }
+
+        //* Remove the sessions
         sessionStorage.removeItem('SSID');
         sessionStorage.removeItem('isAuthenticated');
         sessionStorage.removeItem('userCatigory');
-
-        // Resolve the Promise
+        //* Resolve the Promise
         resolve();
       })
       .catch(() => {
@@ -128,15 +185,21 @@ export class UserService {
     return new Promise<void> ((resolve, reject) => {
       signInWithEmailAndPassword(this.fireauth, email, password)
       .then((userCredentials) => {
-        const userId: string | undefined = userCredentials.user?.uid;
-        const lastSign: any = userCredentials.user?.metadata.lastSignInTime;
+        //* CHECK IF THE USER ALREADY SIGN IN
+        if (userCredentials !== null) {
+          this.userKeys.uid = userCredentials.user?.uid;
+          this.userKeys.lastSign = userCredentials.user?.metadata.lastSignInTime;
 
           // Condition to Check if the userId is undefined
-          if (userId !== undefined) {
-            this.fetchAndUpadteLastSignIn(table, userId, lastSign)
+          if (this.userKeys.uid !== undefined) {
+            this.fetchAndUpadteLastSignIn(table, this.userKeys.uid, this.userKeys.lastSign)
             .then(() => {
               // Activate the sessions
-              sessionStorage.setItem('SSID', userId);
+              if (this.userKeys.uid !== undefined) {
+                sessionStorage.setItem('SSID', this.userKeys.uid);
+              }else {
+                sessionStorage.setItem('SSID', "undefined");
+              }
               sessionStorage.setItem('isAuthenticated', 'true');
               sessionStorage.setItem('userCatigory', table);
 
@@ -149,10 +212,96 @@ export class UserService {
           }else {
             reject('Warning: Invaild user data');
           }
+        }else {
+          reject("Error: Faied to get records");
+        }
       })
       .catch(() => {
         reject('Error: Authenication service failed');
       });
     });
+  }
+
+  private sendEmailVerificationToUser(user: User): Promise<void> {
+    return new Promise<void> ((resolve, reject) => {
+      sendEmailVerification(user).then(() => {
+        resolve();
+      })
+      .catch(() => {
+        console.warn('Error: Failed to verfied email address')
+      })
+    })
+  }
+
+  //* Insert New User Record to database with the auth == true
+  private insertNewUserRecord(table: string, userCredentials: any): Promise<void>{
+    return new Promise<void> ((resolve, reject) => {
+      this.userKeys.displayName = userCredentials.user?.displayName;
+      this.userKeys.email = userCredentials.user?.email;
+      this.userKeys.emailVaildation = userCredentials.user.emailVerified;
+      this.userKeys.uid = userCredentials.user.uid;
+      this.userKeys.lastSign = userCredentials.user?.metadata.lastSignInTime;
+      this.userKeys.createdTime = userCredentials.user?.metadata.creationTime;
+      this.userKeys.phoneNo = userCredentials.user.phoneNumber;
+      this.userKeys.photoURL = userCredentials.user?.photoURL;
+      this.userKeys.authStatus = true;
+
+      if (this.userKeys.uid !== undefined) {
+        set(ref(this.db, table + "/" + this.userKeys.uid), {
+          displayName: this.userKeys.displayName,
+          email: this.userKeys.email,
+          emailVaildation: this.userKeys.emailVaildation,
+          phoneNumber: this.userKeys.phoneNo,
+          photoURL: this.userKeys.photoURL,
+          lastSign: this.userKeys.lastSign,
+          createdTime: this.userKeys.createdTime,
+          authStatus: this.userKeys.authStatus
+        })
+        .then(() => {
+          if (this.userKeys.uid !== undefined) {
+            sessionStorage.setItem('SSID', this.userKeys.uid);
+          }else {
+            sessionStorage.setItem('SSID', "undefined");
+          }
+          sessionStorage.setItem('isAuthenticated', 'true');
+          sessionStorage.setItem('userCatigory', table);
+          resolve();
+        })
+        .catch(() => {
+          console.warn("Error: Failed to insert records");
+        });
+      }
+    })
+  }
+
+  //* Create user with email and password
+  createUserWihEmailAndPassword(table: string, email: string, password: string): Promise<void> {
+    return new Promise<void> ((resolve, reject) => {
+      createUserWithEmailAndPassword(this.fireauth, email, password)
+        .then((userCredentials) => {
+          //* If the current Auth user is not null
+          if (userCredentials !== null) {
+            //* Send the Verfication email
+            this.sendEmailVerificationToUser(userCredentials.user)
+            .then(() => {
+              console.log(userCredentials.user);
+              //* Insert the new record
+              this.insertNewUserRecord(table, userCredentials)
+              .then(() => {
+                resolve();
+              }).catch((err) => {
+                reject(err);
+              })
+            }).catch((err) => {
+              reject(err);
+            });
+          }else {
+            reject("Error: Internal Error (User)");
+          }
+        })
+        .catch((err) => {
+          reject("Error: Unable to create new user");
+        })
+    })
   }
 }

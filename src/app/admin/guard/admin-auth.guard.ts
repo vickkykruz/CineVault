@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { UserService } from '../../service/user.service';
 
 @Injectable({
@@ -11,7 +11,10 @@ export class AdminAuthGuard implements CanActivate {
     private router: Router,
     private userService: UserService) {}
 
-  canActivate(): Promise<boolean> {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
     return new Promise<boolean>((resolve) => {
       const userCatigory = this.userService.getUserCatigory();
 
@@ -21,13 +24,14 @@ export class AdminAuthGuard implements CanActivate {
           resolve(true); //* User is authenicated, continue with navigaion
         }else {
           //* User is not authenicated,redirect to login
-          sessionStorage.clear();
-          this.router.navigate(['/admin/auth/login']);
+          this.userService.userSignOut();
+          this.router.createUrlTree(['/admin/auth/login']);
           resolve(false);
         }
       } else {
         //* User is not authenicated,redirect to login
-        this.router.navigate(['/admin/auth/login']);
+        this.userService.userSignOut();
+        this.router.createUrlTree(['/admin/auth/login']);
         resolve(false);
       }
     });

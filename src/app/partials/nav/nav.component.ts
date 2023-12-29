@@ -19,7 +19,7 @@ export class NavComponent implements OnInit{
     private userService: UserService,
     ) {}
 
-  
+
 
   ngOnInit(): void {
     this.checkUserStatus();
@@ -29,16 +29,16 @@ export class NavComponent implements OnInit{
 
   checkUserStatus() {
     this.authStatus = this.userService.isLogging();
-    console.log(this.authStatus);
+    // console.log(this.authStatus);
   }
 
   logout() {
     this.userService.userSignOut()
     .then(() => {
       if (this.id != null) {
-        this.router.navigate([`/movie/${this.id}`]);
+        this.router.navigate([`/auth/login/${this.id}`]);
       }else {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/auth/login']);
       }
     })
     .catch((err) => {

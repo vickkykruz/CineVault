@@ -12,9 +12,11 @@ export class UserAuthGuard implements CanActivate {
     private router: Router,
     private userService: UserService) {}
 
-  canActivate(): Promise<boolean> {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
     return new Promise<boolean>((resolve) => {
-
       const userCatigory = this.userService.getUserCatigory();
 
       //! Check if the user is logged in
@@ -22,13 +24,14 @@ export class UserAuthGuard implements CanActivate {
         if(userCatigory  === 'users') {
           resolve(true); //* User is authenicated, continue with navigaion
         }else {
-          //* User is not authenicated,redirect to login
-          sessionStorage.clear();
-          this.router.navigate(['/auth/login']);
-          resolve(false);
+        //* User is not authenicated,redirect to login
+        this.userService.userSignOut();
+        this.router.createUrlTree(['/auth/login']);
+        resolve(false);
         }
       }else {
-        this.router.navigate(['/auth/login']);
+        this.userService.userSignOut();
+        this.router.createUrlTree(['/auth/login']);
         resolve(false);
       }
     })

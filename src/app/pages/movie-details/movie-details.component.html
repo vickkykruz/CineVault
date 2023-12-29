@@ -84,9 +84,16 @@
           <iframe #youtubeVideo width="1366" class="w-100" height="230" title="movieDetails.title" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           <div class="movie-link mt-4">
             <div class="movie-watch">
-              <a [routerLink]="['/auth/login', movieDetails.id]">
-                <h6> <i class='bx bx-download'></i> <span> Download</span> </h6>
-              </a>
+              <ng-container *ngIf="authStatus; else DownloadMovie">
+                <a [routerLink]="['/download', movieDetails.id]">
+                  <h6> <i class='bx bx-download'></i> <span> Download</span> </h6>
+                </a>
+              </ng-container>
+              <ng-template #DownloadMovie>
+                <a [routerLink]="['/auth/login', movieDetails.id]">
+                  <h6> <i class='bx bx-download'></i> <span> Download</span> </h6>
+                </a>
+              </ng-template>
             </div>
           </div>
 

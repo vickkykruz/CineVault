@@ -61,7 +61,7 @@
   color: var(--main-color);
   font-size: 35px;
   cursor: pointer;
-  // display: none;
+  display: none;
 }
 
 .navbar .menu .menu-container label.cancel {
@@ -121,13 +121,15 @@
     display: block;
   }
 
+
   #check:checked ~ .bars {
     display: none;
   }
 
-  #check:checked ~ #btncancel {
-    display: block !important;
+  #check:checked ~ .cancel {
+    display: inline-block;
   }
+
 
   #check:checked ~ ul {
     left: 0;

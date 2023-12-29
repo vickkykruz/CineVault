@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AuthService } from 'src/app/service/auth.service';
-import { Observable, timer } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-register',
@@ -22,17 +19,13 @@ export class RegisterComponent implements OnInit {
 
   message!:string;
   ValidateForm!: boolean;
-
-  defaultError = {
-    'display' : 'none'
-  }
+  isProcessing: boolean = false;
   // usage_status: boolean = this.service.userEffect();
 
   constructor(
     private routeId: ActivatedRoute,
-    private fireAuth: AngularFireAuth,
     private router: Router,
-    private service: AuthService,
+    private userService: UserService,
     private title: Title) {}
   ngOnInit(): void {
     this.title.setTitle('Cruz Tv || Register');
@@ -40,42 +33,27 @@ export class RegisterComponent implements OnInit {
 
   id: any = this.routeId.snapshot.paramMap.get('id');
   submitForm() {
-      // Process The Registration
-      this.fireAuth.createUserWithEmailAndPassword(this.userInfo.email, this.userInfo.password)
-      .then((response) => {
-        // alert(this.userInfo.username);
-        const datas: any = {
-          id: response.user?.uid,
-          status: 'active'
-        };
-        this.service.saveDataInSessionStorage(datas);
-        this.service.sendVerificationEmail(response.user, this.userInfo.username); // Send a verfiied email
+      //* Preventing the function from continuing futher if the processing is true to avoid conflict
+    if (this.isProcessing) {
+      return;
+    }
 
-        const redirectDisplay: number = 5000;
-
-        alert('Redirecting...');
-        const timer$ = timer(redirectDisplay);
-
-
-        timer$.pipe(take(1)).subscribe(() => {
-          if (this.id != null) {
-            this.router.navigate([`/movie/${this.id}`]);
-          } else {
-            this.router.navigate(['/home']);
-          };
-        });
-      })
-      .catch((err) => {
-        this.defaultError = {
-          'display': 'block'
-        }
-
-        if (err.message == "Firebase: Error (auth/user-not-found).") {
-          this.message = "No Accound Found With The Email Address";
-        }else {
-          this.message = "Network connection failed";
-        }
-        this.ValidateForm = false;
-      })
+    //* Disable the formand showing procaessing meassage
+    this.isProcessing = true;
+    this.userService.showProcessingMessage();
+    this.userService.createUserWihEmailAndPassword("users", this.userInfo.email, this.userInfo.password)
+    .then(() => {
+      this.userService.displaySnackBar("Welcome");
+      this.isProcessing = false;
+      if (this.id != null) {
+        this.router.navigate([`/download/${this.id}`]);
+      }else {
+        this.router.navigate(['/home']);
+      }
+    })
+    .catch((error) => {
+      this.userService.displaySnackBar(error);
+      this.isProcessing = false;
+    })
   }
 }

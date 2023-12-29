@@ -1,0 +1,10 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "private_data": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}
