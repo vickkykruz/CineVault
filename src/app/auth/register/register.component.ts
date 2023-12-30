@@ -3,6 +3,7 @@ import { Auth } from '../auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/service/user.service';
+import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -26,6 +27,7 @@ export class RegisterComponent implements OnInit {
     private routeId: ActivatedRoute,
     private router: Router,
     private userService: UserService,
+    private authService: AuthService,
     private title: Title) {}
   ngOnInit(): void {
     this.title.setTitle('Cruz Tv || Register');
@@ -41,7 +43,7 @@ export class RegisterComponent implements OnInit {
     //* Disable the formand showing procaessing meassage
     this.isProcessing = true;
     this.userService.showProcessingMessage();
-    this.userService.createUserWihEmailAndPassword("users", this.userInfo.email, this.userInfo.password)
+    this.userService.createUserWihEmailAndPassword("users", this.userInfo.username, this.userInfo.email, this.userInfo.password)
     .then(() => {
       this.userService.displaySnackBar("Welcome");
       this.isProcessing = false;
@@ -54,6 +56,15 @@ export class RegisterComponent implements OnInit {
     .catch((error) => {
       this.userService.displaySnackBar(error);
       this.isProcessing = false;
+    })
+  }
+
+  // SignIn Google
+  signInWithGoogle() {
+    this.authService.signInWithGoogle().then(() => {
+      console.log('Successfully signIn By google');
+    }).catch((err) => {
+      console.error("Google SignIn Error", err);
     })
   }
 }

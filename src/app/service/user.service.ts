@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, User, createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, signOut, updatePassword } from '@angular/fire/auth';
+import { Auth, User, createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, signOut, updatePassword, updateProfile } from '@angular/fire/auth';
 import { DatabaseReference, child, get, getDatabase, ref, set, update } from '@angular/fire/database';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserDertail } from './userdetails';
@@ -59,13 +59,8 @@ export class UserService {
     try {
       await this.initializeUser(); //* Call the initialzedUser
       if (this.user !== null) {
-        await this.user.getIdToken(true);
-      }else {
-        throw Error;
-      }
-    } catch (error) {
-      throw error;
-    }
+        await this.user.getIdToken(true); }else { throw Error}
+    } catch (error) { throw error; }
   }
 
   private updateAdminLastSignIn(table: string, userId: string, nwLastSignIN: string): Promise<void> {
@@ -78,11 +73,17 @@ export class UserService {
 
   //* Update the User Auth status  from the backend
   private updateAuthStatus(table: string, userId: string, status: boolean): Promise<void> {
-    //* Update the value
-    const updates: Record<string, any> = {};
-    updates[`/${table}/${userId}/authStatus`] = status;
-    //* Perform the action
-    return update(ref(this.db) as DatabaseReference, updates);
+    return new Promise<void> (async(resolve) => {
+      //* Update the value
+      await this.refreshAuthToken();
+      const updates: Record<string, any> = {};
+      updates[`/${table}/${userId}/authStatus`] = status;
+      //* Perform the action
+      update(ref(this.db) as DatabaseReference, updates).then(() => {
+        resolve(); }).catch(() => {
+        console.warn("Error: Failed to update Auth Status");
+      });
+    });
   }
 
   private fetchAndUpadteLastSignIn(table: string, userId: string, lastSignIn: any): Promise<void> {
@@ -164,7 +165,9 @@ export class UserService {
         const table = this.getUserCatigory();
         const SSID = sessionStorage.getItem('SSID');
         if (table !== null && SSID !== null) {
-          this.updateAuthStatus(table, SSID, false);
+          this.updateAuthStatus(table, SSID, false).then(() => {
+            console.log("Successfully edited the auth status");
+          }).catch(() => { console.warn("Failed to edit the auth status"); })
         }
 
         //* Remove the sessions
@@ -202,13 +205,9 @@ export class UserService {
               }
               sessionStorage.setItem('isAuthenticated', 'true');
               sessionStorage.setItem('userCatigory', table);
-
               // Resolve the Promise
-              resolve();
-            })
-            .catch(() => {
-              reject('Internal Error: Fetch and update failed');
-            });
+              resolve(); }) .catch(() => {
+              reject('Internal Error: Fetch and update failed'); });
           }else {
             reject('Warning: Invaild user data');
           }
@@ -228,27 +227,26 @@ export class UserService {
         resolve();
       })
       .catch(() => {
-        console.warn('Error: Failed to verfied email address')
+        reject('Error: Failed to verfied email address')
       })
     })
   }
 
   //* Insert New User Record to database with the auth == true
-  private insertNewUserRecord(table: string, userCredentials: any): Promise<void>{
+  private insertNewUserRecord(table: string, username: string | undefined, userCredentials: any): Promise<void>{
     return new Promise<void> ((resolve, reject) => {
-      this.userKeys.displayName = userCredentials.user?.displayName;
       this.userKeys.email = userCredentials.user?.email;
       this.userKeys.emailVaildation = userCredentials.user.emailVerified;
       this.userKeys.uid = userCredentials.user.uid;
       this.userKeys.lastSign = userCredentials.user?.metadata.lastSignInTime;
       this.userKeys.createdTime = userCredentials.user?.metadata.creationTime;
-      this.userKeys.phoneNo = userCredentials.user.phoneNumber;
-      this.userKeys.photoURL = userCredentials.user?.photoURL;
+      this.userKeys.phoneNo = null;
+      this.userKeys.photoURL = null;
       this.userKeys.authStatus = true;
 
       if (this.userKeys.uid !== undefined) {
         set(ref(this.db, table + "/" + this.userKeys.uid), {
-          displayName: this.userKeys.displayName,
+          displayName: username,
           email: this.userKeys.email,
           emailVaildation: this.userKeys.emailVaildation,
           phoneNumber: this.userKeys.phoneNo,
@@ -268,14 +266,28 @@ export class UserService {
           resolve();
         })
         .catch(() => {
-          console.warn("Error: Failed to insert records");
+          reject("Error: Failed to insert records");
         });
       }
     })
   }
 
+  // * Userdate the server profile
+  private updateUserUsername(username: string | undefined): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
+      await this.initializeUser();
+      if (this.user) {
+        updateProfile(this.user, {
+          displayName: username
+        }).then(() => { resolve(); }).catch(() => {
+          reject("Error: Server Error (Username)");
+        });
+      }
+    });
+  }
+
   //* Create user with email and password
-  createUserWihEmailAndPassword(table: string, email: string, password: string): Promise<void> {
+  createUserWihEmailAndPassword(table: string, username: string | undefined, email: string, password: string): Promise<void> {
     return new Promise<void> ((resolve, reject) => {
       createUserWithEmailAndPassword(this.fireauth, email, password)
         .then((userCredentials) => {
@@ -284,24 +296,20 @@ export class UserService {
             //* Send the Verfication email
             this.sendEmailVerificationToUser(userCredentials.user)
             .then(() => {
-              console.log(userCredentials.user);
-              //* Insert the new record
-              this.insertNewUserRecord(table, userCredentials)
-              .then(() => {
-                resolve();
-              }).catch((err) => {
-                reject(err);
-              })
-            }).catch((err) => {
-              reject(err);
-            });
+              // console.log(userCredentials.user);
+              //* Update the username to the server
+              this.updateUserUsername(username).then(() => {
+                //* Insert the new record
+                this.insertNewUserRecord(table, username, userCredentials).then(() => {
+                  resolve(); }).catch((err) => {reject(err); }); }).catch((err) => {
+                reject(err); }); }).catch((err) => { reject(err); });
           }else {
             reject("Error: Internal Error (User)");
           }
         })
-        .catch((err) => {
+        .catch(() => {
           reject("Error: Unable to create new user");
-        })
-    })
+        });
+    });
   }
 }
