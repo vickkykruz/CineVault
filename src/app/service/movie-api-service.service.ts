@@ -10,8 +10,6 @@ export class MovieApiServiceService {
     private http: HttpClient  ) {}
 
   private handleError(error: HttpErrorResponse) {
-    // error.status
-    // return error.error;
     return throwError(error);
   }
 

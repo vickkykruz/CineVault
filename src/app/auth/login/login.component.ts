@@ -30,12 +30,14 @@ export class LoginComponent implements OnInit {
     private title: Title) {}
   
   ngOnInit(): void {
-    this.title.setTitle('Cruz Tv || Login');
+    this.title.setTitle('Cruz Tv || Login System');
   }
 
   id: any = this.router.snapshot.paramMap.get('id');
   feedback!: any;
   user: any;
+  
+  // Submit logic
   submitForm() {
     //* Preventing the function from continuing futher if the processing is true to avoid conflict
     if (this.isProcessing) {

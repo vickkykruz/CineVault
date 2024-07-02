@@ -16,7 +16,7 @@ const routes: Routes = [
   {path: 'download/:movieid', canActivate: [UserAuthGuard], component: DownloadMoviesComponent},
   {path: 'auth', loadChildren: () => import('./auth/auth.module').then( m => m.AuthModules)},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
-  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  {path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   {path: '**', component: NotFoundComponent}
 ];
 

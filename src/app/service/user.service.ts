@@ -4,6 +4,7 @@ import { DatabaseReference, child, get, getDatabase, ref, set, update } from '@a
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserDertail } from './userdetails';
 import { Subscription, Unsubscribable } from 'rxjs';
+import { EmailService } from './email.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +25,15 @@ export class UserService {
     createdTime: "",
     authStatus: false
   }
+  private loginSubject!: string;
+  private loginBoday!: string;
+  private registerSubject!: string;
+  private registerBoday!: string;  
 
   constructor(
     private fireauth: Auth,
     private _snackbar: MatSnackBar,
+	private emailservice: EmailService,
     ) {
        this.fireauth.onAuthStateChanged((user) => {
         this.user = user;
@@ -197,26 +203,35 @@ export class UserService {
           if (this.userKeys.uid !== undefined) {
             this.fetchAndUpadteLastSignIn(table, this.userKeys.uid, this.userKeys.lastSign)
             .then(() => {
-              // Activate the sessions
-              if (this.userKeys.uid !== undefined) {
-                sessionStorage.setItem('SSID', this.userKeys.uid);
-              }else {
-                sessionStorage.setItem('SSID', "undefined");
-              }
-              sessionStorage.setItem('isAuthenticated', 'true');
-              sessionStorage.setItem('userCatigory', table);
-              // Resolve the Promise
-              resolve(); }) .catch(() => {
+			  
+			  // Email Template
+			  this.loginSubject = `LOGIN NOTIFICATION`;
+			  this.loginBoday = `Hey ${email}.
+				You have just loggin at ${this.userKeys.lastSign}. If not you, kindly send us a mail at info@cruztv.com.
+				Thank you.`;
+			  // Send mail
+			  this.emailservice.sendEmail(email, this.loginSubject, this.loginBoday)
+			  .then(() => {
+				
+				// Activate the sessions
+				sessionStorage.setItem('SSID', this.userKeys.uid || "undefined"); 
+				sessionStorage.setItem('isAuthenticated', 'true');
+				sessionStorage.setItem('userCatigory', table);
+				resolve();
+			  }) .catch(() => {
+				reject('Internal Error: An error occured'); });
+				
+            }) .catch(() => {
               reject('Internal Error: Fetch and update failed'); });
           }else {
             reject('Warning: Invaild user data');
           }
         }else {
-          reject("Error: Faied to get records");
+          reject("Error: No records found");
         }
       })
       .catch(() => {
-        reject('Error: Authenication service failed');
+        reject('Error: Invaild Credential. Try again');
       });
     });
   }
