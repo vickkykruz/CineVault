@@ -4,6 +4,8 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { VideoTrailerComponent } from 'src/app/partials/video-trailer/video-trailer.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -11,203 +13,164 @@ import { VideoTrailerComponent } from 'src/app/partials/video-trailer/video-trai
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
   bannerApiData: any = [];
   trendingMoviesResults: any = [];
   actionMoviesResults: any = [];
   adventureMoviesResults: any = [];
   animationMoviesResults: any = [];
+  biographyMoviesResults: any = [];
   comedyMoviesResults: any = [];
+  crimeMoviesResults: any = [];
   documentaryMoviesResults: any = [];
+  dramaMoviesResults: any = [];
+  familyMoviesResults: any = [];
+  fantasyMoviesResults: any = [];
+  filmNoirMoviesResults: any = [];
+  historyMoviesResults: any = [];
+  musicalMoviesResults: any = [];
+  mysteryMoviesResults: any = [];
+  romanceMoviesResults: any = [];
   scifiMoviesResults: any = [];
+  sportMoviesResults: any = [];
   thrillerMoviesResults: any = [];
+  warMoviesResults: any = [];
+  westernMoviesResults: any = [];
   loading: boolean = true;
-  error: Error | null = null;
-  errorStatus!: number;
-  errorMessage!: string;
+  errorStatus: number | null = null;
 
-  constructor(private service: MovieApiServiceService, private title: Title, public dialog: MatDialog) {}
+  sections = [
+    { title: 'All Movies', results: this.trendingMoviesResults },
+    { title: 'Adventure Movies', results: this.adventureMoviesResults },
+    { title: 'Action Movies', results: this.actionMoviesResults },
+    { title: 'Animation Movies', results: this.animationMoviesResults },
+	{ title: 'Biography Movies', results: this.biographyMoviesResults },
+	{ title: 'Comedy Movies', results: this.comedyMoviesResults },
+	{ title: 'Crime Movies', results: this.crimeMoviesResults },
+	{ title: 'Documentary Movies', results: this.documentaryMoviesResults },
+	{ title: 'Drama Movies', results: this.dramaMoviesResults },
+	{ title: 'Family Movies', results: this.familyMoviesResults },
+	{ title: 'Fantasy Movies', results: this.fantasyMoviesResults },
+	{ title: 'Film-Noir Movies', results: this.filmNoirMoviesResults },
+	{ title: 'History Movies', results: this.historyMoviesResults },
+	{ title: 'Musical Movies', results: this.musicalMoviesResults },
+	{ title: 'Mystery Movies', results: this.mysteryMoviesResults },
+	{ title: 'Romance Movies', results: this.romanceMoviesResults },
+    { title: 'Sci-Fi Movies', results: this.scifiMoviesResults },
+	{ title: 'Sport Movies', results: this.sportMoviesResults },
+    { title: 'Thriller Movies', results: this.thrillerMoviesResults },
+	{ title: 'War Movies', results: this.warMoviesResults },
+	{ title: 'Western Movies', results: this.westernMoviesResults },
+  ];
+
+  selectedCategory: string = 'All Movies';
+  selectedCategoryData: any = this.sections.find(section => section.title === this.selectedCategory);
+  showNextNavText: boolean = false; // Flag to show Next navText
+  isPrevClicked: boolean = false;
+
+  constructor(
+    private service: MovieApiServiceService,
+    private title: Title,
+    public dialog: MatDialog) {}
+
   ngOnInit(): void {
     this.title.setTitle('cruztv.netlify.app || Welcome to cruztv, where we offer latest and trending movies.');
-    this.bannerData();
-    this.trendingData();
-    this.actionMovieData();
-    this.adventureMovieData();
-    this.animationMovieData();
-    this.comedyMoviesData();
-    this.documentaryMovieData();
-    this.scfiMovieData();
-    this.thrillerMovieData();
-    this.imbTrendingData();
+    this.loadData();
+    this.logSections();
   }
 
-  bannerData() {
-    try {
-      this.service.bannerApiData().subscribe((result)=> {
-        // console.log(result, 'bannerResult##');
-        this.bannerApiData = result.results;
-      }, error => {
-        this.errorStatus = error.status;
-        this.errorMessage = error.message;
-        this.loading = false;
-      })
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-    }
+  logSections() {
+    console.log(this.sections);
   }
 
-  imbTrendingData() {
-    try {
-      this.service.imdbTrendingMoivesApi().subscribe((result) => {
-        // console.log(result, 'Imdb Data');
-      })
-    } catch (error) {
+  loadData() {
+    forkJoin({
+      banner: this.service.bannerApiData(),
+      trending: this.service.trendingMoviesApi(),
+      action: this.service.getActionMovies(),
+      adventure: this.service.getAdventureMovies(),
+      animation: this.service.getAnimationMovies(),
+      scifi: this.service.getSciFiMovies(),
+      comedy: this.service.getComedyMovies(),
+      documentary: this.service.getDocumentaryMovies(),
+      thriller: this.service.getThrillerMovies()
+    }).subscribe({
+      next: (results) => {
+        this.bannerApiData = results.banner.results;
+        this.trendingMoviesResults = results.trending.results;
+        this.actionMoviesResults = results.action.results;
+        this.adventureMoviesResults = results.adventure.results;
+        this.animationMoviesResults = results.animation.results;
+        this.scifiMoviesResults = results.scifi.results;
+        this.comedyMoviesResults = results.comedy.results;
+        this.documentaryMoviesResults = results.documentary.results;
+        this.thrillerMoviesResults = results.thriller.results;
 
-    }
+        this.sections = [
+			{ title: 'All Movies', results: this.trendingMoviesResults },
+			{ title: 'Adventure Movies', results: this.adventureMoviesResults },
+			{ title: 'Action Movies', results: this.actionMoviesResults },
+			{ title: 'Animation Movies', results: this.animationMoviesResults },
+			{ title: 'Biography Movies', results: this.biographyMoviesResults },
+			{ title: 'Comedy Movies', results: this.comedyMoviesResults },
+			{ title: 'Crime Movies', results: this.crimeMoviesResults },
+			{ title: 'Documentary Movies', results: this.documentaryMoviesResults },
+			{ title: 'Drama Movies', results: this.dramaMoviesResults },
+			{ title: 'Family Movies', results: this.familyMoviesResults },
+			{ title: 'Fantasy Movies', results: this.fantasyMoviesResults },
+			{ title: 'Film-Noir Movies', results: this.filmNoirMoviesResults },
+			{ title: 'History Movies', results: this.historyMoviesResults },
+			{ title: 'Musical Movies', results: this.musicalMoviesResults },
+			{ title: 'Mystery Movies', results: this.mysteryMoviesResults },
+			{ title: 'Romance Movies', results: this.romanceMoviesResults },
+			{ title: 'Sci-Fi Movies', results: this.scifiMoviesResults },
+			{ title: 'Sport Movies', results: this.sportMoviesResults },
+			{ title: 'Thriller Movies', results: this.thrillerMoviesResults },
+			{ title: 'War Movies', results: this.warMoviesResults },
+			{ title: 'Western Movies', results: this.westernMoviesResults },
+		  ];
+
+        this.selectCategory(this.selectedCategory);
+        this.logSections();
+        this.loading = false; // Data loading is complete
+      },
+      error: (error: HttpErrorResponse) => {
+        this.handleError(error);
+      }
+    });
   }
 
-  trendingData() {
-    try {
-      this.service.trendingMoviesApi().subscribe((result)=> {
-        this.trendingMoviesResults = result.results;
-      }, error => {
-        this.errorStatus = error.status;
-        this.errorMessage = error.message;
-        this.loading = false;
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-    }
+  selectCategory(category: string) {
+    this.selectedCategory = category;
+    this.selectedCategoryData = this.sections.find(section => section.title === this.selectedCategory);
   }
 
-  actionMovieData() {
-    try {
-      this.service.getActionMovies().subscribe((res) => {
-        this.actionMoviesResults = res.results;
-      }, error => {
-        this.errorStatus = error.status;
-        this.errorMessage = error.message;
-        this.loading = false;
-      });
-    } catch (error) {
-      if (error instanceof Error){
-        throw error;
-      }
-    }
+  handleError(error: HttpErrorResponse) {
+    this.errorStatus = error.status;
+    this.loading = false;
   }
 
-    adventureMovieData() {
-      try {
-        this.service.getAdventureMovies().subscribe((res) => {
-          this.adventureMoviesResults = res.results;
-        }, error => {
-          this.errorStatus = error.status;
-          this.errorMessage = error.message;
-          this.loading = false;
-        });
-      } catch (error) {
-        if (error instanceof Error){
-          throw error;
-        }
-      }
-    }
+  openVideo(id: number, enterAnimationDuration: string, exitAnimationDuration: string) {
+    this.dialog.open(VideoTrailerComponent, {
+      width: '100%',
+      height: '500px',
+      data: { id: id },
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
 
-    animationMovieData() {
-      try {
-        this.service.getAnimationMovies().subscribe((res) => {
-          this.animationMoviesResults = res.results;
-        }, error => {
-          this.errorStatus = error.status;
-          this.errorMessage = error.message;
-          this.loading = false;
-        });
-      } catch (error) {
-        if (error instanceof Error){
-          throw error;
-        }
-      }
-    }
-
-    comedyMoviesData() {
-      try {
-        this.service.getComedyMovies().subscribe((res) => {
-          this.comedyMoviesResults = res.results;
-        }, error => {
-          this.errorStatus = error.status;
-          this.errorMessage = error.message;
-          this.loading = false;
-        });
-      } catch (error) {
-        if (error instanceof Error){
-          throw error;
-        }
-      }
-    }
-
-    documentaryMovieData() {
-      try {
-        this.service.getDocumentaryMovies().subscribe((res) => {
-          this.documentaryMoviesResults = res.results;
-        }, error => {
-          this.errorStatus = error.status;
-          this.errorMessage = error.message;
-          this.loading = false;
-        });
-      } catch (error) {
-        if (error instanceof Error){
-          throw error;
-        }
-      }
-    }
-
-    scfiMovieData() {
-      try {
-        this.service.getSciFiMovies().subscribe((res) => {
-          this.scifiMoviesResults = res.results;
-        }, error => {
-          this.errorStatus = error.status;
-          this.errorMessage = error.message;
-          this.loading = false;
-        });
-      } catch (error) {
-        if (error instanceof Error){
-          throw error;
-        }
-      }
-    }
-
-    thrillerMovieData() {
-      try {
-        this.service.getThrillerMovies().subscribe((res) => {
-          this.thrillerMoviesResults = res.results;
-        }, error => {
-          this.errorStatus = error.status;
-          this.errorMessage = error.message;
-          this.loading = false;
-        });
-      } catch (error) {
-        if (error instanceof Error){
-          throw error;
-        }
-      }
-    }
-
-    customOptions: OwlOptions = {
-      loop: true,
+  customOptions: OwlOptions = {
+    loop: true,
     mouseDrag: true,
     touchDrag: true,
     pullDrag: false,
     dots: false,
-    navSpeed: 800,
+    navSpeed: 3000,
     navText: ['<', '>'],
     autoplay: true,
     autoplayTimeout: 10000,
     responsive: { 0: { items: 1 }, 400: { items: 1 }, 740: { items: 1 }, 940: { items: 1 } },
-    nav: false
+    nav: false,
   }
 
   tendingSlide: OwlOptions = {
@@ -217,23 +180,28 @@ export class HomeComponent implements OnInit {
     touchDrag: true,
     pullDrag: false,
     dots: false,
-    navSpeed: 800,
-    autoplay: true,
-    autoplayTimeout: 10000,
-    items: 2,
-    // margin: 10,
-    responsive: { 0: { items: 1, margin: 5 }, 280: { items: 1, margin: 5 }, 320: { items: 2, margin: 5 }, 510: { items: 2, margin: 5 }, 758: { items: 3, margin: 10 }, 900: { items: 4, margin: 15 } }
+    navSpeed: 1500,
+    navText: ['<', '>'],
+    responsive: { 0: { items: 2 }, 400: { items: 3 }, 740: { items: 4 }, 940: { items: 6 } },
+    nav: true,
   }
-
-  // Watch Trailer
-  openVideo(id: number, enterAnimationDuration: string, exitAnimationDuration: string) {
-    this.dialog.open(VideoTrailerComponent, {
-      width: '100%',
-      height: '500px',
-      data: { id: id },
-      enterAnimationDuration,
-      exitAnimationDuration,
-    })
-  }
-
+  
+  categoryOptions: OwlOptions = {
+	  loop: false,
+	  center: false,
+	  mouseDrag: true,
+	  touchDrag: true,
+	  pullDrag: false,
+	  dots: false,
+	  navText: ['<', '>'],
+	  responsive: {
+		0: { items: 2, margin: 10 },
+		400: { items: 3, margin: 15 },
+		740: { items: 5, margin: 20 },
+		940: { items: 7, margin: 25 }
+	  },
+	  nav: true,
+	  navSpeed: 700,
+	  navClass: ['owl-prev', 'owl-next'],
+	};
 }

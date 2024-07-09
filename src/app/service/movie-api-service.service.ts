@@ -10,6 +10,7 @@ export class MovieApiServiceService {
     private http: HttpClient  ) {}
 
   private handleError(error: HttpErrorResponse) {
+    console.error('A Http error occured in the MovieAPI: ', error );
     return throwError(error);
   }
 
@@ -41,7 +42,7 @@ export class MovieApiServiceService {
 
   // SearchMovie
   getSearchMovie(data: any): Observable<any> {
-    console.log(data);
+    console.log(`Search data: ${data}`);
     return this.http
       .get(`${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${data}`)
       .pipe(catchError(this.handleError));
@@ -69,36 +70,50 @@ export class MovieApiServiceService {
 
   // Action
   getActionMovies(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=28`);
+    return this.http
+	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=28`)
+	  .pipe(catchError(this.handleError));
   }
 
   // Adventure
   getAdventureMovies(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=12`);
+    return this.http
+	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=12`)
+	  .pipe(catchError(this.handleError));
   }
 
   // Animation
   getAnimationMovies(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=16`);
+    return this.http
+	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=16`)
+	  .pipe(catchError(this.handleError));
   }
 
   // Comedy
   getComedyMovies(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=35`);
+    return this.http
+	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=35`)
+	  .pipe(catchError(this.handleError));
   }
 
   // Documentary
   getDocumentaryMovies(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=99`);
+    return this.http
+	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=99`)
+	  .pipe(catchError(this.handleError));
   }
 
   // Sci-Fi
   getSciFiMovies(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=878`);
+    return this.http
+	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=878`)
+	  .pipe(catchError(this.handleError));
   }
 
   // Thriller
   getThrillerMovies(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=53`);
+    return this.http
+	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=53`)
+	  .pipe(catchError(this.handleError));
   }
 }

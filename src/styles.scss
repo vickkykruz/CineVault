@@ -124,7 +124,78 @@ a {
   margin-right: 1rem;
 }
 
-// Authentication Style
+/* Home Styles specific to the trending slide carousel */
+.trending-carousel .owl-carousel .owl-item {
+  margin-right: 10px;
+}
+
+.trending-carousel .owl-carousel .owl-nav,
+.custom-carousel .owl-carousel .owl-nav {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.category-carousel .owl-carousel .owl-nav {
+  position: relative;
+  top: auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: none;
+  margin-top: 10px;
+}
+
+.trending-carousel .owl-carousel .owl-nav .owl-prev,
+.trending-carousel .owl-carousel .owl-nav .owl-next,
+.custom-carousel .owl-carousel .owl-nav .owl-prev,
+.custom-carousel .owl-carousel .owl-nav .owl-next, {
+  font-size: 25px;
+  font-weight: 600;
+  color: rgba(177, 4, 12, .8);
+  padding: 15px 10px;
+  background: rgba(37, 19, 12, .3);
+}
+
+.category-carousel .owl-carousel .owl-nav .owl-prev,
+.category-carousel .owl-carousel .owl-nav .owl-next {
+  font-size: 25px;
+  font-weight: 600;
+  color: rgba(177, 4, 12, 0.8);
+  padding: 10px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.category-carousel .owl-carousel .owl-stage {
+  display: flex;
+  align-items: center;
+}
+
+.category-carousel .owl-carousel .owl-item {
+  margin-right: 10px; // Adjust as needed for spacing
+}
+
+.category-carousel .owl-carousel .owl-item button.mat-raised-button {
+  margin: 0 5px; // Adjust as needed for button spacing
+}
+
+
+.trending-carousel .owl-carousel {
+  width: calc(100% + 5px); /* Adjust width to accommodate margin */
+  margin-left: -5px; /* Offset for margin */
+}
+
+.trending-carousel .owl-carousel .owl-stage {
+  display: flex; /* Flex display for stage */
+  align-items: center; /* Center align items */
+}
+
+
+/****** Authentication Style ****/
 .bg-img {
   background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url(assets/images/background/Free-Movie-Download.jpg);
   background-size: cover;

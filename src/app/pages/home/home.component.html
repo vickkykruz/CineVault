@@ -1,266 +1,153 @@
-<ng-container *ngIf="loading; else elseTemplate">
-<!-- Navbar -->
-<app-nav></app-nav>
-<!-- Navbar End -->
+<ng-container *ngIf="!loading; else loadingTemplate">
+  <!-- Main Content -->
+  <!-- Navbar -->
+  <app-nav></app-nav>
+  <!-- Navbar End -->
 
-<!-- Banner Start -->
-<owl-carousel-o [options]="customOptions">
-  <ng-template carouselSlide *ngFor="let data of bannerApiData">
-    <div class="hero-slide-item">
-      <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" alt="" />
-      <div class="overlay"></div>
-      <div class="hero-slide-item-content">
-        <div class="item-content-wraper">
-          <div class="item-content-title top-down" *ngIf="data.original_name; else elseBlock">{{ data.original_name }}</div>
-          <ng-template #elseBlock>
-            <div class="item-content-title top-down" >{{ data.original_title }}</div>
-          </ng-template>
+  <!-- Banner Start -->
+  <owl-carousel-o [options]="customOptions" class="custom-carousel">
+    <ng-template carouselSlide *ngFor="let data of bannerApiData">
+      <div class="hero-slide-item">
+        <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" alt="" />
+        <div class="overlay"></div>
+        <div class="hero-slide-item-content">
+          <div class="item-content-wraper">
+            <div class="item-content-title top-down" *ngIf="data.original_name; else elseBlock">{{ data.original_name }}</div>
+            <ng-template #elseBlock>
+              <div class="item-content-title top-down">{{ data.original_title }}</div>
+            </ng-template>
 
-          <div class="movie-infos top-down delay-2">
-            <div class="movie-info">
-              <i class="bx bxs-star"></i>
-              <span>{{ data.vote_average }}</span>
+            <div class="movie-infos top-down delay-2">
+              <div class="movie-info">
+                <i class="bx bxs-star"></i>
+                <span>{{ data.vote_average }}</span>
+              </div>
+              <div class="movie-info">
+                <i class="bx bxs-time"></i>
+                <span>120 mins</span>
+              </div>
+              <div class="movie-info">
+                <span>HD</span>
+              </div>
+              <div class="movie-info">
+                <span>16+</span>
+              </div>
             </div>
-            <div class="movie-info">
-              <i class="bx bxs-time"></i>
-              <span>120 mins</span>
+            <div class="item-content-description top-down delay-4">
+              {{ data.overview.substring(0, 150) }}... <a [routerLink]="['/movie', data.id]" routerLinkActive="router-link-active" style="padding:10px 0">Show More</a>
             </div>
-            <div class="movie-info">
-              <span>HD</span>
+            <div class="item-action top-down delay-6">
+              <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="btn btn-hover">
+                <i class="bx bxs-right-arrow"></i>
+                <span>Watch Trailer</span>
+              </a>
             </div>
-            <div class="movie-info">
-              <span>16+</span>
-            </div>
-          </div>
-          <div class="item-content-description top-down delay-4">
-            {{ data.overview.substring(0, 150) }}... <a [routerLink]="['/movie', data.id]" routerLinkActive="router-link-active"  style="padding:10px 0">Show More</a>
-          </div>
-          <div class="item-action top-down delay-6">
-            <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="btn btn-hover">
-              <i class="bx bxs-right-arrow"></i>
-              <span>Watch Trailer</span>
-            </a>
           </div>
         </div>
       </div>
-    </div>
-  </ng-template>
-</owl-carousel-o>
-<!-- Banner End -->
+    </ng-template>
+  </owl-carousel-o>
+  <!-- Banner End -->
 
-<!-- Trending Section -->
-<section class="container mt-5">
-  <div class="row">
-      <div class="col-lg-9 col-md-9 col-sm-12">
-        <div class="trending-info">
-          <div class="trending-heading">
-            <h2 class="trending-title">Trending Movies</h2>
-          </div>
-
-          <owl-carousel-o [options]="tendingSlide">
-            <ng-template carouselSlide *ngFor="let data of trendingMoviesResults">
-              <div class="movie-box" [routerLink]="['/movie', data.id]">
-                <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
-                <div class="box-text">
-                  <h5 class="movie-title">{{ data.original_title }}</h5>
-                  <span class="movie-type">{{data.media_type}}</span>
-                  <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
-                    <i class="bx bx-right-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </ng-template>
-
-
-          </owl-carousel-o>
-        </div>
-
-        <div class="trending-info mt-5">
-          <div class="trending-heading">
-            <h2 class="trending-title">Adventure Movies</h2>
-          </div>
-
-          <owl-carousel-o [options]="tendingSlide">
-            <ng-template carouselSlide *ngFor="let data of adventureMoviesResults">
-              <div class="movie-box" [routerLink]="['/movie', data.id]">
-                <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
-                <div class="box-text">
-                  <h5 class="movie-title">{{ data.original_title }}</h5>
-                  <span class="movie-type">{{data.media_type}}</span>
-                  <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
-                    <i class="bx bx-right-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </ng-template>
-
-
-          </owl-carousel-o>
-        </div>
-
-        <div class="trending-info mt-5">
-          <div class="trending-heading">
-            <h2 class="trending-title">Action Movies</h2>
-          </div>
-
-          <owl-carousel-o [options]="tendingSlide">
-            <ng-template carouselSlide *ngFor="let data of actionMoviesResults">
-              <div class="movie-box" [routerLink]="['/movie', data.id]">
-                <img [src]="'https://image.tmdb.org/t/p/original' + data.backdrop_path" width="250px" height="250px" alt="" class="movie-box-img">
-                <div class="box-text">
-                  <h5 class="movie-title">{{ data.original_title }}</h5>
-                  <span class="movie-type">{{data.media_type}}</span>
-                  <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
-                    <i class="bx bx-right-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </ng-template>
-
-
-          </owl-carousel-o>
-        </div>
-
-        <div class="trending-info mt-5">
-          <div class="trending-heading">
-            <h2 class="trending-title">Animations Movies</h2>
-          </div>
-
-          <owl-carousel-o [options]="tendingSlide">
-            <ng-template carouselSlide *ngFor="let data of animationMoviesResults">
-              <div class="movie-box" [routerLink]="['/movie', data.id]">
-                <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
-                <div class="box-text">
-                  <h5 class="movie-title">{{ data.original_title }}</h5>
-                  <span class="movie-type">{{data.media_type}}</span>
-                  <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
-                    <i class="bx bx-right-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </ng-template>
-
-
-          </owl-carousel-o>
-        </div>
-
-        <div class="trending-info mt-5">
-          <div class="trending-heading">
-            <h2 class="trending-title">Sci-Fi Movies</h2>
-          </div>
-
-          <owl-carousel-o [options]="tendingSlide">
-            <ng-template carouselSlide *ngFor="let data of scifiMoviesResults">
-              <div class="movie-box" [routerLink]="['/movie', data.id]">
-                <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
-                <div class="box-text">
-                  <h5 class="movie-title">{{ data.original_title }}</h5>
-                  <span class="movie-type">{{data.media_type}}</span>
-                  <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
-                    <i class="bx bx-right-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </ng-template>
-
-
-          </owl-carousel-o>
-        </div>
-
-        <div class="trending-info mt-5">
-          <div class="trending-heading">
-            <h2 class="trending-title">Comdey Movies</h2>
-          </div>
-
-          <owl-carousel-o [options]="tendingSlide">
-            <ng-template carouselSlide *ngFor="let data of comedyMoviesResults">
-              <div class="movie-box" [routerLink]="['/movie', data.id]">
-                <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
-                <div class="box-text">
-                  <h5 class="movie-title">{{ data.original_title }}</h5>
-                  <span class="movie-type">{{data.media_type}}</span>
-                  <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
-                    <i class="bx bx-right-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </ng-template>
-
-
-          </owl-carousel-o>
-        </div>
-
-        <div class="trending-info mt-5">
-          <div class="trending-heading">
-            <h2 class="trending-title">Documentary Movies</h2>
-          </div>
-
-          <owl-carousel-o [options]="tendingSlide">
-            <ng-template carouselSlide *ngFor="let data of documentaryMoviesResults">
-              <div class="movie-box" [routerLink]="['/movie', data.id]">
-                <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
-                <div class="box-text">
-                  <h5 class="movie-title">{{ data.original_title }}</h5>
-                  <span class="movie-type">{{data.media_type}}</span>
-                  <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
-                    <i class="bx bx-right-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </ng-template>
-
-
-          </owl-carousel-o>
-        </div>
-
-        <div class="trending-info mt-5">
-          <div class="trending-heading">
-            <h2 class="trending-title">Thriller Movies</h2>
-          </div>
-
-          <owl-carousel-o [options]="tendingSlide">
-            <ng-template carouselSlide *ngFor="let data of thrillerMoviesResults">
-              <div class="movie-box" [routerLink]="['/movie', data.id]">
-                <img src="https://image.tmdb.org/t/p/original{{ data.backdrop_path }}" width="250px" height="250px" alt="" class="movie-box-img">
-                <div class="box-text">
-                  <h5 class="movie-title">{{ data.original_title }}</h5>
-                  <span class="movie-type">{{data.media_type}}</span>
-                  <a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
-                    <i class="bx bx-right-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </ng-template>
-
-
-          </owl-carousel-o>
-        </div>
-
+  <!-- Trending Section -->
+  <section class="container-fluid mt-3">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 trending">
+        <!-- Section template -->
+        <div class="trending-info mt-5" *ngIf="selectedCategoryData">
+		  <div class="container">
+			<div class="trending-heading">
+			  <div class="top-trading-movies">
+				<div class="d-flex align-items-center justify-content-center">
+				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="trending_up"></mat-icon></span>
+				  <span class="text">Trends Now</span>
+				</div>
+				<div class="d-flex align-items-center justify-content-center mt-2">
+				  <span class="red-dot"></span>
+				</div>
+			  </div>
+			  <div class="top-trading-movies">
+				<div class="d-flex align-items-center justify-content-center">
+				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="trending_up"></mat-icon></span>
+				  <span class="text">Popular</span>
+				</div>
+			  </div>
+			  <div class="top-trading-movies">
+				<div class="d-flex align-items-center justify-content-center">
+				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="trending_up"></mat-icon></span>
+				  <span class="text">Premieres</span>
+				</div>
+			  </div>
+			  <div class="top-trading-movies">
+				<div class="d-flex align-items-center justify-content-center">
+				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="trending_up"></mat-icon></span>
+				  <span class="text">Recently Added</span>
+				</div>
+			  </div>
+			</div>
+			<div class="category-btns mb-3">
+			  <owl-carousel-o [options]="categoryOptions" class="category-carousel">
+				<ng-container *ngFor="let section of sections">
+				  <ng-template carouselSlide>
+					<button
+					  mat-raised-button
+					  [class.active]="selectedCategory === section.title"
+					  (click)="selectCategory(section.title)">
+					  {{ section.title.split(' ')[0] }}
+					</button>
+				  </ng-template>
+				</ng-container>
+			  </owl-carousel-o>
+			</div>
+		  </div>
+			<!-- [routerLink]="['/movie', data.id]" -->
+		  <owl-carousel-o [options]="tendingSlide" class="trending-carousel">
+			  <ng-template carouselSlide *ngFor="let data of selectedCategoryData.results">
+				<div class="movie-box">
+				  <img [src]="'https://image.tmdb.org/t/p/original' + data.backdrop_path" width="250px" height="250px" alt="" class="movie-box-img">
+				  <div class="box-text">
+					<h5 class="movie-title">{{ data.original_title }}</h5>
+					<span class="movie-type">{{ data.media_type }}</span>
+					<a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
+					  <i class="bx bx-right-arrow"></i>
+					</a>
+				  </div>
+				</div>
+			  </ng-template>
+		   </owl-carousel-o>		  
+		</div>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-12 mt-3">
+      <!--- <div class="col-lg-3 col-md-3 col-sm-12 mt-3">
         <app-aside-bar></app-aside-bar>
-      </div>
-  </div>
-</section>
-<div class="mt-5 pt-5"></div>
-<!-- Footer -->
-<app-footer></app-footer>
-<!-- End Footer -->
+      </div> -->
+    </div>
+  </section>
+  <div class="mt-5 pt-5"></div>
+  <!-- Footer -->
+  <app-footer></app-footer>
+  <!-- End Footer -->
 </ng-container>
+
+<ng-template #loadingTemplate>
+  <!-- Display a loading spinner or placeholder here if desired -->
+  <div>Loading...</div>
+</ng-template>
+
 <ng-template #elseTemplate>
   <div class="container errDis mt-5">
     <div class="error-container text-center">
-      <ng-container *ngIf="errorStatus === 0; else elseTemplates">
+      <ng-container *ngIf="errorStatus === 0; else otherErrors">
         <h1><i class='bx bx-wifi-off'></i></h1>
+        <div class="display_err">
+          <h5>Something Bad Happened. Please Try Again Later.</h5>
+        </div>
       </ng-container>
-      <ng-template #elseTemplates>
+      <ng-template #otherErrors>
         <h1><i class='bx bx-error'></i> {{ errorStatus }}</h1>
+        <div class="display_err">
+          <h5>Something Bad Happened. Please Try Again Later.</h5>
+        </div>
       </ng-template>
-      <div class="display_err">
-
-        <h5>Something Bad Happened. Please Try Again Later.</h5>
-      </div>
     </div>
   </div>
 </ng-template>
-

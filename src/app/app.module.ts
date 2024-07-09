@@ -38,6 +38,7 @@ import { CommentSectionComponent } from './partials/comment-section/comment-sect
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { UserService } from './service/user.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatDialogModule,
     MatButtonModule,
     MatSnackBarModule,
+	MatIconModule,
   ],
   providers: [
     MovieApiServiceService,

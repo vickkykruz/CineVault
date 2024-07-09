@@ -48,6 +48,21 @@
   font-weight: 900;
 }
 
+.category-btns button {
+    background: transparent;
+    outline: none;
+    border: 2px solid rgba(177, 4, 12, 0.8);
+    color: #fff;
+    margin: 0 5px;
+    border-radius: 20px;
+    padding: 0 1.5rem;
+    font-size: 0.9rem;
+}
+
+.category-btns .active {
+    background: rgba(177, 4, 12, 0.8);
+}
+
 .movie-infos {
   display: flex;
   align-items: center;
@@ -86,18 +101,35 @@
 
 // Trending Movies
 .trending-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #fafafa44;
-  padding: 8px 14px;
-  border: 1px solid hsla(80, 37%, 97%, 0.247);
-  margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+    border-bottom: 2px solid hsla(80, 37%, 97%, 0.247);
+    margin-bottom: 15px;
 }
 
-.trending-title {
-  font-size: 1.2rem;
-  font-weight: 600;
+.top-trading-movies {
+	display: inline-block;
+    align-items: center;
+    font-size: 18px;
+    color: #ccc;
+    padding: 10px;
+}
+
+.top-trading-movies .icon,
+.top-trading-movies .text {
+	margin: 0 2px;
+	font-weight: 800;
+	font-size: 1.2rem;
+}
+
+.top-trading-movies .red-dot {
+	width: 7px;
+    height: 7px;
+    background: red;
+    border-radius: 50%;
+    display: inline-block;
 }
 
 .watch-btn{
@@ -166,6 +198,8 @@
   bottom: 0.8rem;
   right: 0.8rem;
 }
+
+
 
 
 @media only screen and (max-width: 1280px) {
