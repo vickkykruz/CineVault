@@ -202,6 +202,5 @@ export class HomeComponent implements OnInit {
 	  },
 	  nav: true,
 	  navSpeed: 700,
-	  navClass: ['owl-prev', 'owl-next'],
 	};
 }
