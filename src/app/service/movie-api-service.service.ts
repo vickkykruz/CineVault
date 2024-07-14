@@ -14,106 +14,91 @@ export class MovieApiServiceService {
     return throwError(error);
   }
 
-  baseUrl = 'https://api.themoviedb.org/3';
-  altBaseUrl = 'https://imdb-api.com/en/API/';
-  apiKey = '08cc33bd5ae3a747598ce2ad84376e66';
-  altApiKey = 'k_w6zpo7f7';
+  // Get the movie data from the server
+  baseUrl = 'http://localhost:3000';
+  
+  // Fetch movie data from the server
+  fetchMovies(endpoint: string): Observable<any> {
+    return this.http
+      .get(`${this.baseUrl}/movies/${endpoint}`)
+      .pipe(catchError(this.handleError));
+  }
 
+  // Fetch banner data
   bannerApiData(): Observable<any> {
-    return this.http
-      .get(`${this.baseUrl}/trending/all/week?api_key=${this.apiKey}`)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.fetchMovies('banner');
   }
 
-  // TreadingMoviesApi
+  // Trending movies
   trendingMoviesApi(): Observable<any> {
-    return this.http
-      .get(`${this.baseUrl}/trending/movie/day?api_key=${this.apiKey}`)
-      .pipe(catchError(this.handleError));
+    return this.fetchMovies('trending');
   }
-
-  imdbTrendingMoivesApi(): Observable<any> {
-    return this.http
-    .get(`${this.altBaseUrl}MostPopularMovies/${this.altApiKey}`)
-    .pipe(catchError(this.handleError));
-  }
-
-  // SearchMovie
-  getSearchMovie(data: any): Observable<any> {
-    console.log(`Search data: ${data}`);
-    return this.http
-      .get(`${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${data}`)
-      .pipe(catchError(this.handleError));
-  }
-
-  // Get Movie Dtails
-  getMovieDetails(data: any): Observable<any> {
-    return this.http
-      .get(`${this.baseUrl}/movie/${data}?api_key=${this.apiKey}`)
-      .pipe(catchError(this.handleError));
-  }
-
-  // Get ovie Video
-  getMovieVideo(data: any): Observable<any> {
-    return this.http
-      .get(`${this.baseUrl}/movie/${data}/videos?api_key=${this.apiKey}`)
-      .pipe(catchError(this.handleError));
-  }
-
-  getMovieCast(data: any): Observable<any> {
-    return this.http
-      .get(`${this.baseUrl}/movie/${data}/credits?api_key=${this.apiKey}`)
-      .pipe(catchError(this.handleError));
-  };
-
-  // Action
+  
+  // Action movies
   getActionMovies(): Observable<any> {
-    return this.http
-	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=28`)
-	  .pipe(catchError(this.handleError));
+    return this.fetchMovies('action');
   }
-
-  // Adventure
+  
+  // Adventure movies
   getAdventureMovies(): Observable<any> {
-    return this.http
-	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=12`)
-	  .pipe(catchError(this.handleError));
+    return this.fetchMovies('adventure');
   }
 
-  // Animation
+  // Animation movies
   getAnimationMovies(): Observable<any> {
-    return this.http
-	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=16`)
-	  .pipe(catchError(this.handleError));
+    return this.fetchMovies('animation');
   }
 
-  // Comedy
+  // Comedy movies
   getComedyMovies(): Observable<any> {
-    return this.http
-	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=35`)
-	  .pipe(catchError(this.handleError));
+    return this.fetchMovies('comedy');
   }
 
-  // Documentary
+  // Documentary movies
   getDocumentaryMovies(): Observable<any> {
-    return this.http
-	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=99`)
-	  .pipe(catchError(this.handleError));
+    return this.fetchMovies('documentary');
   }
 
-  // Sci-Fi
+  // Sci-Fi movies
   getSciFiMovies(): Observable<any> {
-    return this.http
-	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=878`)
-	  .pipe(catchError(this.handleError));
+    return this.fetchMovies('scifi');
   }
 
-  // Thriller
+  // Thriller movies
   getThrillerMovies(): Observable<any> {
+    return this.fetchMovies('thriller');
+  }
+
+// Fetch movies by genre
+  getMoviesByGenre(genre: string): Observable<any> {
+    return this.fetchMovies(genre.toLowerCase());
+  }
+
+  // Search movies
+  getSearchMovie(query: string): Observable<any> {
     return this.http
-	  .get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=53`)
-	  .pipe(catchError(this.handleError));
+      .get(`${this.baseUrl}/search/movie?query=${query}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  // Get movie details
+  getMovieDetails(movieId: number): Observable<any> {
+    return this.http
+      .get(`${this.baseUrl}/movie/details/${movieId}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  // Get movie trailler video
+  getMovieVideo(movieId: number): Observable<any> {
+    return this.http
+      .get(`${this.baseUrl}/movie/video/${movieId}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  // Get movie cast
+  getMovieCast(movieId: number): Observable<any> {
+    return this.http
+      .get(`${this.baseUrl}/movie/cast/${movieId}`)
+      .pipe(catchError(this.handleError));
   }
 }

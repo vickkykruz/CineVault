@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { VideoTrailerComponent } from 'src/app/partials/video-trailer/video-trailer.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-home',
@@ -37,6 +38,7 @@ export class HomeComponent implements OnInit {
   westernMoviesResults: any = [];
   loading: boolean = true;
   errorStatus: number | null = null;
+  private initialLoadCompleted: boolean = false;
 
   sections = [
     { title: 'All Movies', results: this.trendingMoviesResults },
@@ -70,7 +72,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private service: MovieApiServiceService,
     private title: Title,
-    public dialog: MatDialog) {}
+    public dialog: MatDialog,
+	private userService: UserService) {}
 
   ngOnInit(): void {
     this.title.setTitle('cruztv.netlify.app || Welcome to cruztv, where we offer latest and trending movies.');
@@ -79,7 +82,12 @@ export class HomeComponent implements OnInit {
   }
 
   logSections() {
-    console.log(this.sections);
+	// Set a timeout to check if all arrays are still empty after 10 minutes
+	  setTimeout(() => {
+		if (!this.initialLoadCompleted && this.areAllArraysEmpty()) {
+		  this.userService.displaySnackBar('Unable to load data. Please reload page');
+		}
+	  }, 300000);
   }
 
   loadData() {
@@ -104,31 +112,9 @@ export class HomeComponent implements OnInit {
         this.comedyMoviesResults = results.comedy.results;
         this.documentaryMoviesResults = results.documentary.results;
         this.thrillerMoviesResults = results.thriller.results;
-
-        this.sections = [
-			{ title: 'All Movies', results: this.trendingMoviesResults },
-			{ title: 'Adventure Movies', results: this.adventureMoviesResults },
-			{ title: 'Action Movies', results: this.actionMoviesResults },
-			{ title: 'Animation Movies', results: this.animationMoviesResults },
-			{ title: 'Biography Movies', results: this.biographyMoviesResults },
-			{ title: 'Comedy Movies', results: this.comedyMoviesResults },
-			{ title: 'Crime Movies', results: this.crimeMoviesResults },
-			{ title: 'Documentary Movies', results: this.documentaryMoviesResults },
-			{ title: 'Drama Movies', results: this.dramaMoviesResults },
-			{ title: 'Family Movies', results: this.familyMoviesResults },
-			{ title: 'Fantasy Movies', results: this.fantasyMoviesResults },
-			{ title: 'Film-Noir Movies', results: this.filmNoirMoviesResults },
-			{ title: 'History Movies', results: this.historyMoviesResults },
-			{ title: 'Musical Movies', results: this.musicalMoviesResults },
-			{ title: 'Mystery Movies', results: this.mysteryMoviesResults },
-			{ title: 'Romance Movies', results: this.romanceMoviesResults },
-			{ title: 'Sci-Fi Movies', results: this.scifiMoviesResults },
-			{ title: 'Sport Movies', results: this.sportMoviesResults },
-			{ title: 'Thriller Movies', results: this.thrillerMoviesResults },
-			{ title: 'War Movies', results: this.warMoviesResults },
-			{ title: 'Western Movies', results: this.westernMoviesResults },
-		  ];
-
+		this.initialLoadCompleted = true;
+		this.updateSections();
+        
         this.selectCategory(this.selectedCategory);
         this.logSections();
         this.loading = false; // Data loading is complete
@@ -138,6 +124,38 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+  updateSections() {
+    // Update each section with current results and loading status
+    this.sections = [
+		{ title: 'All Movies', results: this.trendingMoviesResults },
+		{ title: 'Adventure Movies', results: this.adventureMoviesResults },
+		{ title: 'Action Movies', results: this.actionMoviesResults },
+		{ title: 'Animation Movies', results: this.animationMoviesResults },
+		{ title: 'Biography Movies', results: this.biographyMoviesResults },
+		{ title: 'Comedy Movies', results: this.comedyMoviesResults },
+		{ title: 'Crime Movies', results: this.crimeMoviesResults },
+		{ title: 'Documentary Movies', results: this.documentaryMoviesResults },
+		{ title: 'Drama Movies', results: this.dramaMoviesResults },
+		{ title: 'Family Movies', results: this.familyMoviesResults },
+		{ title: 'Fantasy Movies', results: this.fantasyMoviesResults },
+		{ title: 'Film-Noir Movies', results: this.filmNoirMoviesResults },
+		{ title: 'History Movies', results: this.historyMoviesResults },
+		{ title: 'Musical Movies', results: this.musicalMoviesResults },
+		{ title: 'Mystery Movies', results: this.mysteryMoviesResults },
+		{ title: 'Romance Movies', results: this.romanceMoviesResults },
+		{ title: 'Sci-Fi Movies', results: this.scifiMoviesResults },
+		{ title: 'Sport Movies', results: this.sportMoviesResults },
+		{ title: 'Thriller Movies', results: this.thrillerMoviesResults },
+		{ title: 'War Movies', results: this.warMoviesResults },
+		{ title: 'Western Movies', results: this.westernMoviesResults },
+	  ];
+  }
+
+    areAllArraysEmpty(): boolean {
+	  // Check if all movie result arrays are empty
+	  return this.sections.every(section => section.results.length === 0);
+	}
 
   selectCategory(category: string) {
     this.selectedCategory = category;
@@ -193,14 +211,14 @@ export class HomeComponent implements OnInit {
 	  touchDrag: true,
 	  pullDrag: false,
 	  dots: false,
-	  navText: ['<', '>'],
 	  responsive: {
 		0: { items: 2, margin: 10 },
 		400: { items: 3, margin: 15 },
-		740: { items: 5, margin: 20 },
-		940: { items: 7, margin: 25 }
+		768: { items: 5, margin: 10 },
+		1024: { items: 6, margin: 10 },
+		1440: { items: 8, margin: 10 }
 	  },
-	  nav: true,
+	  nav: false,
 	  navSpeed: 700,
 	};
 }

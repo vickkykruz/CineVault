@@ -19,17 +19,19 @@
 
             <div class="movie-infos top-down delay-2">
               <div class="movie-info">
-                <i class="bx bxs-star"></i>
+                <mat-icon aria-hidden="false" aria-label="" style="font-size: 20px; color: #FFEF00;" fontIcon="grade"></mat-icon>
                 <span>{{ data.vote_average }}</span>
               </div>
               <div class="movie-info">
-                <i class="bx bxs-time"></i>
+                <mat-icon aria-hidden="false" aria-label="" style="font-size: 20px; color: #E50914;" fontIcon="history"></mat-icon>
                 <span>120 mins</span>
               </div>
               <div class="movie-info">
+				<mat-icon aria-hidden="false" aria-label="" style="font-size: 20px; color: #E50914;" fontIcon="hd"></mat-icon>
                 <span>HD</span>
               </div>
               <div class="movie-info">
+				<mat-icon aria-hidden="false" aria-label="" style="font-size: 20px; color: #E50914;" fontIcon="person"></mat-icon>
                 <span>16+</span>
               </div>
             </div>
@@ -67,20 +69,20 @@
 				</div>
 			  </div>
 			  <div class="top-trading-movies">
-				<div class="d-flex align-items-center justify-content-center">
-				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="trending_up"></mat-icon></span>
+				<div class="d-flex align-items-center justify-content-center category-type">
+				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="local_fire_department"></mat-icon></span>
 				  <span class="text">Popular</span>
 				</div>
 			  </div>
 			  <div class="top-trading-movies">
-				<div class="d-flex align-items-center justify-content-center">
-				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="trending_up"></mat-icon></span>
+				<div class="d-flex align-items-center justify-content-center category-type">
+				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="star_half"></mat-icon></span>
 				  <span class="text">Premieres</span>
 				</div>
 			  </div>
 			  <div class="top-trading-movies">
-				<div class="d-flex align-items-center justify-content-center">
-				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="trending_up"></mat-icon></span>
+				<div class="d-flex align-items-center justify-content-center category-type">
+				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="add"></mat-icon></span>
 				  <span class="text">Recently Added</span>
 				</div>
 			  </div>
@@ -107,7 +109,17 @@
 				  <img [src]="'https://image.tmdb.org/t/p/original' + data.backdrop_path" width="250px" height="250px" alt="" class="movie-box-img">
 				  <div class="box-text">
 					<h5 class="movie-title">{{ data.original_title }}</h5>
-					<span class="movie-type">{{ data.media_type }}</span>
+					<div class="d-flex align-items-center rating-container">
+						<div class="d-flex align-items-center" style="margin-right: 5px;">
+							<mat-icon aria-hidden="false" class="rate-mat-icon" aria-label="" fontIcon="grade"></mat-icon>
+							<span class="rate-text">7.9</span>
+						</div>
+						<div class="d-flex align-items-center" style="margin-left: 5px;">
+							<mat-icon aria-hidden="false" aria-label="" class="calendar-mat-icon"  fontIcon="calendar_month"></mat-icon>
+							<span class="year-text">2024</span>
+						</div>
+					</div>
+					
 					<a (click)="openVideo(data.id, '2000ms', '1500ms')" class="watch-btn play-btn">
 					  <i class="bx bx-right-arrow"></i>
 					</a>
