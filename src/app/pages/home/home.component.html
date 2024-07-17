@@ -17,10 +17,10 @@
               <div class="item-content-title top-down">{{ data.original_title }}</div>
             </ng-template>
 
-            <div class="movie-infos top-down delay-2">
+            <div class="movie-infos mt-3 top-down delay-2">
               <div class="movie-info">
                 <mat-icon aria-hidden="false" aria-label="" style="font-size: 20px; color: #FFEF00;" fontIcon="grade"></mat-icon>
-                <span>{{ data.vote_average }}</span>
+                <span>{{ data.vote_average | round }}</span>
               </div>
               <div class="movie-info">
                 <mat-icon aria-hidden="false" aria-label="" style="font-size: 20px; color: #E50914;" fontIcon="history"></mat-icon>
@@ -31,8 +31,8 @@
                 <span>HD</span>
               </div>
               <div class="movie-info">
-				<mat-icon aria-hidden="false" aria-label="" style="font-size: 20px; color: #E50914;" fontIcon="person"></mat-icon>
-                <span>16+</span>
+				<mat-icon aria-hidden="false" aria-label="" style="font-size: 20px; color: #E50914;" fontIcon="calendar_month"></mat-icon>
+                <span>{{ data.release_date | date:'yyyy' }}</span>
               </div>
             </div>
             <div class="item-content-description top-down delay-4">
@@ -70,36 +70,36 @@
 			  </div>
 			  <div class="top-trading-movies">
 				<div class="d-flex align-items-center justify-content-center category-type">
-				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="local_fire_department"></mat-icon></span>
+				  <span class="icon"><mat-icon class="category-icon" aria-hidden="false" aria-label="" fontIcon="local_fire_department"></mat-icon></span>
 				  <span class="text">Popular</span>
 				</div>
 			  </div>
 			  <div class="top-trading-movies">
 				<div class="d-flex align-items-center justify-content-center category-type">
-				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="star_half"></mat-icon></span>
+				  <span class="icon"><mat-icon class="category-icon" aria-hidden="false" aria-label="" fontIcon="star_half"></mat-icon></span>
 				  <span class="text">Premieres</span>
 				</div>
 			  </div>
 			  <div class="top-trading-movies">
 				<div class="d-flex align-items-center justify-content-center category-type">
-				  <span class="icon"><mat-icon aria-hidden="false" aria-label="" fontIcon="add"></mat-icon></span>
+				  <span class="icon"><mat-icon class="category-icon" aria-hidden="false" aria-label="" fontIcon="add"></mat-icon></span>
 				  <span class="text">Recently Added</span>
 				</div>
 			  </div>
 			</div>
 			<div class="category-btns mb-3">
 			  <owl-carousel-o [options]="categoryOptions" class="category-carousel">
-				<ng-container *ngFor="let section of sections">
-				  <ng-template carouselSlide>
-					<button
-					  mat-raised-button
-					  [class.active]="selectedCategory === section.title"
-					  (click)="selectCategory(section.title)">
-					  {{ section.title.split(' ')[0] }}
-					</button>
-				  </ng-template>
-				</ng-container>
-			  </owl-carousel-o>
+				  <ng-container *ngFor="let section of sections">
+					<ng-template carouselSlide>
+					  <button
+						mat-raised-button
+						[class.active]="selectedCategory === section.title"
+						(click)="selectCategory(section.title)">
+						{{ section.title.split(' ')[0] }}
+					  </button>
+					</ng-template>
+				  </ng-container>
+				</owl-carousel-o>
 			</div>
 		  </div>
 			<!-- [routerLink]="['/movie', data.id]" -->
@@ -112,11 +112,11 @@
 					<div class="d-flex align-items-center rating-container">
 						<div class="d-flex align-items-center" style="margin-right: 5px;">
 							<mat-icon aria-hidden="false" class="rate-mat-icon" aria-label="" fontIcon="grade"></mat-icon>
-							<span class="rate-text">7.9</span>
+							<span class="rate-text">{{ data.vote_average | round }}</span>
 						</div>
 						<div class="d-flex align-items-center" style="margin-left: 5px;">
 							<mat-icon aria-hidden="false" aria-label="" class="calendar-mat-icon"  fontIcon="calendar_month"></mat-icon>
-							<span class="year-text">2024</span>
+							<span class="year-text">{{ data.release_date | date:'yyyy' }}</span>
 						</div>
 					</div>
 					

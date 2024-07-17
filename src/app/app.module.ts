@@ -39,6 +39,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { UserService } from './service/user.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatIconModule} from '@angular/material/icon';
+import { RoundPipe } from './pipes/round.pipe';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import {MatIconModule} from '@angular/material/icon';
     AsideBarComponent,
     DownloadMoviesComponent,
     VideoTrailerComponent,
-    CommentSectionComponent
+    CommentSectionComponent,
+    RoundPipe
   ],
   imports: [
     BrowserModule,

@@ -176,11 +176,12 @@ a {
 }
 
 .category-carousel .owl-carousel .owl-item {
-  margin-right: 10px; // Adjust as needed for spacing
+  width: auto !important;
+  margin-right: 0; // Ensure no margin is applied
 }
 
 .category-carousel .owl-carousel .owl-item button.mat-raised-button {
-  margin: 0 5px; // Adjust as needed for button spacing
+  margin: 0 10px; // Adjust button margin for spacing
 }
 
 

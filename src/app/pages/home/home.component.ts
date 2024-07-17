@@ -16,23 +16,22 @@ import { UserService } from 'src/app/service/user.service';
 export class HomeComponent implements OnInit {
   bannerApiData: any = [];
   trendingMoviesResults: any = [];
+  tvMoviesResults: any = [];
   actionMoviesResults: any = [];
   adventureMoviesResults: any = [];
   animationMoviesResults: any = [];
-  biographyMoviesResults: any = [];
   comedyMoviesResults: any = [];
   crimeMoviesResults: any = [];
   documentaryMoviesResults: any = [];
   dramaMoviesResults: any = [];
   familyMoviesResults: any = [];
   fantasyMoviesResults: any = [];
-  filmNoirMoviesResults: any = [];
   historyMoviesResults: any = [];
+  horrorMoviesResults: any = [];
   musicalMoviesResults: any = [];
   mysteryMoviesResults: any = [];
   romanceMoviesResults: any = [];
   scifiMoviesResults: any = [];
-  sportMoviesResults: any = [];
   thrillerMoviesResults: any = [];
   warMoviesResults: any = [];
   westernMoviesResults: any = [];
@@ -42,23 +41,21 @@ export class HomeComponent implements OnInit {
 
   sections = [
     { title: 'All Movies', results: this.trendingMoviesResults },
+	{ title: 'Action Movies', results: this.actionMoviesResults },
     { title: 'Adventure Movies', results: this.adventureMoviesResults },
-    { title: 'Action Movies', results: this.actionMoviesResults },
     { title: 'Animation Movies', results: this.animationMoviesResults },
-	{ title: 'Biography Movies', results: this.biographyMoviesResults },
 	{ title: 'Comedy Movies', results: this.comedyMoviesResults },
 	{ title: 'Crime Movies', results: this.crimeMoviesResults },
 	{ title: 'Documentary Movies', results: this.documentaryMoviesResults },
 	{ title: 'Drama Movies', results: this.dramaMoviesResults },
 	{ title: 'Family Movies', results: this.familyMoviesResults },
 	{ title: 'Fantasy Movies', results: this.fantasyMoviesResults },
-	{ title: 'Film-Noir Movies', results: this.filmNoirMoviesResults },
 	{ title: 'History Movies', results: this.historyMoviesResults },
+	{ title: 'Horror Movies', results: this.horrorMoviesResults },
 	{ title: 'Musical Movies', results: this.musicalMoviesResults },
 	{ title: 'Mystery Movies', results: this.mysteryMoviesResults },
 	{ title: 'Romance Movies', results: this.romanceMoviesResults },
     { title: 'Sci-Fi Movies', results: this.scifiMoviesResults },
-	{ title: 'Sport Movies', results: this.sportMoviesResults },
     { title: 'Thriller Movies', results: this.thrillerMoviesResults },
 	{ title: 'War Movies', results: this.warMoviesResults },
 	{ title: 'Western Movies', results: this.westernMoviesResults },
@@ -94,24 +91,48 @@ export class HomeComponent implements OnInit {
     forkJoin({
       banner: this.service.bannerApiData(),
       trending: this.service.trendingMoviesApi(),
+	  tvmovies: this.service.getTvMovies(),
       action: this.service.getActionMovies(),
       adventure: this.service.getAdventureMovies(),
       animation: this.service.getAnimationMovies(),
-      scifi: this.service.getSciFiMovies(),
       comedy: this.service.getComedyMovies(),
+	  crime: this.service.getCrimeMovies(),
       documentary: this.service.getDocumentaryMovies(),
-      thriller: this.service.getThrillerMovies()
+	  drama: this.service.getDramaMovies(),
+	  family: this.service.getFamilyMovies(),
+	  fantasy: this.service.getFantasyMovies(),
+	  history: this.service.getHistoryMovies(),
+	  horror: this.service.getHorrorMovies(),
+	  musical: this.service.getMusicMovies(),
+	  mystery: this.service.getMysteryMovies(),
+	  romance: this.service.getRomanceMovies(),
+	  scifi: this.service.getSciFiMovies(),
+      thriller: this.service.getThrillerMovies(),
+	  war: this.service.getWarMovies(),
+	  western: this.service.getWesternMovies()
     }).subscribe({
       next: (results) => {
         this.bannerApiData = results.banner.results;
         this.trendingMoviesResults = results.trending.results;
+		this.tvMoviesResults = results.tvmovies.results;
         this.actionMoviesResults = results.action.results;
         this.adventureMoviesResults = results.adventure.results;
         this.animationMoviesResults = results.animation.results;
-        this.scifiMoviesResults = results.scifi.results;
         this.comedyMoviesResults = results.comedy.results;
-        this.documentaryMoviesResults = results.documentary.results;
+		this.crimeMoviesResults = results.crime.results;
+		this.documentaryMoviesResults = results.documentary.results;
+		this.dramaMoviesResults = results.drama.results;
+		this.familyMoviesResults = results.family.results;
+		this.fantasyMoviesResults = results.fantasy.results;
+		this.historyMoviesResults = results.history.results;
+		this.horrorMoviesResults = results.horror.results;
+		this.musicalMoviesResults = results.musical.results;
+		this.mysteryMoviesResults = results.mystery.results;
+		this.romanceMoviesResults = results.romance.results;
+		this.scifiMoviesResults = results.scifi.results;
         this.thrillerMoviesResults = results.thriller.results;
+		this.warMoviesResults = results.war.results;
+		this.westernMoviesResults = results.western.results;
 		this.initialLoadCompleted = true;
 		this.updateSections();
         
@@ -129,23 +150,21 @@ export class HomeComponent implements OnInit {
     // Update each section with current results and loading status
     this.sections = [
 		{ title: 'All Movies', results: this.trendingMoviesResults },
-		{ title: 'Adventure Movies', results: this.adventureMoviesResults },
 		{ title: 'Action Movies', results: this.actionMoviesResults },
+		{ title: 'Adventure Movies', results: this.adventureMoviesResults },
 		{ title: 'Animation Movies', results: this.animationMoviesResults },
-		{ title: 'Biography Movies', results: this.biographyMoviesResults },
 		{ title: 'Comedy Movies', results: this.comedyMoviesResults },
 		{ title: 'Crime Movies', results: this.crimeMoviesResults },
 		{ title: 'Documentary Movies', results: this.documentaryMoviesResults },
 		{ title: 'Drama Movies', results: this.dramaMoviesResults },
 		{ title: 'Family Movies', results: this.familyMoviesResults },
 		{ title: 'Fantasy Movies', results: this.fantasyMoviesResults },
-		{ title: 'Film-Noir Movies', results: this.filmNoirMoviesResults },
 		{ title: 'History Movies', results: this.historyMoviesResults },
+		{ title: 'Horror Movies', results: this.horrorMoviesResults },
 		{ title: 'Musical Movies', results: this.musicalMoviesResults },
 		{ title: 'Mystery Movies', results: this.mysteryMoviesResults },
 		{ title: 'Romance Movies', results: this.romanceMoviesResults },
 		{ title: 'Sci-Fi Movies', results: this.scifiMoviesResults },
-		{ title: 'Sport Movies', results: this.sportMoviesResults },
 		{ title: 'Thriller Movies', results: this.thrillerMoviesResults },
 		{ title: 'War Movies', results: this.warMoviesResults },
 		{ title: 'Western Movies', results: this.westernMoviesResults },
@@ -212,12 +231,13 @@ export class HomeComponent implements OnInit {
 	  pullDrag: false,
 	  dots: false,
 	  responsive: {
-		0: { items: 2, margin: 10 },
-		400: { items: 3, margin: 15 },
-		768: { items: 5, margin: 10 },
-		1024: { items: 6, margin: 10 },
-		1440: { items: 8, margin: 10 }
+		0: { items: 2, margin: 0 }, // Set margin to 0 for all breakpoints
+		400: { items: 3, margin: 0 },
+		768: { items: 5, margin: 0 },
+		1024: { items: 6, margin: 0 },
+		1440: { items: 8, margin: 0 }
 	  },
+	  navText: ['<', '>'],
 	  nav: false,
 	  navSpeed: 700,
 	};

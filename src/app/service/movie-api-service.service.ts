@@ -53,20 +53,80 @@ export class MovieApiServiceService {
   getComedyMovies(): Observable<any> {
     return this.fetchMovies('comedy');
   }
+  
+  // Crime movies
+  getCrimeMovies(): Observable<any> {
+    return this.fetchMovies('crime');
+  }
 
   // Documentary movies
   getDocumentaryMovies(): Observable<any> {
     return this.fetchMovies('documentary');
+  }
+  
+  // Drama movies
+  getDramaMovies(): Observable<any> {
+    return this.fetchMovies('drama');
+  }
+  
+  // Family movies
+  getFamilyMovies(): Observable<any> {
+    return this.fetchMovies('family');
+  }
+  
+  // Fantasy movies
+  getFantasyMovies(): Observable<any> {
+    return this.fetchMovies('fantasy');
+  }
+  
+  // History movies
+  getHistoryMovies(): Observable<any> {
+    return this.fetchMovies('history');
+  }
+  
+  // Horror movies
+  getHorrorMovies(): Observable<any> {
+    return this.fetchMovies('horror');
+  }
+  
+  // Music movies
+  getMusicMovies(): Observable<any> {
+    return this.fetchMovies('music');
+  }
+  
+  // Mystery movies
+  getMysteryMovies(): Observable<any> {
+    return this.fetchMovies('mystery');
+  }
+  
+  // Romance movies
+  getRomanceMovies(): Observable<any> {
+    return this.fetchMovies('romance');
   }
 
   // Sci-Fi movies
   getSciFiMovies(): Observable<any> {
     return this.fetchMovies('scifi');
   }
+  
+  // Tv movies
+  getTvMovies(): Observable<any> {
+    return this.fetchMovies('tvmovie');
+  }
 
   // Thriller movies
   getThrillerMovies(): Observable<any> {
     return this.fetchMovies('thriller');
+  }
+  
+  // War movies
+  getWarMovies(): Observable<any> {
+    return this.fetchMovies('war');
+  }
+  
+  // Western movies
+  getWesternMovies(): Observable<any> {
+    return this.fetchMovies('western');
   }
 
 // Fetch movies by genre
