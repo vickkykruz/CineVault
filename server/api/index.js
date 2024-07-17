@@ -16,7 +16,7 @@ const port = process.env.SERVER_PORT;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'http://localhost:4200', // Replace with your Angular app's URL in production
+    origin: 'netflix-clone-or4o2lyvz-vickkykruzs-projects.vercel.app', // Replace with your Angular app's URL in production
     methods: ['GET', 'POST'], // Specify the allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Specify the allowed headers
 }));
