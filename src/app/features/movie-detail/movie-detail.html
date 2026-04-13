@@ -1,1 +1,220 @@
-<p>movie-detail works!</p>
+<!-- LOADING -->
+@if (isLoading()) {
+  <div class="detail-loading">
+    <div class="loading-backdrop"></div>
+    <div class="loading-content">
+      <div class="skeleton-backdrop"></div>
+      <div class="loading-info">
+        <div class="skeleton-line wide"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+    </div>
+  </div>
+}
+ 
+<!-- MOVIE DETAIL -->
+@if (movie() && !isLoading()) {
+  <div class="detail-page">
+ 
+    <!-- HERO -->
+    <div class="detail-hero"
+         [style.background-image]="'url(' + getBackdrop(movie()!.backdrop_path) + ')'">
+      <div class="hero-overlay"></div>
+ 
+      <!-- Back button -->
+      <button class="btn-back" (click)="goBack()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
+ 
+      <div class="hero-content">
+        <!-- Poster -->
+        <div class="hero-poster">
+          <img [src]="getPoster(movie()!.poster_path)" [alt]="movie()!.title" />
+        </div>
+ 
+        <!-- Info -->
+        <div class="hero-info">
+          <div class="hero-tag">
+            @for (genre of movie()!.genres!.slice(0,3); track genre.id) {
+              <span class="genre-pill">{{ genre.name }}</span>
+            }
+          </div>
+ 
+          <h1 class="hero-title">{{ movie()!.title }}</h1>
+ 
+          @if (movie()!.tagline) {
+            <p class="hero-tagline">"{{ movie()!.tagline }}"</p>
+          }
+ 
+          <div class="hero-meta">
+            <div class="meta-rating">
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              {{ getRating(movie()!.vote_average) }}
+              <span class="vote-count">({{ movie()!.vote_count.toLocaleString() }} votes)</span>
+            </div>
+            <span class="meta-dot">·</span>
+            <span>{{ getYear(movie()!.release_date) }}</span>
+            @if (movie()!.runtime) {
+              <span class="meta-dot">·</span>
+              <span>{{ getRuntime(movie()!.runtime) }}</span>
+            }
+          </div>
+ 
+          <!-- Rating bar -->
+          <div class="rating-bar-wrap">
+            <div class="rating-bar">
+              <div class="rating-bar-fill"
+                   [style.width.%]="getRatingPercent(movie()!.vote_average)">
+              </div>
+            </div>
+            <span class="rating-pct">{{ getRatingPercent(movie()!.vote_average) }}%</span>
+          </div>
+ 
+          <p class="hero-overview">{{ movie()!.overview }}</p>
+ 
+          <div class="hero-actions">
+            @if (trailer()) {
+              <button class="btn-trailer" (click)="openTrailer()">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                Watch Trailer
+              </button>
+            }
+            <button class="btn-watchlist">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              Add to Watchlist
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- CAST -->
+    @if (cast().length > 0) {
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Cast</h2>
+        </div>
+        <div class="cast-row">
+          @for (member of cast(); track member.id) {
+            <div class="cast-card">
+              <div class="cast-photo">
+                @if (getProfile(member.profile_path)) {
+                  <img [src]="getProfile(member.profile_path)" [alt]="member.name" loading="lazy"/>
+                } @else {
+                  <div class="cast-photo-placeholder">
+                    {{ member.name.charAt(0) }}
+                  </div>
+                }
+              </div>
+              <div class="cast-name">{{ member.name }}</div>
+              <div class="cast-char">{{ member.character }}</div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+ 
+    <!-- DETAILS GRID -->
+    <section class="section section-details">
+      <div class="section-header">
+        <h2 class="section-title">Details</h2>
+      </div>
+      <div class="details-grid">
+        @if (movie()!.status) {
+          <div class="detail-item">
+            <span class="detail-label">Status</span>
+            <span class="detail-value">{{ movie()!.status }}</span>
+          </div>
+        }
+        @if (movie()!.release_date) {
+          <div class="detail-item">
+            <span class="detail-label">Release Date</span>
+            <span class="detail-value">{{ movie()!.release_date }}</span>
+          </div>
+        }
+        @if (movie()!.runtime) {
+          <div class="detail-item">
+            <span class="detail-label">Runtime</span>
+            <span class="detail-value">{{ getRuntime(movie()!.runtime) }}</span>
+          </div>
+        }
+        @if (movie()!.budget) {
+          <div class="detail-item">
+            <span class="detail-label">Budget</span>
+            <span class="detail-value">${{ movie()!.budget.toLocaleString() }}</span>
+          </div>
+        }
+        @if (movie()!.revenue) {
+          <div class="detail-item">
+            <span class="detail-label">Revenue</span>
+            <span class="detail-value">${{ movie()!.revenue.toLocaleString() }}</span>
+          </div>
+        }
+        @if (movie()!.vote_count) {
+          <div class="detail-item">
+            <span class="detail-label">Vote Count</span>
+            <span class="detail-value">{{ movie()!.vote_count.toLocaleString() }}</span>
+          </div>
+        }
+      </div>
+    </section>
+ 
+    <!-- SIMILAR MOVIES -->
+    @if (similarMovies().length > 0) {
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">You Might Also Like</h2>
+        </div>
+        <div class="similar-row">
+          @for (m of similarMovies(); track m.id) {
+            <div class="movie-card" (click)="goToMovie(m.id)">
+              <div class="card-poster">
+                <img [src]="getPoster(m.poster_path)" [alt]="m.title" loading="lazy"/>
+                <div class="card-rating">★ {{ getRating(m.vote_average) }}</div>
+                <div class="card-overlay">
+                  <p class="card-desc">{{ m.overview }}</p>
+                  <div class="card-btn">View</div>
+                </div>
+              </div>
+              <div class="card-info">
+                <div class="card-title">{{ m.title }}</div>
+                <div class="card-sub">{{ getYear(m.release_date) }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+ 
+  </div>
+}
+ 
+<!-- TRAILER MODAL -->
+@if (showTrailer() && trailer()) {
+  <div class="trailer-modal" (click)="closeTrailer()">
+    <div class="trailer-wrap" (click)="$event.stopPropagation()">
+      <button class="trailer-close" (click)="closeTrailer()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <iframe
+        [src]="'https://www.youtube.com/embed/' + trailer()!.key + '?autoplay=1' | safeUrl"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+}
+ 
