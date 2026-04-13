@@ -1,1 +1,171 @@
-<p>discover works!</p>
+<div class="discover-page">
+ 
+  <!-- PAGE HEADER -->
+  <div class="discover-header">
+    <div class="discover-header-inner">
+      <h1 class="discover-title">Discover</h1>
+      <p class="discover-sub">Search, filter and explore the world of cinema.</p>
+ 
+      <!-- Search bar -->
+      <div class="search-bar">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input
+          type="text"
+          placeholder="Search for a film, director, keyword..."
+          [(ngModel)]="searchInput"
+          (keydown)="onSearchKeydown($event)"
+          class="search-input"
+        />
+        @if (searchInput) {
+          <button class="search-clear" (click)="clearSearch()">✕</button>
+        }
+        <button class="search-btn" (click)="search()">Search</button>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="discover-body">
+ 
+    <!-- SIDEBAR FILTERS -->
+    <aside class="sidebar">
+ 
+      <!-- Sort -->
+      <div class="filter-group">
+        <div class="filter-label">Sort By</div>
+        <div class="filter-options">
+          @for (opt of sortOptions; track opt.value) {
+            <button
+              class="filter-opt"
+              [class.active]="activeSort() === opt.value"
+              (click)="selectSort(opt.value)"
+            >{{ opt.label }}</button>
+          }
+        </div>
+      </div>
+ 
+      <!-- Genres -->
+      <div class="filter-group">
+        <div class="filter-label">Genre</div>
+        <div class="filter-options">
+          <button
+            class="filter-opt"
+            [class.active]="activeGenre() === null && activeMood() === null && !searchQuery()"
+            (click)="selectGenre(null)"
+          >All</button>
+          @for (genre of genres(); track genre.id) {
+            <button
+              class="filter-opt"
+              [class.active]="activeGenre() === genre.id"
+              (click)="selectGenre(genre.id)"
+            >{{ genre.name }}</button>
+          }
+        </div>
+      </div>
+ 
+      <!-- Moods -->
+      <div class="filter-group">
+        <div class="filter-label">Mood</div>
+        <div class="filter-options mood-options">
+          @for (mood of moods; track mood.key) {
+            <button
+              class="filter-opt mood-opt"
+              [class.active]="activeMood() === mood.key"
+              (click)="selectMood(mood.key)"
+            >
+              <span>{{ mood.emoji }}</span> {{ mood.label }}
+            </button>
+          }
+        </div>
+      </div>
+ 
+    </aside>
+ 
+    <!-- MAIN CONTENT -->
+    <main class="discover-main">
+ 
+      <!-- Active filter label -->
+      <div class="results-header">
+        <h2 class="results-label">{{ getActiveFilterLabel() }}</h2>
+        <span class="results-page">
+          Page {{ currentPage() }} of {{ totalPages() }}
+        </span>
+      </div>
+ 
+      <!-- Loading skeletons -->
+      @if (isLoading()) {
+        <div class="movies-grid">
+          @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]; track i) {
+            <div class="skeleton-card">
+              <div class="skeleton-poster"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line short"></div>
+            </div>
+          }
+        </div>
+      }
+ 
+      <!-- Movies grid -->
+      @if (!isLoading() && movies().length > 0) {
+        <div class="movies-grid">
+          @for (movie of movies(); track movie.id) {
+            <div class="movie-card" (click)="goToMovie(movie.id)">
+              <div class="card-poster">
+                <img
+                  [src]="getPoster(movie.poster_path)"
+                  [alt]="movie.title"
+                  loading="lazy"
+                />
+                <div class="card-rating">★ {{ getRating(movie.vote_average) }}</div>
+                <div class="card-overlay">
+                  <p class="card-desc">{{ movie.overview }}</p>
+                  <div class="card-btn">View Details</div>
+                </div>
+              </div>
+              <div class="card-info">
+                <div class="card-title">{{ movie.title }}</div>
+                <div class="card-sub">{{ getYear(movie.release_date) }}</div>
+              </div>
+            </div>
+          }
+        </div>
+ 
+        <!-- Pagination -->
+        <div class="pagination">
+          <button
+            class="page-btn"
+            [disabled]="currentPage() === 1"
+            (click)="goToPage(currentPage() - 1)"
+          >← Prev</button>
+ 
+          @for (page of getPageNumbers(); track page) {
+            <button
+              class="page-btn"
+              [class.active]="page === currentPage()"
+              (click)="goToPage(page)"
+            >{{ page }}</button>
+          }
+ 
+          <button
+            class="page-btn"
+            [disabled]="currentPage() === totalPages()"
+            (click)="goToPage(currentPage() + 1)"
+          >Next →</button>
+        </div>
+      }
+ 
+      <!-- Empty state -->
+      @if (!isLoading() && movies().length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">🎬</div>
+          <h3 class="empty-title">No films found</h3>
+          <p class="empty-sub">Try a different search term or filter.</p>
+          <button class="btn-primary" (click)="clearSearch()">Clear Filters</button>
+        </div>
+      }
+ 
+    </main>
+  </div>
+</div>
+ 

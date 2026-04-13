@@ -94,6 +94,15 @@ export class TmdbService {
     });
   }
  
+  // ── Discover with filters ──────────────────────────────────
+  discoverMovies(filters: Record<string, any> = {}): Observable<MovieResponse> {
+    let params = new HttpParams();
+    Object.entries(filters).forEach(([key, val]) => {
+      params = params.set(key, val);
+    });
+    return this.http.get<MovieResponse>(`${this.base}/discover/movie`, { params });
+  }
+ 
   // ── Search ─────────────────────────────────────────────────
   searchMovies(query: string, page = 1): Observable<MovieResponse> {
     return this.http.get<MovieResponse>(`${this.base}/search/movie`, {
