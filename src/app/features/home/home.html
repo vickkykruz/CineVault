@@ -1,1 +1,250 @@
-<p>home works!</p>
+<!-- NAV -->
+<nav class="nav">
+  <a routerLink="/" class="nav-logo">Cine<span>Vault</span></a>
+ 
+  <ul class="nav-links">
+    <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a></li>
+    <li><a routerLink="/discover" routerLinkActive="active">Discover</a></li>
+    <li><a routerLink="/watchlist" routerLinkActive="active">Watchlist</a></li>
+    <li><a routerLink="/verdict" routerLinkActive="active">The Verdict</a></li>
+    <li><a routerLink="/time-capsule" routerLinkActive="active">Time Capsule</a></li>
+  </ul>
+ 
+  <div class="nav-right">
+    <div class="nav-search">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input
+        type="text"
+        placeholder="Search films, directors..."
+        [(ngModel)]="searchQuery"
+        (keydown)="onSearchKeydown($event)"
+      />
+    </div>
+ 
+    @if (auth.user()) {
+      <div class="avatar" routerLink="/profile">
+        {{ auth.user()?.displayName?.charAt(0) ?? auth.user()?.email?.charAt(0) ?? 'U' }}
+      </div>
+    } @else {
+      <a routerLink="/auth/login" class="btn-ghost-sm">Sign In</a>
+    }
+  </div>
+</nav>
+ 
+<!-- HERO -->
+@if (heroMovie()) {
+  <section class="hero" [style.background-image]="'url(' + getBackdrop(heroMovie()!.backdrop_path) + ')'">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Featured Tonight</div>
+      <h1 class="hero-title">{{ heroMovie()!.title }}</h1>
+      <div class="hero-meta">
+        <span class="hero-rating">
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          {{ getRating(heroMovie()!.vote_average) }}
+        </span>
+        <span class="dot">·</span>
+        <span>{{ getYear(heroMovie()!.release_date) }}</span>
+      </div>
+      <p class="hero-desc">{{ heroMovie()!.overview }}</p>
+      <div class="hero-actions">
+        <button class="btn-primary" (click)="goToMovie(heroMovie()!.id)">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          View Details
+        </button>
+        <button class="btn-ghost">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Add to List
+        </button>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </section>
+} @else {
+  <div class="hero hero-skeleton"></div>
+}
+ 
+<!-- MOOD PICKER -->
+<div class="mood-section">
+  <div class="mood-label">What's your mood tonight?</div>
+  <div class="mood-pills">
+    @for (mood of moods; track mood.key) {
+      <div
+        class="mood-pill"
+        [class.active]="activeMood() === mood.key"
+        (click)="loadMoodMovies(mood.key)"
+      >
+        <span class="emoji">{{ mood.emoji }}</span>
+        {{ mood.label }}
+      </div>
+    }
+  </div>
+</div>
+ 
+<!-- TRENDING -->
+<section class="section">
+  <div class="section-header">
+    <h2 class="section-title">Trending This Week</h2>
+    <a routerLink="/discover" class="section-link">See all →</a>
+  </div>
+ 
+  @if (isLoading()) {
+    <div class="cards-row">
+      @for (i of [1,2,3,4,5]; track i) {
+        <div class="skeleton-card">
+          <div class="skeleton-poster"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="cards-row">
+      @for (movie of trendingMovies().slice(0,5); track movie.id) {
+        <div class="movie-card" (click)="goToMovie(movie.id)">
+          <div class="card-poster">
+            <img
+              [src]="getPoster(movie.poster_path)"
+              [alt]="movie.title"
+              class="card-poster-img"
+              loading="lazy"
+            />
+            <div class="card-rating">★ {{ getRating(movie.vote_average) }}</div>
+            <div class="card-overlay">
+              <p class="card-desc">{{ movie.overview }}</p>
+              <div class="card-actions">
+                <div class="card-btn">View</div>
+                <div class="card-btn icon-btn">+</div>
+              </div>
+            </div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">{{ movie.title }}</div>
+            <div class="card-sub">{{ getYear(movie.release_date) }}</div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>
+ 
+<!-- MOOD MOVIES -->
+<section class="section" style="padding-top: 0;">
+  <div class="section-header">
+    <h2 class="section-title">
+      {{ moods.find(m => m.key === activeMood())?.emoji }}
+      {{ moods.find(m => m.key === activeMood())?.label }}
+    </h2>
+    <a routerLink="/discover" class="section-link">More →</a>
+  </div>
+  <div class="cards-row">
+    @for (movie of moodMovies(); track movie.id) {
+      <div class="movie-card" (click)="goToMovie(movie.id)">
+        <div class="card-poster">
+          <img
+            [src]="getPoster(movie.poster_path)"
+            [alt]="movie.title"
+            class="card-poster-img"
+            loading="lazy"
+          />
+          <div class="card-rating">★ {{ getRating(movie.vote_average) }}</div>
+          <div class="card-overlay">
+            <p class="card-desc">{{ movie.overview }}</p>
+            <div class="card-actions">
+              <div class="card-btn">View</div>
+              <div class="card-btn icon-btn">+</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-title">{{ movie.title }}</div>
+          <div class="card-sub">{{ getYear(movie.release_date) }}</div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+ 
+<!-- THE VERDICT TEASER -->
+<div class="verdict-teaser">
+  <div class="verdict-left">
+    <div class="verdict-eyebrow">New Feature</div>
+    <h3 class="verdict-title">The Verdict</h3>
+    <p class="verdict-desc">
+      Can't agree on what to watch? Invite your group, everyone swipes,
+      and the app finds your perfect match — instantly.
+    </p>
+    <button class="btn-primary" routerLink="/verdict">Start a Group Session</button>
+  </div>
+  <div class="verdict-preview">
+    <div class="vp-card vp-card-1"></div>
+    <div class="vp-card vp-card-2"></div>
+    <div class="vp-card vp-card-3"></div>
+    <div class="vp-match">⚡ It's a Match!</div>
+  </div>
+</div>
+ 
+<!-- TOP RATED -->
+<section class="section">
+  <div class="section-header">
+    <h2 class="section-title">Top Rated All Time</h2>
+    <a routerLink="/discover" class="section-link">View all →</a>
+  </div>
+  <div class="cards-row">
+    @for (movie of topRatedMovies(); track movie.id) {
+      <div class="movie-card" (click)="goToMovie(movie.id)">
+        <div class="card-poster">
+          <img
+            [src]="getPoster(movie.poster_path)"
+            [alt]="movie.title"
+            class="card-poster-img"
+            loading="lazy"
+          />
+          <div class="card-badge">★ {{ getRating(movie.vote_average) }}</div>
+          <div class="card-overlay">
+            <p class="card-desc">{{ movie.overview }}</p>
+            <div class="card-actions">
+              <div class="card-btn">View</div>
+              <div class="card-btn icon-btn">+</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-title">{{ movie.title }}</div>
+          <div class="card-sub">{{ getYear(movie.release_date) }}</div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+ 
+<!-- TIME CAPSULE TEASER -->
+<div class="capsule-teaser">
+  <div class="capsule-icon">⏳</div>
+  <div>
+    <div class="verdict-eyebrow">Coming Soon</div>
+    <h3 class="capsule-title">Time Capsule</h3>
+    <p class="capsule-desc">
+      "Write to your future self about a film. Seal it. We'll bring it back to you in 5 years."
+    </p>
+    <button class="btn-ghost" routerLink="/time-capsule">Get Notified</button>
+  </div>
+</div>
+ 
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">Cine<span>Vault</span></div>
+  <div class="footer-copy">© 2026 CineVault. Built with obsession.</div>
+</footer>
+ 

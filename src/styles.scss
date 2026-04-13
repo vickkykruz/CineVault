@@ -1,1 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --black:     #080808;
+  --deep:      #0f0f0f;
+  --surface:   #161616;
+  --card:      #1c1c1c;
+  --border:    #2a2a2a;
+  --gold:      #c9a84c;
+  --gold-dim:  #a07832;
+  --gold-glow: rgba(201,168,76,0.15);
+  --text:      #e8e8e8;
+  --muted:     #888;
+  --faint:     #444;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+a { text-decoration: none; }
+button { cursor: pointer; }
