@@ -1,8 +1,10 @@
 <div class="auth-page">
  
-  <!-- Left Panel — Cinematic Branding -->
+  <!-- Left Panel — Living Poster Wall -->
   <div class="auth-left">
-    <div class="auth-left-inner">
+ 
+    <!-- Dark overlay with gradient and branding -->
+    <div class="auth-left-overlay">
       <a routerLink="/" class="auth-logo">Cine<span>Vault</span></a>
  
       <div class="auth-brand">
@@ -33,11 +35,23 @@
       </div>
     </div>
  
-    <!-- Decorative film strip -->
-    <div class="film-strip">
-      @for (i of filmCells; track i) {
-        <div class="film-cell" [style.background]="filmColors[i % filmColors.length]"></div>
-      }
+    <!-- Poster wall — two columns scrolling at different speeds -->
+    <div class="poster-wall">
+ 
+      <!-- Column A — scrolls up -->
+      <div class="poster-col poster-col-a">
+        @for (url of columnA(); track url + $index) {
+          <img [src]="url" alt="Movie poster" class="poster-img" loading="lazy" />
+        }
+      </div>
+ 
+      <!-- Column B — scrolls down -->
+      <div class="poster-col poster-col-b">
+        @for (url of columnB(); track url + $index) {
+          <img [src]="url" alt="Movie poster" class="poster-img" loading="lazy" />
+        }
+      </div>
+ 
     </div>
   </div>
  

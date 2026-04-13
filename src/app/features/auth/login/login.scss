@@ -1,6 +1,6 @@
 .auth-page {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.1fr 0.9fr;
   min-height: 100vh;
   background: var(--black);
 }
@@ -8,21 +8,26 @@
 // ── LEFT PANEL ─────────────────────────────────────────────
 .auth-left {
   position: relative;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
+  background: var(--black);
 }
  
-.auth-left-inner {
-  flex: 1;
+// Overlay sits on top of poster wall
+.auth-left-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 48px;
-  position: relative;
-  z-index: 2;
+  background:
+    linear-gradient(to right, rgba(8,8,8,0.92) 40%, rgba(8,8,8,0.5) 100%),
+    linear-gradient(to top, rgba(8,8,8,0.95) 0%, rgba(8,8,8,0.2) 50%);
+  pointer-events: none;
+ 
+  // Re-enable pointer events for links
+  a, button { pointer-events: all; }
 }
  
 .auth-logo {
@@ -35,17 +40,19 @@
 }
  
 .auth-brand {
-  margin-top: auto;
-  margin-bottom: 48px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
  
 .auth-brand-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(48px, 5vw, 72px);
-  line-height: 0.95;
+  font-size: clamp(52px, 5.5vw, 80px);
+  line-height: 0.93;
   letter-spacing: 2px;
   color: var(--text);
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   em {
     color: var(--gold);
     font-style: normal;
@@ -55,69 +62,92 @@
 .auth-brand-sub {
   font-family: 'Lora', serif;
   font-size: 15px;
-  line-height: 1.7;
-  color: var(--muted);
-  max-width: 340px;
+  line-height: 1.75;
+  color: rgba(232,232,232,0.7);
+  max-width: 360px;
 }
  
 .auth-stats {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
 }
  
 .auth-stat {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
  
 .auth-stat-num {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px;
+  font-size: 30px;
   color: var(--gold);
   line-height: 1;
 }
  
 .auth-stat-label {
-  font-size: 11px;
-  letter-spacing: 1.5px;
+  font-size: 10px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--faint);
+  color: rgba(232,232,232,0.4);
 }
  
 .auth-stat-divider {
   width: 1px;
-  height: 32px;
-  background: var(--border);
+  height: 36px;
+  background: rgba(255,255,255,0.1);
 }
  
-// Film strip decoration
-.film-strip {
+// ── POSTER WALL ────────────────────────────────────────────
+.poster-wall {
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 48px;
+  inset: 0;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  z-index: 1;
+  overflow: hidden;
+}
+ 
+.poster-col {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 4px;
-  border-left: 1px solid var(--border);
-  overflow: hidden;
-  opacity: 0.6;
+  gap: 8px;
+  flex: 1;
 }
  
-.film-cell {
+// Column A scrolls upward
+.poster-col-a {
+  animation: scrollUp 40s linear infinite;
+}
+ 
+// Column B scrolls downward — slower for parallax effect
+.poster-col-b {
+  animation: scrollDown 55s linear infinite;
+  margin-top: -120px;
+}
+ 
+.poster-img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 4px;
+  opacity: 0.55;
+  transition: opacity 0.3s;
   flex-shrink: 0;
-  height: 56px;
-  border-radius: 2px;
-  animation: filmScroll 20s linear infinite;
+ 
+  &:hover { opacity: 0.8; }
 }
  
-@keyframes filmScroll {
+@keyframes scrollUp {
   0%   { transform: translateY(0); }
   100% { transform: translateY(-50%); }
+}
+ 
+@keyframes scrollDown {
+  0%   { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
 }
  
 // ── RIGHT PANEL ────────────────────────────────────────────
@@ -125,8 +155,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 32px;
+  padding: 48px 40px;
   background: var(--black);
+  border-left: 1px solid var(--border);
 }
  
 .auth-form-wrap {
@@ -149,9 +180,9 @@
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--muted);
   cursor: pointer;
@@ -161,7 +192,6 @@
     color: var(--gold);
     border-bottom-color: var(--gold);
   }
- 
   &:hover:not(.active) { color: var(--text); }
 }
  
@@ -205,11 +235,7 @@
     border-color: var(--gold-dim);
     background: var(--card);
   }
- 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
  
 // Divider
@@ -227,8 +253,8 @@
   }
  
   span {
-    font-size: 11px;
-    letter-spacing: 1.5px;
+    font-size: 10px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--faint);
     white-space: nowrap;
@@ -250,8 +276,8 @@
 }
  
 .form-label {
-  font-size: 11px;
-  letter-spacing: 1.5px;
+  font-size: 10px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -266,10 +292,9 @@
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.2s;
  
   &::placeholder { color: var(--faint); }
- 
   &:focus {
     border-color: var(--gold-dim);
     background: var(--card);
@@ -282,8 +307,8 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: rgba(224, 82, 82, 0.08);
-  border: 1px solid rgba(224, 82, 82, 0.2);
+  background: rgba(224,82,82,0.08);
+  border: 1px solid rgba(224,82,82,0.2);
   border-radius: 2px;
   font-size: 13px;
   color: #e05252;
@@ -313,11 +338,7 @@
     background: #e0b855;
     transform: translateY(-1px);
   }
- 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
  
 // Spinner
@@ -361,8 +382,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 12px;
-  letter-spacing: 1px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--faint);
   text-decoration: none;
@@ -371,9 +392,14 @@
 }
  
 // ── RESPONSIVE ─────────────────────────────────────────────
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .auth-page { grid-template-columns: 1fr; }
   .auth-left { display: none; }
-  .auth-right { padding: 32px 24px; align-items: flex-start; padding-top: 64px; }
+  .auth-right {
+    padding: 32px 24px;
+    align-items: flex-start;
+    padding-top: 80px;
+    border-left: none;
+  }
 }
  
