@@ -4,7 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Auth, updateProfile } from '@angular/fire/auth';
 import { AuthService } from '../../core/services/auth.service';
-import { WatchlistService } from '../../core/services/watchlist-data.service';
+import { WatchlistService } from '../../core/services/watchlist.service';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
  

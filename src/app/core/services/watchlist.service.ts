@@ -13,15 +13,15 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
  
 export interface WatchlistEntry {
-  movieId: number;
-  title: string;
-  poster_path: string;
+  movieId:      number;
+  title:        string;
+  poster_path:  string;
   vote_average: number;
   release_date: string;
-  overview: string;
-  addedAt: number;
-  watched: boolean;
-  rating?: number;
+  overview:     string;
+  addedAt:      number;
+  watched:      boolean;
+  rating?:      number;
 }
  
 @Injectable({ providedIn: 'root' })
@@ -46,7 +46,9 @@ export class WatchlistService {
   getWatchlist(): Observable<WatchlistEntry[]> {
     const uid = this.getUserId();
     if (!uid) return of([]);
-    return collectionData(this.watchlistRef(uid), { idField: 'id' }) as Observable<WatchlistEntry[]>;
+    return collectionData(
+      this.watchlistRef(uid), { idField: 'id' }
+    ) as Observable<WatchlistEntry[]>;
   }
  
   // ── Check if a movie is in the watchlist ───────────────
@@ -59,7 +61,9 @@ export class WatchlistService {
   }
  
   // ── Add movie to watchlist ─────────────────────────────
-  async addToWatchlist(movie: Omit<WatchlistEntry, 'addedAt' | 'watched'>): Promise<void> {
+  async addToWatchlist(
+    movie: Omit<WatchlistEntry, 'addedAt' | 'watched'>
+  ): Promise<void> {
     const uid = this.getUserId();
     if (!uid) throw new Error('User not authenticated');
     await setDoc(this.movieDocRef(uid, movie.movieId), {
