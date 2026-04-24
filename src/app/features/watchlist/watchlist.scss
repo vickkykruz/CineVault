@@ -1,0 +1,396 @@
+.watchlist-page {
+  min-height: 100vh;
+  background: var(--black);
+  padding-top: 72px;
+}
+ 
+// ── HEADER ────────────────────────────────────────────────
+.watchlist-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 48px 48px 0;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+ 
+.page-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  letter-spacing: 3px;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 6px;
+ 
+  &::after {
+    content: '.';
+    color: var(--gold);
+  }
+}
+ 
+.page-sub {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  color: var(--muted);
+  font-style: italic;
+}
+ 
+// Stats
+.watchlist-stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+ 
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+ 
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--gold);
+  line-height: 1;
+}
+ 
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+ 
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border);
+}
+ 
+// ── FILTERS ───────────────────────────────────────────────
+.watchlist-filters {
+  display: flex;
+  gap: 0;
+  padding: 32px 48px 0;
+  border-bottom: 1px solid var(--border);
+}
+ 
+.filter-tab {
+  padding: 10px 24px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+ 
+  &:hover { color: var(--text); }
+ 
+  &.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+}
+ 
+// ── GRID ──────────────────────────────────────────────────
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+  padding: 40px 48px;
+}
+ 
+// ── WATCHLIST CARD ────────────────────────────────────────
+.watchlist-card {
+  border-radius: 4px;
+  overflow: hidden;
+  transition: opacity 0.3s;
+  animation: cardReveal 0.5s cubic-bezier(0.16,1,0.3,1) both;
+ 
+  &.is-watched {
+    .card-poster img { filter: brightness(0.6) saturate(0.4); }
+  }
+ 
+  &:hover .card-overlay { opacity: 1; }
+  &:hover .card-poster img { transform: scale(1.04); }
+}
+ 
+.card-poster {
+  position: relative;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--surface);
+  cursor: pointer;
+ 
+  img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease, filter 0.3s ease;
+  }
+}
+ 
+.watched-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: rgba(8,8,8,0.85);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+ 
+.card-rating {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: rgba(8,8,8,0.85);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+ 
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8,8,8,0.95) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px;
+}
+ 
+.card-desc {
+  font-family: 'Lora', serif;
+  font-size: 10px;
+  color: #aaa;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+ 
+// Card info
+.card-info {
+  padding: 10px 2px 4px;
+}
+ 
+.card-title {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: color 0.2s;
+  &:hover { color: var(--gold); }
+}
+ 
+.card-year {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+ 
+// Star rating
+.star-rating {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+ 
+.star {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: var(--faint);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s, transform 0.15s;
+  line-height: 1;
+ 
+  &.active { color: var(--gold); }
+  &:hover  { color: var(--gold); transform: scale(1.2); }
+}
+ 
+// Actions
+.card-actions {
+  display: flex;
+  gap: 6px;
+}
+ 
+.btn-watch {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+ 
+  &:hover {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+ 
+  &.watched {
+    background: var(--gold-glow);
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+}
+ 
+.btn-remove {
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--faint);
+  cursor: pointer;
+  transition: all 0.2s;
+ 
+  &:hover {
+    background: rgba(224,82,82,0.1);
+    border-color: rgba(224,82,82,0.3);
+    color: #e05252;
+  }
+ 
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+ 
+// ── SKELETON ──────────────────────────────────────────────
+.skeleton-card { border-radius: 4px; }
+ 
+.skeleton-poster {
+  aspect-ratio: 2/3;
+  background: linear-gradient(90deg, var(--surface) 25%, var(--card) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+ 
+.skeleton-line {
+  height: 12px;
+  background: linear-gradient(90deg, var(--surface) 25%, var(--card) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 2px;
+  margin-top: 8px;
+  &.short { width: 55%; margin-top: 5px; }
+}
+ 
+// ── EMPTY STATE ───────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 40px;
+  text-align: center;
+}
+ 
+.empty-icon {
+  font-size: 56px;
+  margin-bottom: 20px;
+}
+ 
+.empty-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+ 
+.empty-sub {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 32px;
+  max-width: 360px;
+  line-height: 1.7;
+}
+ 
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold);
+  color: var(--black);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  &:hover { background: #e0b855; transform: translateY(-1px); }
+}
+ 
+// ── ANIMATIONS ────────────────────────────────────────────
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+ 
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+ 
+// ── RESPONSIVE ────────────────────────────────────────────
+@media (max-width: 1024px) {
+  .watchlist-header  { padding: 32px 24px 0; }
+  .watchlist-filters { padding: 24px 24px 0; }
+  .watchlist-grid    { padding: 32px 24px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+ 
+@media (max-width: 640px) {
+  .watchlist-stats   { display: none; }
+  .watchlist-grid    { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .filter-tab        { padding: 8px 14px; font-size: 11px; }
+}
+ 

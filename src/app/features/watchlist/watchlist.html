@@ -1,1 +1,173 @@
-<p>watchlist works!</p>
+<div class="watchlist-page">
+ 
+  <!-- HEADER -->
+  <div class="watchlist-header">
+    <div class="header-left">
+      <h1 class="page-title">My Watchlist</h1>
+      <p class="page-sub">
+        {{ user()?.displayName ?? user()?.email ?? 'Your' }} collection
+      </p>
+    </div>
+ 
+    <!-- Stats -->
+    <div class="watchlist-stats">
+      <div class="stat-item">
+        <span class="stat-num">{{ stats().total }}</span>
+        <span class="stat-label">Total</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num">{{ stats().watched }}</span>
+        <span class="stat-label">Watched</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num">{{ stats().unwatched }}</span>
+        <span class="stat-label">To Watch</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num">{{ stats().avgRating }}</span>
+        <span class="stat-label">Avg Rating</span>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- FILTERS -->
+  <div class="watchlist-filters">
+    <button
+      class="filter-tab"
+      [class.active]="activeFilter() === 'all'"
+      (click)="setFilter('all')"
+    >All ({{ stats().total }})</button>
+    <button
+      class="filter-tab"
+      [class.active]="activeFilter() === 'unwatched'"
+      (click)="setFilter('unwatched')"
+    >To Watch ({{ stats().unwatched }})</button>
+    <button
+      class="filter-tab"
+      [class.active]="activeFilter() === 'watched'"
+      (click)="setFilter('watched')"
+    >Watched ({{ stats().watched }})</button>
+  </div>
+ 
+  <!-- LOADING -->
+  @if (isLoading()) {
+    <div class="watchlist-grid">
+      @for (i of [1,2,3,4,5,6,7,8]; track i) {
+        <div class="skeleton-card">
+          <div class="skeleton-poster"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      }
+    </div>
+  }
+ 
+  <!-- MOVIES GRID -->
+  @if (!isLoading() && movies().length > 0) {
+    <div class="watchlist-grid">
+      @for (movie of movies(); track movie.movieId) {
+        <div class="watchlist-card" [class.is-watched]="movie.watched">
+ 
+          <!-- Poster -->
+          <div class="card-poster" (click)="goToMovie(movie.movieId)">
+            <img [src]="getPoster(movie.poster_path)" [alt]="movie.title" loading="lazy"/>
+ 
+            <!-- Watched badge -->
+            @if (movie.watched) {
+              <div class="watched-badge">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                Watched
+              </div>
+            }
+ 
+            <div class="card-rating">★ {{ getRating(movie.vote_average) }}</div>
+ 
+            <div class="card-overlay">
+              <p class="card-desc">{{ movie.overview }}</p>
+            </div>
+          </div>
+ 
+          <!-- Card info -->
+          <div class="card-info">
+            <div class="card-title" (click)="goToMovie(movie.movieId)">
+              {{ movie.title }}
+            </div>
+            <div class="card-year">{{ getYear(movie.release_date) }}</div>
+ 
+            <!-- Star rating -->
+            <div class="star-rating">
+              @for (star of getStars(movie.rating ?? 0); track star) {
+                <button
+                  class="star"
+                  [class.active]="star <= (movie.rating ?? 0)"
+                  (click)="rateMovie(movie.movieId, star)"
+                >★</button>
+              }
+            </div>
+ 
+            <!-- Actions -->
+            <div class="card-actions">
+              <button
+                class="btn-watch"
+                [class.watched]="movie.watched"
+                (click)="toggleWatched(movie)"
+              >
+                @if (movie.watched) {
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M20 6L9 17l-5-5"/>
+                  </svg>
+                  Watched
+                } @else {
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v4M12 16h.01"/>
+                  </svg>
+                  Mark Watched
+                }
+              </button>
+ 
+              <button
+                class="btn-remove"
+                [disabled]="removingId() === movie.movieId"
+                (click)="removeMovie(movie.movieId)"
+              >
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+ 
+        </div>
+      }
+    </div>
+  }
+ 
+  <!-- EMPTY STATE -->
+  @if (!isLoading() && movies().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🎬</div>
+ 
+      @if (activeFilter() !== 'all') {
+        <h3 class="empty-title">No {{ activeFilter() }} films</h3>
+        <p class="empty-sub">Switch filters to see your other films.</p>
+        <button class="btn-primary" (click)="setFilter('all')">Show All</button>
+      } @else {
+        <h3 class="empty-title">Your watchlist is empty</h3>
+        <p class="empty-sub">
+          Start adding films from the Discover page or any movie detail page.
+        </p>
+        <button class="btn-primary" (click)="goToDiscover()">
+          Discover Films
+        </button>
+      }
+    </div>
+  }
+ 
+</div>
+ 

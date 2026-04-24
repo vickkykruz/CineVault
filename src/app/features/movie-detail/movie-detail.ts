@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SafeUrlPipe } from '../../shared/pipes/safe-url.pipe';
 import { TmdbService, MovieDetail as MovieDetailData } from '../../core/services/tmdb.service';
+import { WatchlistService } from '../../core/services/watchlist.service';
+import { AuthService } from '../../core/services/auth.service';
+import { AnalyticsService } from '../../core/services/analytics.service';
  
 interface CastMember {
   id: number;
@@ -25,16 +28,25 @@ interface Video {
   styleUrl: './movie-detail.scss',
 })
 export class MovieDetail implements OnInit {
-  private readonly tmdb = inject(TmdbService);
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  private readonly tmdb             = inject(TmdbService);
+  private readonly route            = inject(ActivatedRoute);
+  private readonly router           = inject(Router);
+  private readonly watchlistService = inject(WatchlistService);
+  private readonly authService      = inject(AuthService);
+  private readonly analytics        = inject(AnalyticsService);
  
-  movie = signal<MovieDetailData | null>(null);
-  cast = signal<CastMember[]>([]);
-  trailer = signal<Video | null>(null);
+  movie         = signal<MovieDetailData | null>(null);
+  cast          = signal<CastMember[]>([]);
+  trailer       = signal<Video | null>(null);
   similarMovies = signal<any[]>([]);
-  isLoading = signal(true);
-  showTrailer = signal(false);
+  isLoading     = signal(true);
+  showTrailer   = signal(false);
+ 
+  // Watchlist state
+  inWatchlist     = signal(false);
+  watchlistLoading = signal(false);
+  toastMessage    = signal('');
+  toastVisible    = signal(false);
  
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -45,6 +57,8 @@ export class MovieDetail implements OnInit {
  
   loadMovie(id: number): void {
     this.isLoading.set(true);
+    this.inWatchlist.set(false);
+ 
     this.tmdb.getMovieDetail(id).subscribe({
       next: (res: any) => {
         this.movie.set(res);
@@ -58,6 +72,16 @@ export class MovieDetail implements OnInit {
         const similar = res.similar?.results?.slice(0, 6) ?? [];
         this.similarMovies.set(similar);
         this.isLoading.set(false);
+ 
+        // Track movie view
+        this.analytics.trackMovieViewed(res.id, res.title);
+ 
+        // Check watchlist status if user is logged in
+        if (this.authService.isLoggedIn()) {
+          this.watchlistService.isInWatchlist(id).subscribe({
+            next: (inList) => this.inWatchlist.set(inList),
+          });
+        }
       },
       error: () => {
         this.isLoading.set(false);
@@ -66,6 +90,51 @@ export class MovieDetail implements OnInit {
     });
   }
  
+  // ── Watchlist ──────────────────────────────────────────
+  async toggleWatchlist(): Promise<void> {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+ 
+    const m = this.movie();
+    if (!m) return;
+ 
+    this.watchlistLoading.set(true);
+ 
+    try {
+      if (this.inWatchlist()) {
+        await this.watchlistService.removeFromWatchlist(m.id);
+        this.inWatchlist.set(false);
+        this.analytics.trackWatchlistRemoved(m.id, m.title);
+        this.showToast('Removed from watchlist');
+      } else {
+        await this.watchlistService.addToWatchlist({
+          movieId:      m.id,
+          title:        m.title,
+          poster_path:  m.poster_path,
+          vote_average: m.vote_average,
+          release_date: m.release_date,
+          overview:     m.overview,
+        });
+        this.inWatchlist.set(true);
+        this.analytics.trackWatchlistAdded(m.id, m.title);
+        this.showToast('Added to watchlist ✓');
+      }
+    } catch (err) {
+      this.showToast('Something went wrong');
+    } finally {
+      this.watchlistLoading.set(false);
+    }
+  }
+ 
+  private showToast(message: string): void {
+    this.toastMessage.set(message);
+    this.toastVisible.set(true);
+    setTimeout(() => this.toastVisible.set(false), 3000);
+  }
+ 
+  // ── Helpers ────────────────────────────────────────────
   getPoster(path: string): string {
     return this.tmdb.getPosterUrl(path, 'w500');
   }
@@ -97,16 +166,18 @@ export class MovieDetail implements OnInit {
     return Math.round((vote / 10) * 100);
   }
  
-  goBack(): void {
-    window.history.back();
-  }
+  goBack(): void { window.history.back(); }
  
   goToMovie(id: number): void {
     this.router.navigate(['/movie', id]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
  
-  openTrailer(): void { this.showTrailer.set(true); }
+  openTrailer(): void  {
+    this.showTrailer.set(true);
+    const m = this.movie();
+    if (m) this.analytics.trackTrailerWatched(m.id, m.title);
+  }
   closeTrailer(): void { this.showTrailer.set(false); }
  
   trackById(_: number, item: any): number { return item.id; }

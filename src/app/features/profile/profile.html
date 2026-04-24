@@ -1,1 +1,199 @@
-<p>profile works!</p>
+<div class="profile-page">
+ 
+  @if (isLoading()) {
+    <div class="profile-loading">
+      <div class="skeleton-avatar"></div>
+      <div class="skeleton-line wide"></div>
+      <div class="skeleton-line medium"></div>
+    </div>
+  }
+ 
+  @if (!isLoading() && user()) {
+    <!-- PROFILE HERO -->
+    <div class="profile-hero">
+      <div class="profile-hero-inner">
+ 
+        <!-- Avatar -->
+        <div class="avatar-wrap">
+          @if (user()!.photoURL) {
+            <img [src]="user()!.photoURL!" [alt]="user()!.displayName!" class="avatar-img"/>
+          } @else {
+            <div class="avatar-placeholder">{{ getInitials() }}</div>
+          }
+        </div>
+ 
+        <!-- User info -->
+        <div class="profile-info">
+          @if (!isEditingName()) {
+            <div class="profile-name-wrap">
+              <h1 class="profile-name">
+                {{ user()!.displayName ?? user()!.email ?? 'CineVault User' }}
+              </h1>
+              <button class="btn-edit-name" (click)="startEditName()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+            </div>
+          } @else {
+            <div class="name-edit-wrap">
+              <input
+                type="text"
+                class="name-input"
+                [(ngModel)]="newDisplayName"
+                placeholder="Enter display name"
+                (keydown.enter)="saveName()"
+                (keydown.escape)="cancelEditName()"
+              />
+              <button class="btn-save-name" (click)="saveName()" [disabled]="isSavingName()">
+                {{ isSavingName() ? '...' : 'Save' }}
+              </button>
+              <button class="btn-cancel-name" (click)="cancelEditName()">Cancel</button>
+            </div>
+          }
+ 
+          <p class="profile-email">{{ user()!.email }}</p>
+          <p class="profile-since">Member since {{ getMemberSince() }}</p>
+ 
+          <div class="profile-badges">
+            @if (totalMovies() >= 10) {
+              <span class="badge">🎬 Film Buff</span>
+            }
+            @if (watchedMovies() >= 5) {
+              <span class="badge">✅ Dedicated Watcher</span>
+            }
+            @if (totalRatings() >= 3) {
+              <span class="badge">⭐ Critic</span>
+            }
+          </div>
+        </div>
+ 
+        <!-- Sign out -->
+        <button class="btn-signout" (click)="signOut()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+          </svg>
+          Sign Out
+        </button>
+ 
+      </div>
+    </div>
+ 
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">{{ totalMovies() }}</div>
+        <div class="stat-label">Films Saved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">{{ watchedMovies() }}</div>
+        <div class="stat-label">Watched</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">{{ unwatchedMovies() }}</div>
+        <div class="stat-label">To Watch</div>
+      </div>
+      <div class="stat-card highlight">
+        <div class="stat-num">{{ avgRating() }}</div>
+        <div class="stat-label">Avg Rating</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">{{ watchedPercent() }}%</div>
+        <div class="stat-label">Completion</div>
+      </div>
+    </div>
+ 
+    <!-- PROGRESS BAR -->
+    @if (totalMovies() > 0) {
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>Watchlist Progress</span>
+          <span>{{ watchedMovies() }} / {{ totalMovies() }} watched</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="watchedPercent()"></div>
+        </div>
+      </div>
+    }
+ 
+    <!-- RECENTLY ADDED -->
+    @if (recentMovies().length > 0) {
+      <section class="profile-section">
+        <div class="section-header">
+          <h2 class="section-title">Recently Added</h2>
+          <button class="section-link" (click)="goToWatchlist()">View all →</button>
+        </div>
+        <div class="movies-row">
+          @for (movie of recentMovies(); track movie.movieId) {
+            <div class="movie-card" (click)="goToMovie(movie.movieId)">
+              <div class="card-poster">
+                <img [src]="getPoster(movie.poster_path)" [alt]="movie.title" loading="lazy"/>
+                @if (movie.watched) {
+                  <div class="watched-tick">✓</div>
+                }
+                <div class="card-overlay">
+                  <div class="card-btn">View</div>
+                </div>
+              </div>
+              <div class="card-info">
+                <div class="card-title">{{ movie.title }}</div>
+                <div class="card-year">{{ getYear(movie.release_date) }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+ 
+    <!-- TOP PERSONAL RATINGS -->
+    @if (topRatedMovies().length > 0) {
+      <section class="profile-section">
+        <div class="section-header">
+          <h2 class="section-title">Your Top Picks</h2>
+        </div>
+        <div class="movies-row">
+          @for (movie of topRatedMovies(); track movie.movieId) {
+            <div class="movie-card" (click)="goToMovie(movie.movieId)">
+              <div class="card-poster">
+                <img [src]="getPoster(movie.poster_path)" [alt]="movie.title" loading="lazy"/>
+                <div class="personal-rating">
+                  @for (star of getStars(movie.rating); track star) {
+                    <span [class.active]="star <= movie.rating">★</span>
+                  }
+                </div>
+                <div class="card-overlay">
+                  <div class="card-btn">View</div>
+                </div>
+              </div>
+              <div class="card-info">
+                <div class="card-title">{{ movie.title }}</div>
+                <div class="card-year">{{ getYear(movie.release_date) }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+ 
+    <!-- EMPTY STATE -->
+    @if (totalMovies() === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🎬</div>
+        <h3 class="empty-title">Your profile is empty</h3>
+        <p class="empty-sub">Start adding films to your watchlist to build your profile.</p>
+        <button class="btn-primary" routerLink="/discover">Discover Films</button>
+      </div>
+    }
+ 
+  }
+ 
+</div>
+ 
+<!-- TOAST -->
+@if (toastVisible()) {
+  <div class="toast" [class.visible]="toastVisible()">
+    {{ toastMessage() }}
+  </div>
+}
+ 

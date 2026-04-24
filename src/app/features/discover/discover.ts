@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TmdbService, Movie, MOOD_GENRE_MAP } from '../../core/services/tmdb.service';
+import { AnalyticsService } from '../../core/services/analytics.service';
  
 interface Genre { id: number; name: string; }
 interface Mood  { key: string; label: string; emoji: string; }
@@ -15,9 +16,10 @@ interface Mood  { key: string; label: string; emoji: string; }
   styleUrl:    './discover.scss',
 })
 export class Discover implements OnInit {
-  private readonly tmdb   = inject(TmdbService);
-  private readonly route  = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  private readonly tmdb      = inject(TmdbService);
+  private readonly route     = inject(ActivatedRoute);
+  private readonly router    = inject(Router);
+  private readonly analytics = inject(AnalyticsService);
  
   // ── State ──────────────────────────────────────────────
   movies       = signal<Movie[]>([]);
@@ -123,6 +125,7 @@ export class Discover implements OnInit {
     this.activeGenre.set(null);
     this.activeMood.set(null);
     this.loadDiscover(1);
+    this.analytics.trackMovieSearched(this.searchInput.trim(), 0);
     this.router.navigate([], {
       queryParams: { q: this.searchInput.trim() },
       queryParamsHandling: 'merge',
@@ -145,6 +148,10 @@ export class Discover implements OnInit {
     this.activeMood.set(null);
     this.searchQuery.set('');
     this.searchInput = '';
+    if (id) {
+      const genre = this.genres().find(g => g.id === id);
+      if (genre) this.analytics.trackMovieFiltered('genre', genre.name);
+    }
     this.loadDiscover(1);
   }
  
@@ -153,11 +160,15 @@ export class Discover implements OnInit {
     this.activeGenre.set(null);
     this.searchQuery.set('');
     this.searchInput = '';
+    if (this.activeMood()) {
+      this.analytics.trackMovieFiltered('mood', key);
+    }
     this.loadDiscover(1);
   }
  
   selectSort(value: string): void {
     this.activeSort.set(value);
+    this.analytics.trackMovieFiltered('sort', value);
     this.loadDiscover(1);
   }
  
