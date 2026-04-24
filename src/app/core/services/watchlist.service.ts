@@ -10,7 +10,7 @@ import {
 } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
  
 export interface WatchlistEntry {
   movieId:      number;
@@ -55,8 +55,11 @@ export class WatchlistService {
   isInWatchlist(movieId: number): Observable<boolean> {
     const uid = this.getUserId();
     if (!uid) return of(false);
-    return docData(this.movieDocRef(uid, movieId)).pipe(
-      map((data) => !!data)
+    return docData(
+      doc(this.firestore, `watchlists/${uid}/movies/${movieId}`)
+    ).pipe(
+      map((data) => !!data),
+      catchError(() => of(false))
     );
   }
  

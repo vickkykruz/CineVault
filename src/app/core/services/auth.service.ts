@@ -2,7 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import {
   Auth,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
@@ -22,13 +23,30 @@ export class AuthService {
  
   readonly user = toSignal(user(this.auth), { initialValue: null });
  
-  // ── Google Sign In ─────────────────────────────────────
+  constructor() {
+    // Handle redirect result on app load
+    this.handleRedirectResult();
+  }
+ 
+  // ── Handle Google redirect result ─────────────────────
+  private async handleRedirectResult(): Promise<void> {
+    try {
+      const result = await getRedirectResult(this.auth);
+      if (result?.user) {
+        this.analytics.trackLogin('google');
+        await this.router.navigate(['/']);
+      }
+    } catch (err) {
+      // Silently handle — no redirect in progress
+    }
+  }
+ 
+  // ── Google Sign In (redirect) ──────────────────────────
   async signInWithGoogle(): Promise<void> {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
-    await signInWithPopup(this.auth, provider);
-    this.analytics.trackLogin('google');
-    await this.router.navigate(['/']);
+    await signInWithRedirect(this.auth, provider);
+    // Page will redirect — code below won't run until return
   }
  
   // ── Email & Password ───────────────────────────────────
