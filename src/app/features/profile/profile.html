@@ -159,7 +159,7 @@
                 <img [src]="getPoster(movie.poster_path)" [alt]="movie.title" loading="lazy"/>
                 <div class="personal-rating">
                   @for (star of getStars(movie.rating); track star) {
-                    <span [class.active]="star <= movie.rating">★</span>
+                    <span [class.active]="star <= (movie.rating ?? 0)">★</span>
                   }
                 </div>
                 <div class="card-overlay">

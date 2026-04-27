@@ -1,10 +1,30 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { WatchlistService, WatchlistEntry } from '../../core/services/watchlist.service';
+import { Auth } from '@angular/fire/auth';
+import {
+  Firestore,
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  deleteDoc,
+} from '@angular/fire/firestore';
 import { AuthService } from '../../core/services/auth.service';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+ 
+interface WatchlistEntry {
+  movieId:      number;
+  title:        string;
+  poster_path:  string;
+  vote_average: number;
+  release_date: string;
+  overview:     string;
+  addedAt:      number;
+  watched:      boolean;
+  rating?:      number;
+}
  
 type FilterType = 'all' | 'watched' | 'unwatched';
  
@@ -16,18 +36,19 @@ type FilterType = 'all' | 'watched' | 'unwatched';
   styleUrl: './watchlist.scss',
 })
 export class Watchlist implements OnInit {
-  private readonly watchlistService = inject(WatchlistService);
-  private readonly authService      = inject(AuthService);
-  private readonly tmdb             = inject(TmdbService);
-  private readonly router           = inject(Router);
-  private readonly analytics        = inject(AnalyticsService);
+  private readonly auth      = inject(Auth);
+  private readonly firestore = inject(Firestore);
+  private readonly authService  = inject(AuthService);
+  private readonly tmdb         = inject(TmdbService);
+  private readonly router       = inject(Router);
+  private readonly analytics    = inject(AnalyticsService);
  
   readonly user = this.authService.user;
  
-  allMovies   = signal<WatchlistEntry[]>([]);
+  allMovies    = signal<WatchlistEntry[]>([]);
   activeFilter = signal<FilterType>('all');
-  isLoading   = signal(true);
-  removingId  = signal<number | null>(null);
+  isLoading    = signal(true);
+  removingId   = signal<number | null>(null);
  
   // Computed filtered list
   movies = computed(() => {
@@ -46,21 +67,37 @@ export class Watchlist implements OnInit {
       watched:   all.filter(m => m.watched).length,
       unwatched: all.filter(m => !m.watched).length,
       avgRating: all.filter(m => m.rating).length
-        ? (all.reduce((s, m) => s + (m.rating ?? 0), 0) / all.filter(m => m.rating).length).toFixed(1)
+        ? (all.reduce((s, m) => s + (m.rating ?? 0), 0) /
+           all.filter(m => m.rating).length).toFixed(1)
         : 'N/A',
     };
   });
  
   ngOnInit(): void {
-    this.watchlistService.getWatchlist().subscribe({
-      next: (entries) => {
-        // Sort by most recently added
-        const sorted = [...entries].sort((a, b) => b.addedAt - a.addedAt);
-        this.allMovies.set(sorted);
-        this.isLoading.set(false);
-      },
-      error: () => this.isLoading.set(false),
-    });
+    this.loadWatchlist();
+  }
+ 
+  // ── Load directly from Firestore ───────────────────────
+  async loadWatchlist(): Promise<void> {
+    this.isLoading.set(true);
+    const uid = this.auth.currentUser?.uid;
+    if (!uid) {
+      this.isLoading.set(false);
+      return;
+    }
+ 
+    try {
+      const ref      = collection(this.firestore, `watchlists/${uid}/movies`);
+      const snapshot = await getDocs(ref);
+      const entries  = snapshot.docs
+        .map(d => d.data() as WatchlistEntry)
+        .sort((a, b) => b.addedAt - a.addedAt);
+      this.allMovies.set(entries);
+    } catch (err) {
+      console.error('Failed to load watchlist', err);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
  
   // ── Actions ────────────────────────────────────────────
@@ -69,23 +106,53 @@ export class Watchlist implements OnInit {
   }
  
   async toggleWatched(movie: WatchlistEntry): Promise<void> {
-    await this.watchlistService.toggleWatched(movie.movieId, !movie.watched);
+    const uid = this.auth.currentUser?.uid;
+    if (!uid) return;
+    const ref = doc(this.firestore, `watchlists/${uid}/movies/${movie.movieId}`);
+    await setDoc(ref, { watched: !movie.watched }, { merge: true });
+ 
+    // Update local state immediately
+    this.allMovies.update(list =>
+      list.map(m => m.movieId === movie.movieId
+        ? { ...m, watched: !m.watched }
+        : m
+      )
+    );
+ 
     if (!movie.watched) {
       this.analytics.trackWatchlistMarkedWatched(movie.movieId, movie.title);
     }
   }
  
   async removeMovie(movieId: number): Promise<void> {
+    const uid = this.auth.currentUser?.uid;
+    if (!uid) return;
     const movie = this.allMovies().find(m => m.movieId === movieId);
     this.removingId.set(movieId);
-    await this.watchlistService.removeFromWatchlist(movieId);
-    if (movie) this.analytics.trackWatchlistRemoved(movieId, movie.title);
-    this.removingId.set(null);
+ 
+    try {
+      const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+      await deleteDoc(ref);
+ 
+      // Update local state immediately
+      this.allMovies.update(list => list.filter(m => m.movieId !== movieId));
+      if (movie) this.analytics.trackWatchlistRemoved(movieId, movie.title);
+    } finally {
+      this.removingId.set(null);
+    }
   }
  
   async rateMovie(movieId: number, rating: number): Promise<void> {
+    const uid = this.auth.currentUser?.uid;
+    if (!uid) return;
     const movie = this.allMovies().find(m => m.movieId === movieId);
-    await this.watchlistService.rateMovie(movieId, rating);
+    const ref   = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+    await setDoc(ref, { rating }, { merge: true });
+ 
+    // Update local state immediately
+    this.allMovies.update(list =>
+      list.map(m => m.movieId === movieId ? { ...m, rating } : m)
+    );
     if (movie) this.analytics.trackWatchlistRated(movieId, movie.title, rating);
   }
  
@@ -110,7 +177,7 @@ export class Watchlist implements OnInit {
     return v?.toFixed(1) ?? 'N/A';
   }
  
-  getStars(rating: number): number[] {
+  getStars(rating: number = 0): number[] {
     return [1, 2, 3, 4, 5];
   }
  

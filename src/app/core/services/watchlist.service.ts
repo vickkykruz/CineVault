@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, EnvironmentInjector, runInInjectionContext } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -7,9 +7,10 @@ import {
   deleteDoc,
   collectionData,
   docData,
+  getDoc,
 } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
  
 export interface WatchlistEntry {
@@ -28,39 +29,36 @@ export interface WatchlistEntry {
 export class WatchlistService {
   private readonly firestore = inject(Firestore);
   private readonly auth      = inject(Auth);
+  private readonly injector  = inject(EnvironmentInjector);
  
   // ── Helpers ────────────────────────────────────────────
   private getUserId(): string | null {
     return this.auth.currentUser?.uid ?? null;
   }
  
-  private watchlistRef(userId: string) {
-    return collection(this.firestore, `watchlists/${userId}/movies`);
-  }
- 
-  private movieDocRef(userId: string, movieId: number) {
-    return doc(this.firestore, `watchlists/${userId}/movies/${movieId}`);
-  }
- 
   // ── Get all watchlist entries ──────────────────────────
   getWatchlist(): Observable<WatchlistEntry[]> {
     const uid = this.getUserId();
     if (!uid) return of([]);
-    return collectionData(
-      this.watchlistRef(uid), { idField: 'id' }
-    ) as Observable<WatchlistEntry[]>;
+ 
+    return runInInjectionContext(this.injector, () => {
+      const ref = collection(this.firestore, `watchlists/${uid}/movies`);
+      return collectionData(ref, { idField: 'id' }) as Observable<WatchlistEntry[]>;
+    });
   }
  
   // ── Check if a movie is in the watchlist ───────────────
   isInWatchlist(movieId: number): Observable<boolean> {
     const uid = this.getUserId();
     if (!uid) return of(false);
-    return docData(
-      doc(this.firestore, `watchlists/${uid}/movies/${movieId}`)
-    ).pipe(
-      map((data) => !!data),
-      catchError(() => of(false))
-    );
+ 
+    return runInInjectionContext(this.injector, () => {
+      const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+      return docData(ref).pipe(
+        map((data) => !!data),
+        catchError(() => of(false))
+      );
+    });
   }
  
   // ── Add movie to watchlist ─────────────────────────────
@@ -69,7 +67,9 @@ export class WatchlistService {
   ): Promise<void> {
     const uid = this.getUserId();
     if (!uid) throw new Error('User not authenticated');
-    await setDoc(this.movieDocRef(uid, movie.movieId), {
+ 
+    const ref = doc(this.firestore, `watchlists/${uid}/movies/${movie.movieId}`);
+    await setDoc(ref, {
       ...movie,
       addedAt: Date.now(),
       watched: false,
@@ -80,29 +80,37 @@ export class WatchlistService {
   async removeFromWatchlist(movieId: number): Promise<void> {
     const uid = this.getUserId();
     if (!uid) throw new Error('User not authenticated');
-    await deleteDoc(this.movieDocRef(uid, movieId));
+ 
+    const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+    await deleteDoc(ref);
   }
  
   // ── Mark as watched / unwatched ────────────────────────
   async toggleWatched(movieId: number, watched: boolean): Promise<void> {
     const uid = this.getUserId();
     if (!uid) throw new Error('User not authenticated');
-    await setDoc(
-      this.movieDocRef(uid, movieId),
-      { watched },
-      { merge: true }
-    );
+ 
+    const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+    await setDoc(ref, { watched }, { merge: true });
   }
  
   // ── Rate a movie ───────────────────────────────────────
   async rateMovie(movieId: number, rating: number): Promise<void> {
     const uid = this.getUserId();
     if (!uid) throw new Error('User not authenticated');
-    await setDoc(
-      this.movieDocRef(uid, movieId),
-      { rating },
-      { merge: true }
-    );
+ 
+    const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+    await setDoc(ref, { rating }, { merge: true });
+  }
+ 
+  // ── Check watchlist status (one-time read) ─────────────
+  async checkInWatchlist(movieId: number): Promise<boolean> {
+    const uid = this.getUserId();
+    if (!uid) return false;
+ 
+    const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+    const snap = await getDoc(ref);
+    return snap.exists();
   }
 }
  

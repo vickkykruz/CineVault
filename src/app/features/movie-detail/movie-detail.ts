@@ -1,9 +1,16 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Auth } from '@angular/fire/auth';
+import {
+  Firestore,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+} from '@angular/fire/firestore';
 import { SafeUrlPipe } from '../../shared/pipes/safe-url.pipe';
 import { TmdbService, MovieDetail as MovieDetailData } from '../../core/services/tmdb.service';
-import { WatchlistService } from '../../core/services/watchlist.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
  
@@ -28,12 +35,13 @@ interface Video {
   styleUrl: './movie-detail.scss',
 })
 export class MovieDetail implements OnInit {
-  private readonly tmdb             = inject(TmdbService);
-  private readonly route            = inject(ActivatedRoute);
-  private readonly router           = inject(Router);
-  private readonly watchlistService = inject(WatchlistService);
-  private readonly authService      = inject(AuthService);
-  private readonly analytics        = inject(AnalyticsService);
+  private readonly tmdb        = inject(TmdbService);
+  private readonly route       = inject(ActivatedRoute);
+  private readonly router      = inject(Router);
+  private readonly auth        = inject(Auth);
+  private readonly firestore   = inject(Firestore);
+  private readonly authService = inject(AuthService);
+  private readonly analytics   = inject(AnalyticsService);
  
   movie         = signal<MovieDetailData | null>(null);
   cast          = signal<CastMember[]>([]);
@@ -43,10 +51,10 @@ export class MovieDetail implements OnInit {
   showTrailer   = signal(false);
  
   // Watchlist state
-  inWatchlist     = signal(false);
+  inWatchlist      = signal(false);
   watchlistLoading = signal(false);
-  toastMessage    = signal('');
-  toastVisible    = signal(false);
+  toastMessage     = signal('');
+  toastVisible     = signal(false);
  
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -60,27 +68,24 @@ export class MovieDetail implements OnInit {
     this.inWatchlist.set(false);
  
     this.tmdb.getMovieDetail(id).subscribe({
-      next: (res: any) => {
+      next: async (res: any) => {
         this.movie.set(res);
-        const cast = res.credits?.cast?.slice(0, 12) ?? [];
-        this.cast.set(cast);
-        const videos = res.videos?.results ?? [];
+        this.cast.set(res.credits?.cast?.slice(0, 12) ?? []);
+ 
+        const videos  = res.videos?.results ?? [];
         const trailer = videos.find(
           (v: Video) => v.site === 'YouTube' && v.type === 'Trailer'
         );
         this.trailer.set(trailer ?? null);
-        const similar = res.similar?.results?.slice(0, 6) ?? [];
-        this.similarMovies.set(similar);
+        this.similarMovies.set(res.similar?.results?.slice(0, 6) ?? []);
         this.isLoading.set(false);
  
-        // Track movie view
+        // Track view
         this.analytics.trackMovieViewed(res.id, res.title);
  
-        // Check watchlist status if user is logged in
+        // Check watchlist status using getDoc (no injection context issue)
         if (this.authService.isLoggedIn()) {
-          this.watchlistService.isInWatchlist(id).subscribe({
-            next: (inList) => this.inWatchlist.set(inList),
-          });
+          await this.checkWatchlistStatus(id);
         }
       },
       error: () => {
@@ -90,32 +95,50 @@ export class MovieDetail implements OnInit {
     });
   }
  
-  // ── Watchlist ──────────────────────────────────────────
+  // ── Check watchlist using getDoc ───────────────────────
+  private async checkWatchlistStatus(movieId: number): Promise<void> {
+    const uid = this.auth.currentUser?.uid;
+    if (!uid) return;
+    try {
+      const ref  = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+      const snap = await getDoc(ref);
+      this.inWatchlist.set(snap.exists());
+    } catch {
+      this.inWatchlist.set(false);
+    }
+  }
+ 
+  // ── Toggle watchlist ───────────────────────────────────
   async toggleWatchlist(): Promise<void> {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/auth/login']);
       return;
     }
  
-    const m = this.movie();
-    if (!m) return;
+    const m   = this.movie();
+    const uid = this.auth.currentUser?.uid;
+    if (!m || !uid) return;
  
     this.watchlistLoading.set(true);
  
     try {
+      const ref = doc(this.firestore, `watchlists/${uid}/movies/${m.id}`);
+ 
       if (this.inWatchlist()) {
-        await this.watchlistService.removeFromWatchlist(m.id);
+        await deleteDoc(ref);
         this.inWatchlist.set(false);
         this.analytics.trackWatchlistRemoved(m.id, m.title);
         this.showToast('Removed from watchlist');
       } else {
-        await this.watchlistService.addToWatchlist({
+        await setDoc(ref, {
           movieId:      m.id,
           title:        m.title,
           poster_path:  m.poster_path,
           vote_average: m.vote_average,
           release_date: m.release_date,
           overview:     m.overview,
+          addedAt:      Date.now(),
+          watched:      false,
         });
         this.inWatchlist.set(true);
         this.analytics.trackWatchlistAdded(m.id, m.title);
@@ -135,31 +158,15 @@ export class MovieDetail implements OnInit {
   }
  
   // ── Helpers ────────────────────────────────────────────
-  getPoster(path: string): string {
-    return this.tmdb.getPosterUrl(path, 'w500');
-  }
- 
-  getBackdrop(path: string): string {
-    return this.tmdb.getBackdropUrl(path, 'w1280');
-  }
- 
-  getProfile(path: string): string {
-    return path ? this.tmdb.getPosterUrl(path, 'w342') : '';
-  }
- 
-  getRating(vote: number): string {
-    return vote?.toFixed(1) ?? 'N/A';
-  }
- 
-  getYear(date: string): string {
-    return date ? date.split('-')[0] : '';
-  }
+  getPoster(path: string): string   { return this.tmdb.getPosterUrl(path, 'w500'); }
+  getBackdrop(path: string): string { return this.tmdb.getBackdropUrl(path, 'w1280'); }
+  getProfile(path: string): string  { return path ? this.tmdb.getPosterUrl(path, 'w342') : ''; }
+  getRating(vote: number): string   { return vote?.toFixed(1) ?? 'N/A'; }
+  getYear(date: string): string     { return date ? date.split('-')[0] : ''; }
  
   getRuntime(mins: number): string {
     if (!mins) return '';
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    return `${h}h ${m}m`;
+    return `${Math.floor(mins / 60)}h ${mins % 60}m`;
   }
  
   getRatingPercent(vote: number): number {
@@ -173,11 +180,12 @@ export class MovieDetail implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
  
-  openTrailer(): void  {
+  openTrailer(): void {
     this.showTrailer.set(true);
     const m = this.movie();
     if (m) this.analytics.trackTrailerWatched(m.id, m.title);
   }
+ 
   closeTrailer(): void { this.showTrailer.set(false); }
  
   trackById(_: number, item: any): number { return item.id; }
