@@ -2,15 +2,10 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Auth } from '@angular/fire/auth';
-import {
-  Firestore,
-  doc,
-  getDoc,
-  setDoc,
-  deleteDoc,
-} from '@angular/fire/firestore';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { SafeUrlPipe } from '../../shared/pipes/safe-url.pipe';
 import { TmdbService, MovieDetail as MovieDetailData } from '../../core/services/tmdb.service';
+import { WatchlistService } from '../../core/services/watchlist.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
  
@@ -35,13 +30,14 @@ interface Video {
   styleUrl: './movie-detail.scss',
 })
 export class MovieDetail implements OnInit {
-  private readonly tmdb        = inject(TmdbService);
-  private readonly route       = inject(ActivatedRoute);
-  private readonly router      = inject(Router);
-  private readonly auth        = inject(Auth);
-  private readonly firestore   = inject(Firestore);
-  private readonly authService = inject(AuthService);
-  private readonly analytics   = inject(AnalyticsService);
+  private readonly tmdb             = inject(TmdbService);
+  private readonly route            = inject(ActivatedRoute);
+  private readonly router           = inject(Router);
+  private readonly auth             = inject(Auth);
+  private readonly firestore        = inject(Firestore);
+  private readonly watchlistService = inject(WatchlistService);
+  private readonly authService      = inject(AuthService);
+  private readonly analytics        = inject(AnalyticsService);
  
   movie         = signal<MovieDetailData | null>(null);
   cast          = signal<CastMember[]>([]);
@@ -80,10 +76,10 @@ export class MovieDetail implements OnInit {
         this.similarMovies.set(res.similar?.results?.slice(0, 6) ?? []);
         this.isLoading.set(false);
  
-        // Track view
+        // Track movie view
         this.analytics.trackMovieViewed(res.id, res.title);
  
-        // Check watchlist status using getDoc (no injection context issue)
+        // Check watchlist status using getDoc
         if (this.authService.isLoggedIn()) {
           await this.checkWatchlistStatus(id);
         }
@@ -108,43 +104,36 @@ export class MovieDetail implements OnInit {
     }
   }
  
-  // ── Toggle watchlist ───────────────────────────────────
+  // ── Toggle watchlist via service (analytics included) ──
   async toggleWatchlist(): Promise<void> {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/auth/login']);
       return;
     }
  
-    const m   = this.movie();
-    const uid = this.auth.currentUser?.uid;
-    if (!m || !uid) return;
+    const m = this.movie();
+    if (!m) return;
  
     this.watchlistLoading.set(true);
  
     try {
-      const ref = doc(this.firestore, `watchlists/${uid}/movies/${m.id}`);
- 
       if (this.inWatchlist()) {
-        await deleteDoc(ref);
+        await this.watchlistService.removeFromWatchlist(m.id, m.title);
         this.inWatchlist.set(false);
-        this.analytics.trackWatchlistRemoved(m.id, m.title);
         this.showToast('Removed from watchlist');
       } else {
-        await setDoc(ref, {
+        await this.watchlistService.addToWatchlist({
           movieId:      m.id,
           title:        m.title,
           poster_path:  m.poster_path,
           vote_average: m.vote_average,
           release_date: m.release_date,
           overview:     m.overview,
-          addedAt:      Date.now(),
-          watched:      false,
         });
         this.inWatchlist.set(true);
-        this.analytics.trackWatchlistAdded(m.id, m.title);
         this.showToast('Added to watchlist ✓');
       }
-    } catch (err) {
+    } catch {
       this.showToast('Something went wrong');
     } finally {
       this.watchlistLoading.set(false);
@@ -187,7 +176,6 @@ export class MovieDetail implements OnInit {
   }
  
   closeTrailer(): void { this.showTrailer.set(false); }
- 
   trackById(_: number, item: any): number { return item.id; }
 }
  

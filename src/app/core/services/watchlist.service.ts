@@ -10,8 +10,9 @@ import {
   getDoc,
 } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { AnalyticsService } from './analytics.service';
  
 export interface WatchlistEntry {
   movieId:      number;
@@ -27,9 +28,10 @@ export interface WatchlistEntry {
  
 @Injectable({ providedIn: 'root' })
 export class WatchlistService {
-  private readonly firestore = inject(Firestore);
-  private readonly auth      = inject(Auth);
-  private readonly injector  = inject(EnvironmentInjector);
+  private readonly firestore  = inject(Firestore);
+  private readonly auth       = inject(Auth);
+  private readonly injector   = inject(EnvironmentInjector);
+  private readonly analytics  = inject(AnalyticsService);
  
   // ── Helpers ────────────────────────────────────────────
   private getUserId(): string | null {
@@ -74,33 +76,57 @@ export class WatchlistService {
       addedAt: Date.now(),
       watched: false,
     });
+ 
+    // Track after successful write
+    this.analytics.trackWatchlistAdded(movie.movieId, movie.title);
   }
  
   // ── Remove movie from watchlist ────────────────────────
-  async removeFromWatchlist(movieId: number): Promise<void> {
+  async removeFromWatchlist(movieId: number, title?: string): Promise<void> {
     const uid = this.getUserId();
     if (!uid) throw new Error('User not authenticated');
  
+    // Fetch title before deleting if not provided
+    let movieTitle = title;
+    if (!movieTitle) {
+      const ref  = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+      const snap = await getDoc(ref);
+      movieTitle = snap.exists() ? snap.data()['title'] : String(movieId);
+    }
+ 
     const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
     await deleteDoc(ref);
+ 
+    // Track after successful delete
+    this.analytics.trackWatchlistRemoved(movieId, movieTitle ?? String(movieId));
   }
  
   // ── Mark as watched / unwatched ────────────────────────
-  async toggleWatched(movieId: number, watched: boolean): Promise<void> {
+  async toggleWatched(movieId: number, watched: boolean, title?: string): Promise<void> {
     const uid = this.getUserId();
     if (!uid) throw new Error('User not authenticated');
  
     const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
     await setDoc(ref, { watched }, { merge: true });
+ 
+    // Track marked as watched (not unwatch — not meaningful to track)
+    if (watched) {
+      const movieTitle = title || String(movieId);
+      this.analytics.trackWatchlistMarkedWatched(movieId, movieTitle);
+    }
   }
  
   // ── Rate a movie ───────────────────────────────────────
-  async rateMovie(movieId: number, rating: number): Promise<void> {
+  async rateMovie(movieId: number, rating: number, title?: string): Promise<void> {
     const uid = this.getUserId();
     if (!uid) throw new Error('User not authenticated');
  
     const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
     await setDoc(ref, { rating }, { merge: true });
+ 
+    // Track rating
+    const movieTitle = title || String(movieId);
+    this.analytics.trackWatchlistRated(movieId, movieTitle, rating);
   }
  
   // ── Check watchlist status (one-time read) ─────────────
@@ -108,7 +134,7 @@ export class WatchlistService {
     const uid = this.getUserId();
     if (!uid) return false;
  
-    const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
+    const ref  = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
     const snap = await getDoc(ref);
     return snap.exists();
   }

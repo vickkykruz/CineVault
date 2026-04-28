@@ -6,25 +6,10 @@ import {
   Firestore,
   collection,
   getDocs,
-  doc,
-  setDoc,
-  deleteDoc,
 } from '@angular/fire/firestore';
+import { WatchlistService, WatchlistEntry } from '../../core/services/watchlist.service';
 import { AuthService } from '../../core/services/auth.service';
 import { TmdbService } from '../../core/services/tmdb.service';
-import { AnalyticsService } from '../../core/services/analytics.service';
- 
-interface WatchlistEntry {
-  movieId:      number;
-  title:        string;
-  poster_path:  string;
-  vote_average: number;
-  release_date: string;
-  overview:     string;
-  addedAt:      number;
-  watched:      boolean;
-  rating?:      number;
-}
  
 type FilterType = 'all' | 'watched' | 'unwatched';
  
@@ -36,12 +21,12 @@ type FilterType = 'all' | 'watched' | 'unwatched';
   styleUrl: './watchlist.scss',
 })
 export class Watchlist implements OnInit {
-  private readonly auth      = inject(Auth);
-  private readonly firestore = inject(Firestore);
-  private readonly authService  = inject(AuthService);
-  private readonly tmdb         = inject(TmdbService);
-  private readonly router       = inject(Router);
-  private readonly analytics    = inject(AnalyticsService);
+  private readonly auth             = inject(Auth);
+  private readonly firestore        = inject(Firestore);
+  private readonly watchlistService = inject(WatchlistService);
+  private readonly authService      = inject(AuthService);
+  private readonly tmdb             = inject(TmdbService);
+  private readonly router           = inject(Router);
  
   readonly user = this.authService.user;
  
@@ -77,14 +62,11 @@ export class Watchlist implements OnInit {
     this.loadWatchlist();
   }
  
-  // ── Load directly from Firestore ───────────────────────
+  // ── Load directly from Firestore using getDocs ─────────
   async loadWatchlist(): Promise<void> {
     this.isLoading.set(true);
     const uid = this.auth.currentUser?.uid;
-    if (!uid) {
-      this.isLoading.set(false);
-      return;
-    }
+    if (!uid) { this.isLoading.set(false); return; }
  
     try {
       const ref      = collection(this.firestore, `watchlists/${uid}/movies`);
@@ -100,89 +82,50 @@ export class Watchlist implements OnInit {
     }
   }
  
-  // ── Actions ────────────────────────────────────────────
+  // ── Actions via service (analytics included) ───────────
   setFilter(f: FilterType): void {
     this.activeFilter.set(f);
   }
  
   async toggleWatched(movie: WatchlistEntry): Promise<void> {
-    const uid = this.auth.currentUser?.uid;
-    if (!uid) return;
-    const ref = doc(this.firestore, `watchlists/${uid}/movies/${movie.movieId}`);
-    await setDoc(ref, { watched: !movie.watched }, { merge: true });
- 
+    await this.watchlistService.toggleWatched(
+      movie.movieId, !movie.watched, movie.title
+    );
     // Update local state immediately
     this.allMovies.update(list =>
       list.map(m => m.movieId === movie.movieId
-        ? { ...m, watched: !m.watched }
-        : m
+        ? { ...m, watched: !m.watched } : m
       )
     );
- 
-    if (!movie.watched) {
-      this.analytics.trackWatchlistMarkedWatched(movie.movieId, movie.title);
-    }
   }
  
   async removeMovie(movieId: number): Promise<void> {
-    const uid = this.auth.currentUser?.uid;
-    if (!uid) return;
     const movie = this.allMovies().find(m => m.movieId === movieId);
     this.removingId.set(movieId);
- 
     try {
-      const ref = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
-      await deleteDoc(ref);
- 
-      // Update local state immediately
+      await this.watchlistService.removeFromWatchlist(movieId, movie?.title);
       this.allMovies.update(list => list.filter(m => m.movieId !== movieId));
-      if (movie) this.analytics.trackWatchlistRemoved(movieId, movie.title);
     } finally {
       this.removingId.set(null);
     }
   }
  
   async rateMovie(movieId: number, rating: number): Promise<void> {
-    const uid = this.auth.currentUser?.uid;
-    if (!uid) return;
     const movie = this.allMovies().find(m => m.movieId === movieId);
-    const ref   = doc(this.firestore, `watchlists/${uid}/movies/${movieId}`);
-    await setDoc(ref, { rating }, { merge: true });
- 
-    // Update local state immediately
+    await this.watchlistService.rateMovie(movieId, rating, movie?.title);
     this.allMovies.update(list =>
       list.map(m => m.movieId === movieId ? { ...m, rating } : m)
     );
-    if (movie) this.analytics.trackWatchlistRated(movieId, movie.title, rating);
   }
  
-  goToMovie(id: number): void {
-    this.router.navigate(['/movie', id]);
-  }
- 
-  goToDiscover(): void {
-    this.router.navigate(['/discover']);
-  }
+  goToMovie(id: number): void { this.router.navigate(['/movie', id]); }
+  goToDiscover(): void        { this.router.navigate(['/discover']); }
  
   // ── Helpers ────────────────────────────────────────────
-  getPoster(path: string): string {
-    return this.tmdb.getPosterUrl(path, 'w342');
-  }
- 
-  getYear(date: string): string {
-    return date ? date.split('-')[0] : '';
-  }
- 
-  getRating(v: number): string {
-    return v?.toFixed(1) ?? 'N/A';
-  }
- 
-  getStars(rating: number = 0): number[] {
-    return [1, 2, 3, 4, 5];
-  }
- 
-  trackById(_: number, item: WatchlistEntry): number {
-    return item.movieId;
-  }
+  getPoster(path: string): string  { return this.tmdb.getPosterUrl(path, 'w342'); }
+  getYear(date: string): string    { return date ? date.split('-')[0] : ''; }
+  getRating(v: number): string     { return v?.toFixed(1) ?? 'N/A'; }
+  getStars(rating: number = 0): number[] { return [1, 2, 3, 4, 5]; }
+  trackById(_: number, item: WatchlistEntry): number { return item.movieId; }
 }
  
